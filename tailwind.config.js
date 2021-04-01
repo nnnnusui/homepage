@@ -1,13 +1,17 @@
 module.exports = {
-  purge: ['./src/components/**/*.tsx', './src/pages/**/*.tsx', './public/**/*.html'],
+  purge: [
+    "./src/components/**/*.tsx",
+    "./src/pages/**/*.tsx",
+    "./public/**/*.html",
+  ],
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
       cursor: {
-        'resize-v': 'ew-resize'
+        "resize-v": "ew-resize",
       },
       maxWidth: {
-        'border': '.8rem' 
+        border: ".8rem",
       },
     },
   },
@@ -15,4 +19,4 @@ module.exports = {
     extend: {},
   },
   plugins: [],
-}
+};

@@ -1,11 +1,12 @@
 import React from "react";
 import { NextPage } from "next";
 import Link from "../components/Link";
+import Title from "../components/Title";
 
 const Home: NextPage = () => {
   return (
     <section className="h-full w-full flex flex-col justify-center text-center">
-      <h1 style={{ fontSize: "500%" }}>N4U</h1>
+      <Title />
       <p>nnnnusui.ga</p>
       <section className="flex justify-center">
         {/* <h1 className="text-center">Links</h1> */}

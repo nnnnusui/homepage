@@ -1,0 +1,75 @@
+$title: N4U;
+$fonts: (
+  (
+    family: "'Reggae One', cursive",
+    url: "https://fonts.googleapis.com/css2?family=Reggae+One",
+  ),
+  (
+    family: "'Dela Gothic One', cursive",
+    url: "https://fonts.googleapis.com/css2?family=Dela+Gothic+One",
+  ),
+  (
+    family: "'Sacramento', cursive",
+    url: "https://fonts.googleapis.com/css2?family=Sacramento",
+  ),
+  (
+    family: "'Kalam', cursive",
+    url: "https://fonts.googleapis.com/css2?family=Kalam:wght@300",
+  ),
+  (
+    family: "'Press Start 2P', cursive",
+    url: "https://fonts.googleapis.com/css2?family=Press+Start+2P",
+  ),
+  (
+    family: "'Parisienne', cursive",
+    url: "https://fonts.googleapis.com/css2?family=Parisienne",
+  ),
+  (
+    family: "'Cinzel Decorative', cursive",
+    url: "https://fonts.googleapis.com/css2?family=Cinzel+Decorative",
+  ),
+  (
+    family: "'Coming Soon', cursive",
+    url: "https://fonts.googleapis.com/css2?family=Coming+Soon",
+  ),
+  (
+    family: "'Graduate', cursive",
+    url: "https://fonts.googleapis.com/css2?family=Graduate",
+  ),
+  (
+    family: "'Merienda One', cursive",
+    url: "https://fonts.googleapis.com/css2?family=Merienda+One",
+  ),
+  (
+    family: "'Wallpoet', cursive",
+    url: "https://fonts.googleapis.com/css2?family=Wallpoet",
+  ),
+  (
+    family: "'Rammetto One', cursive",
+    url: "https://fonts.googleapis.com/css2?family=Rammetto+One",
+  ),
+  (
+    family: "'Oleo Script Swash Caps', cursive",
+    url: "https://fonts.googleapis.com/css2?family=Oleo+Script+Swash+Caps",
+  )
+);
+
+/* stylelint-disable */
+:export {
+  text: $title;
+  fontsCount: length($fonts);
+}
+/* stylelint-enable */
+
+.title {
+  font-size: 500%;
+}
+@for $index from 1 through length($fonts) {
+  $info: nth($fonts, $index);
+  $url: map-get($info, "url");
+  @import url($url + "&text=" + $title);
+  $family: map-get($info, "family");
+  .font-#{$index} {
+    font-family: #{$family};
+  }
+}

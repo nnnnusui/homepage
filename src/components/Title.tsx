@@ -6,7 +6,7 @@ const Title: React.FC = () => {
   const max = Number(style.fontsCount);
   useEffect(() => {
     setRandom(Math.floor(Math.random() * max) + 1);
-  });
+  }, []);
   const text = random ? style.text : "...";
 
   return (

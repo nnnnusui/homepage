@@ -1,0 +1,27 @@
+@use "../variables" as *;
+
+@mixin icon($service, $color) {
+  width: $link-size;
+  height: $link-size;
+  background-color: $color;
+  mask-image: url("../../../public/icon/" + $service + ".svg");
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: $icon-size;
+}
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 25%;
+
+  @each $brand, $info in $brand-map {
+    &.#{$brand} {
+      margin: 0.5rem;
+      background-color: $base-color;
+      div {
+        @include icon($brand, map-get($info, "color"));
+      }
+    }
+  }
+}

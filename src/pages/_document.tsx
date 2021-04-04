@@ -25,6 +25,7 @@ export default class extends Document {
 
           <meta property="og:url" content="https://nnnnusui.ga" />
           <meta property="og:type" content="website" />
+          <meta property="og:title" content="home - nnnnusui.ga" />
           <meta property="og:description" content="In production..." />
           <meta
             property="og:image"

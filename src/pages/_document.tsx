@@ -28,7 +28,7 @@ export default class extends Document {
           <meta property="og:description" content="In production..." />
           <meta
             property="og:image"
-            content="https://avatars.githubusercontent.com/u/2351241"
+            content="https://nnnnusui.ga/thumbnail.jpg"
           />
           <meta property="og:site_name" content="nnnnusui.ga" />
         </Head>

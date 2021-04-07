@@ -1,0 +1,63 @@
+* { all: unset; }
+head { display: none; }
+
+:root {
+  /* font-family: 'New Tegomin', 'Stick', 'Shippori Mincho B1', 'Kiwi Maru', serif; */
+  font-family: 'Noto Sans JP', serif;
+}
+html, body, main, header, footer, section, p {
+  display: block;
+}
+html {
+  background: linear-gradient(to bottom right, #302b2b, #080707);
+  color: #eeebdd;
+}
+body {
+  margin: 0 auto;
+  max-width: 48em;
+  background: linear-gradient(to bottom right, #bebebe25, #4d4a4a77);
+}
+header {
+  height: 3rem;
+}
+footer {
+  height: 5rem;
+}
+main {
+  padding: 0 4rem;
+}
+section {
+  position: relative;
+  margin-top: 1.75rem;
+}
+section > section {
+  margin-top: 1.4rem;
+  margin-left: .55rem;
+  font-size: 98%;
+}
+section > section:first-of-type {
+  margin-top: 0;
+}
+
+h1 {
+  display: block;
+  font-size: 220%;
+  font-family: 'M PLUS Rounded 1c', serif;
+}
+section > h1 {
+  font-size: 160%;
+}
+p {
+  font-size: 100%;
+  text-indent: .75rem;
+  line-height: 1.55rem;
+  margin-bottom: .28rem;
+}
+
+section > section:first-of-type {
+  counter-reset: section;
+}
+section > section > h1::before {
+  counter-increment: section;
+  content: counters(section, '-') '. ';
+}

@@ -8,6 +8,9 @@ head { display: none; }
 html, body, main, header, footer, section, p {
   display: block;
 }
+html, body {
+  height: 100%;
+}
 html {
   background: linear-gradient(to bottom right, #302b2b, #080707);
   color: #eeebdd;
@@ -53,6 +56,10 @@ p {
   line-height: 1.55rem;
   margin-bottom: .28rem;
 }
+
+li::before { content: '- '; }
+a { color: #29a0f0; }
+a:visited { color: #f77b86 }
 
 section > section:first-of-type {
   counter-reset: section;

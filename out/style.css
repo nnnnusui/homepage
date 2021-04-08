@@ -8,16 +8,15 @@ head { display: none; }
 html, body, main, header, footer, section, p {
   display: block;
 }
-html, body {
-  height: 100%;
-}
 html {
   background: linear-gradient(to bottom right, #302b2b, #080707);
   color: #eeebdd;
+  min-height: 100vh;
 }
 body {
   margin: 0 auto;
-  max-width: 48em;
+  max-width: 48rem;
+  min-height: 100vh;
   background: linear-gradient(to bottom right, #bebebe25, #4d4a4a77);
 }
 header {

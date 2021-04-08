@@ -21,12 +21,15 @@ body {
 }
 header {
   height: 3rem;
+  padding: 0 1.5rem;
 }
 footer {
   height: 5rem;
 }
 main {
-  padding: 0 4rem;
+  margin: 0 auto;
+  max-width: 40rem;
+  padding: 0 .35rem;
 }
 section {
   position: relative;

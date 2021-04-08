@@ -17,10 +17,27 @@ section,
 p {
   display: block;
 }
+
+$page-color: (
+  start: #302b2bff,
+  end: #080707ff,
+);
+$article-color: (
+  start: #bebebe25,
+  end: #4d4a4a77,
+);
+$page-start-color: map-get($map: $page-color, $key: "start");
+$page-end-color: map-get($map: $page-color, $key: "end");
+$article-start-color: map-get($map: $article-color, $key: "start");
+$article-end-color: map-get($map: $article-color, $key: "end");
+
+:root {
+  background-color: $page-start-color;
+}
 html {
   min-height: 100vh;
   color: #eeebdd;
-  background: linear-gradient(to bottom right, #302b2b, #080707);
+  background: linear-gradient(to bottom right, $page-start-color, $page-end-color);
 }
 body {
   --max-width: 48rem;
@@ -28,23 +45,23 @@ body {
   max-width: var(--max-width);
   min-height: 100vh;
   margin: 0 auto;
-  background: linear-gradient(to bottom right, #bebebe25, #4d4a4a77);
+  background: linear-gradient(to bottom right, $article-start-color, $article-end-color);
 }
 header {
   max-width: calc(var(--max-width) - 1.5rem * 2);
   height: 3rem;
   padding: 0 var(--min-padding);
   margin: 0 auto;
-}
-header nav li:not(:first-of-type):before {
-  margin: 0 0.15rem;
-  content: "> ";
-}
-header a {
-  color: #54a1ff;
-}
-header a:visited {
-  color: #eb4034;
+  nav li:not(:first-of-type):before {
+    margin: 0 0.15rem;
+    content: "> ";
+  }
+  a {
+    color: #54a1ff;
+  }
+  a:visited {
+    color: #eb4034;
+  }
 }
 footer {
   height: 5rem;
@@ -54,18 +71,16 @@ main {
   max-width: calc(var(--max-width) - 4rem * 2);
   padding: 0 var(--min-padding);
   margin: 0 auto;
-}
-section {
-  position: relative;
-  margin-top: 1.75rem;
-}
-section > section {
-  margin-top: 1.4rem;
-  margin-left: 0.55rem;
-  font-size: 98%;
-}
-section > section:first-of-type {
-  margin-top: 0;
+  li::before {
+    content: "- ";
+    margin-left: .8rem;
+  }
+  a {
+    color: #29a0f0;
+  }
+  a:visited {
+    color: #f77b86;
+  }
 }
 
 h1 {
@@ -73,24 +88,26 @@ h1 {
   font-family: "M PLUS Rounded 1c", serif;
   font-size: 220%;
 }
-section > h1 {
-  font-size: 160%;
-}
-p {
-  margin-bottom: 0.28rem;
-  font-size: 100%;
-  line-height: 1.55rem;
-  text-indent: 0.75rem;
-}
-
-main li::before {
-  content: "- ";
-}
-main a {
-  color: #29a0f0;
-}
-main a:visited {
-  color: #f77b86;
+section {
+  position: relative;
+  margin-top: 1.75rem;
+  section {
+    margin-top: 1.4rem;
+    margin-left: 0.55rem;
+    font-size: 98%;
+  }
+  section:first-of-type {
+    margin-top: 0;
+  }
+  h1 {
+    font-size: 160%;
+  }
+  p {
+    margin-bottom: 0.28rem;
+    font-size: 100%;
+    line-height: 1.55rem;
+    text-indent: 0.75rem;
+  }
 }
 
 section > section:first-of-type {

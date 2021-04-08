@@ -14,10 +14,10 @@
   align-items: center;
   justify-content: center;
   border-radius: 25%;
+  margin: 0 1.65rem;
 
   @each $brand, $info in $brand-map {
     &.#{$brand} {
-      margin: 0.5rem;
       background-color: $base-color;
       div {
         @include icon($brand, map-get($info, "color"));

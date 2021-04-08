@@ -27,7 +27,14 @@ header {
   max-width: calc(var(--max-width) - 1.5rem * 2);
   padding: 0 var(--min-padding);
 }
+header nav li:not(:first-of-type):before {
+  content: '> ';
+  margin: 0 .15rem;
+}
+header a { color: #54a1ff; }
+header a:visited { color: #eb4034; }
 footer {
+  margin: 0 auto;
   height: 5rem;
 }
 main {
@@ -63,9 +70,9 @@ p {
   margin-bottom: .28rem;
 }
 
-li::before { content: '- '; }
-a { color: #29a0f0; }
-a:visited { color: #f77b86 }
+main li::before { content: '- '; }
+main a { color: #29a0f0; }
+main a:visited { color: #f77b86 }
 
 section > section:first-of-type {
   counter-reset: section;

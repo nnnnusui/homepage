@@ -17,7 +17,6 @@ export default class extends Document {
     return (
       <Html lang="en">
         <Head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
-          <title>home - nnnnusui.ga</title>
           <meta name="twitter:card" content="summary" />
           <meta name="twitter:site" content="@nnnnusui" />
           <meta name="twitter:creator" content="@nnnnusui" />

@@ -13,8 +13,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 25%;
   margin: 0 1.65rem;
+  border-radius: 25%;
 
   @each $brand, $info in $brand-map {
     &.#{$brand} {

@@ -1,3 +1,4 @@
+@use "variables" as *;
 @import "~tailwindcss/base";
 @import "~tailwindcss/components";
 @import "~tailwindcss/utilities";
@@ -6,4 +7,47 @@ html,
 body,
 #__next {
   height: 100%;
+  color: $main-color;
+  background-color: $base-color;
+}
+
+.url {
+  margin-top: -1.25rem;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Stick&display=swap");
+.domains {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 0.12rem 0.65rem;
+  margin: 0 auto;
+  margin-top: 0.73rem;
+  margin-bottom: 2.5rem;
+  font-family: "Stick", sans-serif;
+  font-size: 1.2rem;
+
+  background-color: $em-color;
+  li {
+    padding: 0 0.35rem;
+    color: $main-color;
+    background-color: $base-color;
+    + :nth-child(2n) {
+      color: $base-color;
+      background-color: $em-color;
+    }
+  }
+}
+
+.links {
+  position: absolute;
+  top: 75%;
+  right: 0;
+  bottom: 25%;
+  left: 0;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: auto;
 }

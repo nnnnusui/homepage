@@ -19,5 +19,4 @@ $brand-map: (
 $base-color: #eeebdd;
 $main-color: #141212;
 $em-color: #cc3232;
-$link-size: #{100 / (length($brand-map) + 6)} + "vw";
-$icon-size: 75%;
+$link-size: 100vw / (length($brand-map) + 6);

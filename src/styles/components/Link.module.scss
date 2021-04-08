@@ -7,13 +7,12 @@
   mask-image: url("../../../public/icon/" + $service + ".svg");
   mask-repeat: no-repeat;
   mask-position: center;
-  mask-size: $icon-size;
+  mask-size: 75%;
 }
 .link {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 1.65rem;
   border-radius: 25%;
 
   @each $brand, $info in $brand-map {

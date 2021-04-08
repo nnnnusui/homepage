@@ -14,22 +14,26 @@ html {
   min-height: 100vh;
 }
 body {
+  --max-width: 48rem;
+  --min-padding: .35rem;
   margin: 0 auto;
-  max-width: 48rem;
+  max-width: var(--max-width);
   min-height: 100vh;
   background: linear-gradient(to bottom right, #bebebe25, #4d4a4a77);
 }
 header {
+  margin: 0 auto;
   height: 3rem;
-  padding: 0 1.5rem;
+  max-width: calc(var(--max-width) - 1.5rem * 2);
+  padding: 0 var(--min-padding);
 }
 footer {
   height: 5rem;
 }
 main {
   margin: 0 auto;
-  max-width: 40rem;
-  padding: 0 .35rem;
+  max-width: calc(var(--max-width) - 4rem * 2);
+  padding: 0 var(--min-padding);
 }
 section {
   position: relative;

@@ -92,40 +92,51 @@ main {
   max-width: calc(var(--max-width) - 4rem * 2);
   padding: 0 var(--min-padding);
   margin: 0 auto;
+  > section {
+    margin-top: 1.75rem;
+    margin-left: unset;
+    font-size: 100%;
+  }
+}
+
+ul {
+  display: block;
+  margin-left: 1rem;
+  list-style-type: none;
+  background-color: $base-color;
+  p {
+    margin-bottom: unset;
+    line-height: unset;
+    text-indent: unset;
+  }
+  section {
+    margin: unset;
+  }
   ul {
-    display: block;
+    margin-left: unset;
+  }
+  li {
+    position: relative;
+    display: list-item;
+    margin-bottom: 0.45rem;
     margin-left: 2rem;
-    list-style-type: none;
-    p {
-      margin-bottom: unset;
-      line-height: unset;
-      text-indent: unset;
-    }
-    section {
-      margin: unset;
-    }
-    li {
-      position: relative;
-      display: list-item;
-      margin-bottom: 0.45rem;
-      &::before {
-        position: absolute;
-        top: 0.55rem;
-        display: block;
-        width: 0.4rem;
-        height: 0.4rem;
-        margin-left: -1rem;
-        content: "";
-        background-color: $main-color;
-        transform: rotate(45deg);
-      }
+    &::before {
+      position: absolute;
+      top: 0.55rem;
+      display: block;
+      width: 0.4rem;
+      height: 0.4rem;
+      margin-left: -1rem;
+      content: "";
+      background-color: $main-color;
+      transform: rotate(45deg);
     }
   }
-  a {
-    color: #29a0f0;
-    &:visited {
-      color: #f77b86;
-    }
+}
+a {
+  color: #29a0f0;
+  &:visited {
+    color: #f77b86;
   }
 }
 
@@ -142,12 +153,11 @@ p {
   word-break: break-all;
 }
 section {
-  position: relative;
-  margin-top: 1.75rem;
-  section {
-    margin-top: 1.4rem;
-    margin-left: 0.55rem;
-    font-size: 98%;
+  margin-top: 1.4rem;
+  margin-left: 0.55rem;
+  font-size: 98%;
+  &:last-of-type:not(.list) {
+    margin-bottom: 3rem;
   }
   h1 + section {
     margin-top: 0;
@@ -155,9 +165,9 @@ section {
   h1 {
     font-size: 160%;
   }
+  $padding: 0.45rem;
   > .list {
     position: relative;
-    $padding: 0.45rem;
     padding-top: $padding + 0.2rem;
     padding-right: $padding;
     padding-bottom: 0.1rem;
@@ -179,6 +189,9 @@ section {
       border-color: $main-color;
       border-style: solid;
       border-width: 1px;
+    }
+    ul {
+      margin: unset;
     }
   }
 }

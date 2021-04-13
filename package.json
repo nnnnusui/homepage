@@ -3,19 +3,22 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build:markdown5": "markdown5 compile --template template.html src out",
-    "build:sass": "sass src/style.scss out/style.css",
-    "build": "run-p build:*",
+    "compile:markdown5": "markdown5 compile --template template.html src out",
+    "compile:sass": "sass src/style.scss out/style.css",
+    "compile": "run-p compile:*",
     "lint:prettier": "prettier src --check",
     "lint:style": "stylelint \"src/**/*.scss\"",
     "lint": "run-p lint:*",
     "fix:prettier": "npm run lint:prettier -- --write",
     "fix:style": "npm run lint:style -- --fix",
-    "fix": "run-s fix:*"
+    "fix": "run-s fix:*",
+    "dev": "run-s fix compile",
+    "demon": "nodemon -e scss,m5 --ignore \"out/*\" --exec \"npm run dev\""
   },
   "devDependencies": {
     "autoprefixer": "^10.2.5",
-    "markdown5": "^0.4.0",
+    "markdown5": "^0.4.1",
+    "nodemon": "^2.0.7",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.2.8",
     "prettier": "^2.2.1",

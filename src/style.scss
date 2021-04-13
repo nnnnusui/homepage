@@ -79,9 +79,9 @@ header {
   }
   a {
     color: #54a1ff;
-  }
-  a:visited {
-    color: #eb4034;
+    &:visited {
+      color: #eb4034;
+    }
   }
 }
 footer {
@@ -123,9 +123,9 @@ main {
   }
   a {
     color: #29a0f0;
-  }
-  a:visited {
-    color: #f77b86;
+    &:visited {
+      color: #f77b86;
+    }
   }
 }
 
@@ -157,6 +157,7 @@ section {
   }
   > .list {
     position: relative;
+    $padding: 0.45rem;
     padding-top: $padding + 0.2rem;
     padding-right: $padding;
     padding-bottom: 0.1rem;
@@ -167,7 +168,6 @@ section {
     border-color: $main-color;
     border-style: solid;
     border-width: 1px;
-    $padding: 0.45rem;
     h1 {
       font-size: 1rem;
     }

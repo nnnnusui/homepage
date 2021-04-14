@@ -11,7 +11,11 @@ body,
   background-color: $base-color;
 }
 :root {
-  font-size: 3.75vmin;
+  font-size: #{$rem-base}vmin;
+}
+body {
+  width: $max-rem;
+  margin: auto;
 }
 .url {
   margin-top: -1.25rem;
@@ -44,10 +48,8 @@ body,
 .links {
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  margin: 0 2rem;
+  justify-content: space-between;
   li {
     display: block;
-    margin: 0 ($link-size / 3);
   }
 }

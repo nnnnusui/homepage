@@ -1,6 +1,9 @@
 @use "../variables" as *;
 
 @mixin icon($service, $color) {
+  max-width: 4rem;
+  max-height: 4rem;
+  margin: 0 2rem;
   width: $link-size;
   height: $link-size;
   background-color: $color;

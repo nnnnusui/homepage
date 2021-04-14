@@ -156,7 +156,7 @@ section {
   margin-top: 1.4rem;
   margin-left: 0.55rem;
   font-size: 98%;
-  &:last-of-type:not(.list) {
+  &:last-of-type:not(.list, .code) {
     margin-bottom: 3rem;
   }
   h1 + section {
@@ -166,7 +166,8 @@ section {
     font-size: 160%;
   }
   $padding: 0.45rem;
-  > .list {
+  > .list,
+  > .code {
     position: relative;
     padding-top: $padding + 0.2rem;
     padding-right: $padding;
@@ -175,9 +176,6 @@ section {
     margin-top: 1.75rem;
     margin-bottom: 0.75rem;
     background-color: $base-color;
-    border-color: $main-color;
-    border-style: solid;
-    border-width: 1px;
     h1 {
       font-size: 1rem;
     }
@@ -186,12 +184,19 @@ section {
       top: -1rem;
       padding: 0.01rem 0.25rem;
       background-color: $base-color;
-      border-color: $main-color;
-      border-style: solid;
-      border-width: 1px;
     }
     ul {
       margin: unset;
+    }
+  }
+  > .list {
+    border-color: $main-color;
+    border-style: solid;
+    border-width: 1px;
+    > h1 {
+      border-color: $main-color;
+      border-style: solid;
+      border-width: 1px;
     }
   }
 }

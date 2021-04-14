@@ -38,6 +38,9 @@ const Home: NextPage = () => {
             url="https://www.youtube.com/channel/UCbKHgc19qt13_kA95c9Ht3A"
           />
         </li>
+        <li>
+          <Link service="steam" url="https://steamcommunity.com/id/nnnnusui/" />
+        </li>
       </ul>
     </section>
   );

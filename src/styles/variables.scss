@@ -22,4 +22,4 @@ $brand-map: (
 $base-color: #eeebdd;
 $main-color: #141212;
 $em-color: #cc3232;
-$link-size: 100vw / (length($brand-map) + 8);
+$link-size: 10rem / length($brand-map);

@@ -1,11 +1,11 @@
 @use "../variables" as *;
 
 @mixin icon($service, $color) {
+  width: $link-size;
   max-width: 4rem;
+  height: $link-size;
   max-height: 4rem;
   margin: 0 2rem;
-  width: $link-size;
-  height: $link-size;
   background-color: $color;
   mask-image: url("../../../public/icon/" + $service + ".svg");
   mask-repeat: no-repeat;

@@ -60,7 +60,7 @@ VPN (Hamachi とか流行りましたね) とか
     @code bash
       ssh-keygen -t ed25519 -C "GCEで使いたいログインネーム"
 
-    　して、対象のGCE-VMインスタンスに鍵(id_ed25519.pub)登録。
+    　とかやって生成した鍵(id_ed25519.pub)を対象のGCE-VMインスタンスに登録するなどする。
     　WindowsでもPowerShellを使えばsshコマンドがデフォルトで使え……たっけ？
     忘れちゃった……。
     　或いは

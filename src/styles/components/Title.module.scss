@@ -62,7 +62,7 @@ $fonts: (
 /* stylelint-enable */
 
 .title {
-  font-size: 500%;
+  font-size: 5rem;
 }
 @for $index from 1 through length($fonts) {
   $info: nth($fonts, $index);

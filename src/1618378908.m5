@@ -57,7 +57,7 @@ VPN (Hamachi とか流行りましたね) とか
     # SSH接続
     　PCからSSH接続できるようにしておく。
     
-    @code
+    @code bash
       ssh-keygen -t ed25519 -C "GCEで使いたいログインネーム"
 
     　して、対象のGCE-VMインスタンスに鍵(id_ed25519.pub)登録。

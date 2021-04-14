@@ -7,17 +7,17 @@
   mask-image: url("../../../public/icon/" + $service + ".svg");
   mask-repeat: no-repeat;
   mask-position: center;
-  mask-size: 75%;
+  mask-size: 50%;
 }
 .link {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 25%;
+  border-radius: 50%;
 
   @each $brand, $info in $brand-map {
     &.#{$brand} {
-      background-color: $base-color;
+      // background-color: $main-color;
       div {
         @include icon($brand, map-get($info, "color"));
       }

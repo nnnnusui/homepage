@@ -10,7 +10,9 @@ body,
   color: $main-color;
   background-color: $base-color;
 }
-
+:root {
+  font-size: 3.75vmin;
+}
 .url {
   margin-top: -1.25rem;
 }

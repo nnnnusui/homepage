@@ -1,4 +1,4 @@
-# ポート開放せずにサーバーホスティングしる - SSH remote forwarding
+# ポート開放せずにサーバーホスティング - SSH remote forwarding
 　"SSH remote forwarding" なる技術を使って、
 Minecraftのサーバーなんかをポート開放無しで外部公開しようぜと言うやつ。
 

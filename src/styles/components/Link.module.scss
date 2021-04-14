@@ -5,7 +5,7 @@
   max-width: 4rem;
   height: $link-size;
   max-height: 4rem;
-  margin: 0 2rem;
+  margin: 0 ($link-size / 2);
   background-color: $color;
   mask-image: url("../../../public/icon/" + $service + ".svg");
   mask-repeat: no-repeat;

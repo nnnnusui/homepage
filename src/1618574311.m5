@@ -1,0 +1,125 @@
+# ゆにちぃをさわる - 各種入力
+なんか機会を得たので。
+
+# 下準備
+@list 雑準備メモ
+  Cube を適当に伸ばして地面にする。
+  Sphere を適当に置く。地面のちょっと上とかに。
+  Sphere に Rigidbody を登録しておく。
+    [Add Component] > "Physics" > "Rigidbody"
+  Sphere に、書き上げたスクリプトを登録する。
+    [Add Component] > "Scripts" > 選んで登録
+
+  # ついでにテクスチャ設定
+  動いてるのがわかりやすくなって良い
+
+  @list テクスチャ(マテリアル)設定
+    画面下部、Assets上で右クリック
+    "Create" > "Material"
+      "New Material" ができる。お好みでリネーム。
+    作成したマテリアルを選択
+    "Main Maps" 内の項目 "Albedo" (多分一番上の方) の左の丸をクリック(ちっちゃい)
+    テクスチャ選択Windowが出てくるので選択
+      なるべく回転したらわかるやつが良い
+      Assets上に画像ファイルをDrag＆Dropすれば候補に追加できる
+    "Sphere" > "Mesh Renderer" > "Materials" > "Element 0" を、作成したマテリアルに変更
+    Sphereの見た目が変わる。
+
+  # reference
+  　@link https://docs.unity3d.com/ja/current/ScriptReference/Input.html|
+
+# 入力を受け取っていく
+　いろんな入力受け取り方法を試していく。
+　前提として、どれも下記の内容を持つ。
+
+@code Input.cs
+  using System.Collections;
+  using System.Collections.Generic;
+  using UnityEngine;
+
+  public class {適当なクラス名} : MonoBehavior
+  {
+    Rigidbody rigidbody;
+    void Start()
+    {
+      rigidbody = GetComponent<Rigidbody>();
+    }
+    void Update()
+    {
+      var vector = detectInput();
+      rigidbody.velocity = vector;
+    }
+
+    private Vector3 detectInput()
+    {
+      // ここに各サンプル 入力受け付け処理 を記述
+    }
+  }
+
+　どうせなら各方法ごとに対応するSphereを1つ追加していくと、
+一気にビジュアライズできて楽だと思う。
+
+  # 汎用入力受け取り
+  　コントローラーだけじゃなくて、WASDとか矢印キーにも一括で対応してくれる、
+  Unityが用意してくれてる入力受け取り奴。
+
+  @code InputGetAxis.cs
+    var moveX = Input.GetAxis("Horizontal");
+    var moveZ = Input.GetAxis("Vertical");
+    rigidbody.velocity = new Vector3(moveX, 0, moveZ);
+
+  　矢印キーとWASD同時に入力しても速度は一緒。
+  　これ複数デバイス対応するときはどうなるんだろう？
+  　GetAxisには平滑化機能が付いており、GetAxisRowだと平滑化無しの値が取得できる。
+
+  # キーボード
+  　ほんとはmutableな変数使いたくないんだけど、まあこの場においては短く済む方が正義なので……。
+
+  @code InputKeyboard.cs
+    int moveX = 0;
+    int moveZ = 0;
+    if (Input.GetKey(KeyCode.A))
+        moveX = -1;
+    if (Input.GetKey(KeyCode.D))
+        moveX =  1;
+    if (Input.GetKey(KeyCode.W))
+        moveZ =  1;
+    if (Input.GetKey(KeyCode.S))
+        moveZ = -1;
+    return new Vector3(moveX, 0, moveZ);
+
+  　同じキーボード入力でもGetAxisとは動き出しの挙動が異なり、こちらの方が突発的。
+  　GetAxisはゲームパッドのエミュレーションとしての挙動が備わってるんだね。
+  　↑ GetAxisRow だと起こらない。GetAxisには平滑化機能が付いているらしい。
+
+  # マウス
+  @code InputMouse.cs
+    int moveY = 0;
+    if (Input.GetMouseButton(0)) // left click
+        moveY = 10;
+    if (Input.GetMouseButton(1)) // right click
+        moveY = -10;
+    if (Input.GetMouseButton(2)) // middle click
+        moveY = -2;
+    return new Vector3(0, moveY, 0);
+  
+  　MouseButtonCodeクラスはないんですか？？
+
+  # ゲームパッド
+  　ぱっと見 GetAxis を使ったコードばかり出てきた。
+  　キーボードと両用とか、複数のコントローラーを使うとかの場合は
+  @link InputManager https://docs.unity3d.com/ja/2019.4/Manual/class-InputManager.html|
+  でマッピングを指定するみたい。この操作はスクリプト上でも可能なのだろうか。
+  　トリガーなんかを効かせるためにもInputManagerを用いる必要がある？
+  @link [reference] https://hakonebox.hatenablog.com/entry/2018/04/15/125152|
+
+  　コントローラーに関連するものに、Input.GetJoystickNames() を見つけた。
+  　一般的な汎用コントローラー(?)の名称、JoystickとGamepad、どっち派？ 僕Gamepad派。
+  
+  # タッチ
+  　まだやってない
+  　@link https://docs.unity3d.com/ja/2018.4/Manual/MobileInput.html|
+
+# おわり
+
+

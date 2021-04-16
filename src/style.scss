@@ -204,7 +204,11 @@ section {
 section > section:first-of-type {
   counter-reset: section;
 }
-section > section > h1::before {
+section > section:not(.list, .code) > h1::before {
   content: counters(section, "-") ". ";
   counter-increment: section;
+}
+
+pre {
+  white-space: pre-wrap;
 }

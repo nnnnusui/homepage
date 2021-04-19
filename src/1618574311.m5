@@ -20,8 +20,8 @@
     作成したマテリアルを選択
     "Main Maps" 内の項目 "Albedo" (多分一番上の方) の左の丸をクリック(ちっちゃい)
     テクスチャ選択Windowが出てくるので選択
-      なるべく回転したらわかるやつが良い
-      Assets上に画像ファイルをDrag＆Dropすれば候補に追加できる
+      　なるべく回転したらわかるやつが良い
+      　Assets上に画像ファイルをDrag＆Dropすれば候補に追加できる
     "Sphere" > "Mesh Renderer" > "Materials" > "Element 0" を、作成したマテリアルに変更
     Sphereの見た目が変わる。
 

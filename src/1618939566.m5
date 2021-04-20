@@ -105,7 +105,7 @@ $HOMEに構築するのがいいが、変えたかったので`$MikanOS`にし�
       -hda disk.img
 
   # day2
-  　@link #6 https://github.com/uchan-nos/mikanos-build/issues/6|
+  　@link issue-#6 https://github.com/uchan-nos/mikanos-build/issues/6|
   より
 
   @code bash

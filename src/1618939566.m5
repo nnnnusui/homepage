@@ -5,7 +5,8 @@
 　"M1 Mac"環境なので上手く行くか不安。
 
 @list reference
-  @link Macで始める「ゼロからのOS自作入門」-Qiita https://qiita.com/yamoridon/items/4905765cc6e4f320c9b5|
+  Mac で始める「ゼロからのOS自作入門」- Qiita
+    @link https://qiita.com/yamoridon/items/4905765cc6e4f320c9b5|
 
 # パッケージ導入
   　必要なコマンドのインストール

@@ -47,7 +47,6 @@
 
   @code bash
     brew install nasm
-  
 
   # 他
   　もしかしたら
@@ -56,7 +55,7 @@
 
   @code bash
     xcodebuild -license accept
-  
+
   が必要になるかもしれない。
 
 

@@ -49,41 +49,39 @@
     　新しく C#Script を作成し、編集する。先ほど生成したScriptを使う。
     この時、Asset編集画面での命名がクラス名やメソッド名に影響する。
     　以下に法則を示す。
-      # 命名法則
-      @code example.cs
-        class Foo : MonoBehaviour, {Asset名}.I{ActionMap名}Action
+    @code example.cs
+      class Foo : MonoBehaviour, {Asset名}.I{ActionMap名}Action
+      {
+        public void On{Action名}(InputAction.CallbackContext context)
         {
-          public void On{Action名}(InputAction.CallbackContext context)
-          {
-            // ...
-          }
+          // ...
         }
+      }
     　示した法則に従って、Actionのコールバック関数を記述する。
     　C# なので、これとは別に`+= lambda` 的な記法でも書けたりする。
-      # 具体例
-      @list _ 
-        Asset名: SampleController
-        ActionMap名: Test
-        Action名: Move
-      @code sample.cs
-        class Foo : MonoBehaviour, SampleController.ITestAction
+    @list 例
+      Asset名: SampleController
+      ActionMap名: Test
+      Action名: Move
+    @code sample.cs
+      class Foo : MonoBehaviour, SampleController.ITestAction
+      {
+        private SampleController _input;
+        private void Awake()
         {
-          private SampleController _input;
-          private void Awake()
-          {
-              _input = new SampleController();
-              _input.Test.SetCallbacks(this);
-          }
-          public void OnMove(InputAction.CallbackContext context)
-          {
-            // 単純なコールバック処理の例
-            var move = context.ReadValue<Vector2>();
-            rigidbody.velocity = new Vector3(move.x, 0, move.y);
-          }
-          private void OnEnable() { _input.Enable(); }
-          private void OnDisable() { _input.Disable(); }
-          private void OnDestroy() { _input.Dispose(); }
+            _input = new SampleController();
+            _input.Test.SetCallbacks(this);
         }
+        public void OnMove(InputAction.CallbackContext context)
+        {
+          // 単純なコールバック処理の例
+          var move = context.ReadValue<Vector2>();
+          rigidbody.velocity = new Vector3(move.x, 0, move.y);
+        }
+        private void OnEnable() { _input.Enable(); }
+        private void OnDisable() { _input.Disable(); }
+        private void OnDestroy() { _input.Dispose(); }
+      }
     　Moveという名前なことだし、Actionの"+" > "Add 2D Vector Composite"を用いた
     体で書いてみた。
     　GamepadのLeftStickとKeyboardのWASDを登録しておけば、ゆ～～っくり動く。

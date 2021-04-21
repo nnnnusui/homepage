@@ -5,6 +5,8 @@
 改めてggって見たら2019/05辺りから"InputSystem"なるパッケージの情報が出始めていた。
 　触ってみたら大分便利そうだったので、こっちをまとめようとなった。
 
+　一番下に参考文献がまとめてあり、実際そっちを見た方が良い。
+
 # 導入
 　"Window" > "Package Manager" から "Input System" をinstall。
 　この時、「InputManager(旧版的なやつ) を無効化しますよ」
@@ -109,3 +111,19 @@
 # おわり
 　便利だね～。表示している画面で Action Map を切り替えるとかやってよしなに
 できそう。
+
+@list references
+  【Unity】新しいInput System入門
+    　@link https://light11.hatenadiary.com/entry/2020/08/18/202627|
+    　ここの上位互換なのでこちらを見た方が良い。
+    　今見たら"On-Screen Stick"でInputManager使わないようにできそうな記述があった。試したら更新しよ。
+  Unityの新しい入力システムInputSystemを使ってみる
+    　@link https://gametukurikata.com/basic/inputsystem|
+    　"Input Action" Asset越しじゃなくて、直接Inputを受け取る方法が書いてある。
+  【Unity】新しいInput SystemのOn-Screen Controlsで...
+    　@link https://light11.hatenadiary.com/entry/2020/08/24/220237|
+    　自前のOn-Screen Controlsを作成するとかもできるらしい。
+  【Unity】新しいInputSystemのEnhancedTouchで端末のタッチ入力を処理する
+    　@link https://myudon.hatenablog.com/entry/2021/02/01/234545|
+    　タッチ入力直さわり。
+    でも"Input Action" と併用できないらしい？

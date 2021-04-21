@@ -1,0 +1,110 @@
+# Unity - InputSystem
+　入力処理に入門していく。
+
+
+# 導入
+　"Window" > "Package Manager" から install。
+　この時、「InputManager(旧版的なやつ) を無効化しますよ」
+といったダイアログが出るのですが、Noを選んだほうがいいです。
+　これは "Edit" > "Project Settings" > "Player" > "Other Settings" > "Active Input Handling*" から変更できるので、
+"Both"に設定しておいてください。
+
+  # なんでBothなの
+  　わざわざダイアログも出ることだし、新旧混ざらないように
+  無効化しておくべきなんじゃないかとか思ったそこの貴方。僕もそう思いました。
+  @link 罠でした https://qiita.com/KONTA2019/items/219732d07458dd9ebaba|
+  。
+  　内部で `UnityEngine.Input` を使うあらゆるコンポーネントやライブラリのために、
+  "Both" に設定しておきましょう。
+
+# 使い方
+  # "Input Action" Assetの作成
+  @list 手順
+    Assetsで右クリック
+    "Create" > "Input Actions"
+      (多分一番下の方にある)
+  
+  # Assetの編集
+  　生成されたAssetをダブルクリックして編集画面を開く。
+  　"Action Maps" と "Actions" を命名。パスカルケースで記入するとよい。
+  　この命名はこのAssetによって自動生成されるC#Scriptを用いる際に関わってくる。
+  詳しくは下の項に。
+    # Actionの登録
+    　Actions項目内のActionには、"+"マークから複数のBindingを登録することができる。
+    　「キーボードのEキー、マウスの左クリック、ゲームパッドのAキーに "Use" と命名する」
+    といった設定をすれば、この3種の入力を同一のものとみなして処理することができる。
+    　Actionの"+" > "Add 2D Vector Composite" を用いれば、
+    ゲームパッドのスティック入力とキーボードのWASD を同一とみなし、Vector2 型で入力値を
+    受け取ることもできる。つよい。
+    　長押しやマルチタップ等の条件設定、スティック入力の閾値の設定なども可能。
+
+  # 定義したActionの使用
+    # C# Script の自動生成
+    　設定画面の上部、"Save Asset" で保存した後一度設定を閉じる。
+    　Asset選択状態だと、画面左の"Inspector" セクションが "Input Actions" 用の
+    表示になっている。
+    　"Generate C# Class" にチェックをつけ、"Apply" を押下。C#Scriptが生成される。
+
+    # 生成したScriptを使う
+    　新しく C#Script を作成し、編集する。先ほど生成したScriptを使う。
+    この時、Asset編集画面での命名がクラス名やメソッド名に影響する。
+    　以下に法則を示す。
+      # 命名法則
+      @code example.cs
+        class Foo : MonoBehaviour, {Asset名}.I{ActionMap名}Action
+        {
+          public void On{Action名}(InputAction.CallbackContext context)
+          {
+            // ...
+          }
+        }
+    　示した法則に従って、Actionのコールバック関数を記述する。
+    　C# なので、これとは別に`+= lambda` 的な記法でも書けたりする。
+      # 具体例
+      @list _ 
+        Asset名: SampleController
+        ActionMap名: Test
+        Action名: Move
+      @code sample.cs
+        class Foo : MonoBehaviour, SampleController.ITestAction
+        {
+          private SampleController _input;
+          private void Awake()
+          {
+              _input = new SampleController();
+              _input.Test.SetCallbacks(this);
+          }
+          public void OnMove(InputAction.CallbackContext context)
+          {
+            // 単純なコールバック処理の例
+            var move = context.ReadValue<Vector2>();
+            rigidbody.velocity = new Vector3(move.x, 0, move.y);
+          }
+          private void OnEnable() { _input.Enable(); }
+          private void OnDisable() { _input.Disable(); }
+          private void OnDestroy() { _input.Dispose(); }
+        }
+    　Moveという名前なことだし、Actionの"+" > "Add 2D Vector Composite"を用いた
+    体で書いてみた。
+    　GamepadのLeftStickとKeyboardのWASDを登録しておけば、ゆ～～っくり動く。
+    そして慣性が止まらない……。
+
+# タッチ操作にも対応する
+  # 仮想ジョイスティックの追加
+  @list 手順
+    適当なUI要素(Imageとか)を追加する
+      左の"Hierarchy" セクションで右クリック > "UI" > "Image"
+    "Image"にコンポーネントを追加
+      "Add Component" > "Input" > "On-Screen Stick"
+    Control Path を任意に設定
+      移動に使いたかったので "Left Stick [Gamepad]"にした。
+  
+  　これだけ。実行すればマウスで画面上のスティックをぐりぐり動かせる。
+  　この時、"InputManager"を無効にしているとエラーを吐くので注意。罠。
+
+  　これでGamepadのLeftStickをエミュレーションしてくれるので、
+  LeftStick入力時に起こる処理が定義されていればそれが走る。
+
+# おわり
+　便利だね～。表示している画面で Action Map を切り替えるとかやってよしなに
+できそう。

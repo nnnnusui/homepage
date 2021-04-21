@@ -1,9 +1,12 @@
 # Unity - InputSystem
 　入力処理に入門していく。
-
+　最初は
+@link UnityEngine.Inputを触ってた ./1618574311.html|んだけど、
+改めてggって見たら2019/05辺りから"InputSystem"なるパッケージの情報が出始めていた。
+　触ってみたら大分便利そうだったので、こっちをまとめようとなった。
 
 # 導入
-　"Window" > "Package Manager" から install。
+　"Window" > "Package Manager" から "Input System" をinstall。
 　この時、「InputManager(旧版的なやつ) を無効化しますよ」
 といったダイアログが出るのですが、Noを選んだほうがいいです。
 　これは "Edit" > "Project Settings" > "Player" > "Other Settings" > "Active Input Handling*" から変更できるので、

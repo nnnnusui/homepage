@@ -1,0 +1,100 @@
+# day03a
+　@link ゼロからのOS自作入門 https://www.amazon.co.jp/ゼロからのOS自作入門-内田-公太/dp/4839975868|
+のday03aで、引っ掛かりポイントがあったのでメモ。
+　kernelを書き始められると聞いて。
+
+# ディレクトリ構成の確認
+　@link 前回 ./1618939566.html|の作業によって構築された環境。
+@code
+  $HOME ($MikanOS)
+  ├ edk2
+  ├ osbook
+  ┗ workspace/mikanos
+
+# 何もしないカーネル
+@code day03aのデータを用意
+  cd workspace/mikanos
+  git checkout osbook_day03a
+
+　カーネルのビルドで引っ掛かった。
+　@link os-from-zero_issue#41 https://github.com/uchan-nos/os-from-zero/issues/41|
+と同じ症状で苦しんだ。ほんと助かり申した……。
+　リンク時のコマンドに`-z separate-code`オプションを追加。
+
+@code CompileとLink
+  cd workspace/mikanos/kernel
+  clang++ $CPPFLAGS -O2 -Wall -g --target=x86_64-elf -ffreestanding -mno-red-zone \
+    -fno-exceptions -fno-rtti -std=c++17 -c main.cpp
+  ld.lld --entry KernelMain -z norelro -z separate-code --image-base 0x100000 --static \
+    -o kernel.elf main.o
+
+　これ、WSL環境でもおんなじ症状に遭遇していて、解決まではやっていないのだけれど、
+lldのバージョンが7になってたからかこのオプションが存在しなかった。バージョン上げないとかな？
+lld9だと問題ないとも書いてあったけど、それも確認はしていない。
+
+　ついでにディスクイメージ作って立ち上げるところまでメモっておく。
+
+@code bootloaderのbuild
+  cd edk2
+  source edksetup.sh
+  build
+@code disk.imgの作成
+  qemu-img create -f raw disk.img 200M
+  mkfs.fat -n 'MIKAN OS' -s 2 -f 2 -R 32 -F 32 disk.img
+
+  mkdir -p mnt
+  sudo hdiutil attach -mountpoint mnt disk.img
+  sudo mkdir -p mnt/EFI/BOOT
+  sudo cp edk2/Build/MikanLoaderX64/DEBUG_CLANGPDB/X64/Loader.efi mnt/EFI/BOOT/BOOTX64.efi
+  sudo cp workspace/mikanos/kernel/kernel.elf mnt/
+  sudo umount mnt
+@code qemuで起動
+  DEVENV_DIR="osbook/devenv"
+  DISK_IMG="disk.img"
+
+  qemu-system-x86_64 \
+    -m 1G \
+    -drive if=pflash,format=raw,readonly=on,file=$DEVENV_DIR/OVMF_CODE.fd \
+    -drive if=pflash,format=raw,file=$DEVENV_DIR/OVMF_VARS.fd \
+    -drive if=ide,index=0,media=disk,format=raw,file=$DISK_IMG \
+    -device nec-usb-xhci,id=xhci \
+    -device usb-mouse -device usb-kbd \
+    -monitor stdio
+
+　はい。
+　ほんと解決してよかった……。神issueありがとうございます……。
+
+
+# kernelのコード、自作フォーマットから生成してぇ〜〜〜〜〜
+　トチ狂った欲求に身を任せてやっていく。
+　単純に考えればc++のコードを生成すればいいものを、今回は LLVM-IR を調べる。
+
+  # day03aのLLVM-IR
+  　compileコマンド(clang++) に `-S -emit-llvm -O0` を加えて、
+  "main.ll" を入手。
+  　中身めっちゃ削ってみた。(全然知らないので必要なところも削ってないか怖い)
+
+  @code main.ll
+    target triple = "x86_64-unknown-unknown-elf"
+    define void @KernelMain() {
+      br label %1
+    1:
+      call void asm sideeffect "hlt", ""()
+      br label %1
+    }
+
+  　無限ループ内で "hlt" をやるコードっぽい。
+  ラベル内を実行するのに、ラベルに飛ぶ必要があるっぽいですね。
+  　1行目のターゲットの指定がないと hlt に対してエラーが出た。偉……。
+  
+  # llvm-irからkernel生成
+  @code bash
+    llc main.ll -filetype=obj -O2
+  　これで"main.o"ができるので、後はlinkして"kernel.elf"を入手して"disk.img"に突っ込んで
+  qemuで起動する。
+  　生成されたバイナリはちゃんと無限ループとhlt命令をやっていた。
+
+
+# おわり
+　長くなるので一先ずおわり。
+　LLVM-IR見物を初めてしまった……。

@@ -1,0 +1,106 @@
+# day03c を言い訳にしたLLVM-IR見物
+　@link ゼロからのOS自作入門 https://www.amazon.co.jp/ゼロからのOS自作入門-内田-公太/dp/4839975868|
+のday03c を参考になんかやっていく。
+
+# まずはふつーに動かす
+@code day03cのデータを用意
+  cd workspace/mikanos
+  git checkout osbook_day03c
+
+　@link 環境構築 ./1618939566.html|の参考にした
+@link 記事 https://qiita.com/yamoridon/items/4905765cc6e4f320c9b5|の通り、
+TOOL_CHAIN_TAGがCLANGPDBになっている影響で修正が必要になっている。
+
+@code workspace/mikanos/MikanLoaderPkg/Main.c
+  -typedef void EntryPointType(UINT64, UINT64);
+  +typedef void __attribute__((sysv_abi)) EntryPointType(UINT64, UINT64);
+
+　後はコンパイルして動かして。なんか波々というかパターンというか、って感じの模様が表示されたら成功。
+　白く塗りつぶされるだけならkernelが読み込まれてない。
+@link 前回(day03a) ./1619159177.html|に同じ症状の対処をしたのでもしかしたらそれかもしれない。
+
+# day03c の LLVM-IR
+　@link 前回(day03a) ./1619159177.html|はwhile文とインラインアセンブリがあった。
+　今回はforループがある。
+
+@code forループこんな感じだった.ll
+  target triple = "x86_64-unknown-unknown-elf"
+  define void @KernelMain(i64 %0, i64 %1) {
+    ; まず引数と変数の初期化 あれ、%2どこ？
+    %3 = alloca i64, align 8        ; frame_buffer_base 予定地
+    %4 = alloca i64, align 8        ; frame_buffer_size 予定地
+    %5 = alloca i8*, align 8        ; frame_buffer 予定地
+    %6 = alloca i64, align 8        ; i 予定地
+    store i64 %0, i64* %3, align 8  ; 引数0から用意した予定地にデータ書き込み
+    store i64 %1, i64* %4, align 8  ; 引数1から(略)
+    %7 = load i64, i64* %3, align 8 ; frame_buffer_base
+    %8 = inttoptr i64 %7 to i8*     ; i64値(frame_buffer_base)からポインタアドレスを取得
+    store i8* %8, i8** %5, align 8  ; frame_buffer = `reinterpret_cast<uint8_t*>(frame_buffer_base)`
+    store i64 0, i64* %6, align 8   ; i = 0
+    br label %9
+
+  9:  ; ここからfor文
+    %10 = load i64, i64* %6, align 8  ; i
+    %11 = load i64, i64* %4, align 8  ; frame_buffer_size
+    %12 = icmp ult i64 %10, %11       ; i < frame_buffer_size
+    br i1 %12, label %13, label %23   ; ループか 抜け出すか
+
+  13:
+    %14 = load i64, i64* %6, align 8  ; i
+    %15 = urem i64 %14, 256           ; i % 256
+    %16 = trunc i64 %15 to i8         ; i64をi8にキャスト(切り捨て)
+    %17 = load i8*, i8** %5, align 8  ; frame_buffer
+    %18 = load i64, i64* %6, align 8  ; i (多分簡単のために2回やってる)
+    %19 = getelementptr inbounds i8, i8* %17, i64 %18 ; frame_buffer[i]
+    store i8 %16, i8* %19, align 1    ; `frame_buffer[i]` = `i % 256`
+    br label %20
+
+  20:
+    %21 = load i64, i64* %6, align 8  ; i
+    %22 = add i64 %21, 1              ; i++ (計算)
+    store i64 %22, i64* %6, align 8   ; i++ (適用)
+    br label %9                       ; 比較に戻る
+
+  23: ; whileループ　(前回と同じ)
+    ; (略)
+  }
+
+# 命令色々
+  # @link alloca https://llvm.org/docs/LangRef.html#alloca-instruction|
+  　メモリ領域の確保。スタックに取る。
+  　関数を抜ける時に自動で解放される。らしい。
+  　どうやら小さい領域を確保するのに適していて、早いらしい。
+  　@link alloca関数(Qiita) https://qiita.com/jkr_2255/items/b2c488c466e76f7069b1|
+
+  # @link store https://llvm.org/docs/LangRef.html#store-instruction|
+    メモリにデータを書き込む。
+  
+  # @link load https://llvm.org/docs/LangRef.html#load-instruction|
+  　メモリからデータを読み込む。
+
+  # @link icmp https://llvm.org/docs/LangRef.html#icmp-instruction|
+  @code icmp syntax
+    <result: i1> = icmp <condition> <type> <op1> <op2>
+  　2つの整数値の比較。`i1`、つまりbooleanを返すっぽい。
+  　今回登場した condition:`ult`は、`op1`の方が小さければ`true`を返す。
+  　opって何の略語なんだろう。
+
+  # @link br https://llvm.org/docs/LangRef.html#br-instruction|
+  @code br syntax
+    br label <destination>
+    br i1 <condition>, label <iftrue>, label <iffalse>
+  　labelにジャンプする命令。if分岐もできる。
+  　前回、while文を表すのにも出てきましたね。これがgoto君ですか……。
+  
+  # @link urem https://llvm.org/docs/LangRef.html#urem-instruction|
+  @code urem syntax
+    <result: <type>> = urem <type> <op1>, <op2>
+  　余剰。op1 % op2。
+
+  # @link getelementptr https://llvm.org/docs/LangRef.html#getelementptr-instruction|
+  　なんか構造体(type)からデータを引き出すのに使うっぽい。
+  　今回は配列からindexでデータを取り出してた。
+
+# おわり
+　あの、メモってたらすぐ100行いく。
+　ちょうどいいので文脈を区切ることにした。(次回に続く)

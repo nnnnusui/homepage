@@ -205,6 +205,7 @@ section > section:first-of-type {
   counter-reset: section;
 }
 section > section:not(.list, .code) > h1::before {
+  font-size: 1.2rem;
   content: counters(section, "-") ". ";
   counter-increment: section;
 }

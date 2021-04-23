@@ -209,9 +209,12 @@ section > section:not(.list, .code) > h1::before {
   counter-increment: section;
 }
 
-pre {
-  white-space: pre-wrap;
-}
 code {
   font-family: "Cutive Mono", monospace;
+  white-space: pre;
+}
+pre {
+  display: block;
+  overflow-x: scroll;
+  white-space: pre-wrap;
 }

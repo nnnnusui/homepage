@@ -54,10 +54,13 @@
 　ダブルクォーテーションとパイプで構成されるテキストリテラルの
 パーサー(トークナイザー)を書く。トークナイズの例まで示すとこんな感じ。
 　パイプ無しでも次のダブルクォ—トまでを値として読むをやるので、paledOrCloseなんていう
-ちょっとわかんない変数名になっている。
+ちょっとわかんない変数名になっている。(命名ﾑｽﾞ)
 @code textLiteral.ts
   const syntax = chainR(sames('"'), chainL({paledOrClose}, sames('"')));
   const textLiteral = tokenize(syntax, (it) => ({ kind: "text literal", value: it }));
+
+　値のリテラル、取り敢えずの最小の単位なので、ここでテストも書いちゃう。
+@link 書いた https://github.com/nnnnusui/ikata/commit/45beb3422c7054d64a784b581db28cc1842c7ba2|。
 
 
 # おわり

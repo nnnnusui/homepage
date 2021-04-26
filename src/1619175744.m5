@@ -1,0 +1,67 @@
+# コンパイラを、書いていこうな……
+　どうすりゃいいんだ……。
+
+# エントリポイントを書けるようにしよう
+　まあまずは呼び出す場所を定義出来ないといけないと思うので、そうする。
+　KernelMainって名前は
+
+@code main.ik
+  f KernelMain: void = {
+    // ここにコードを書く……
+  }
+
+　@link ikata-lang https://github.com/nnnnusui/ikata|。
+拡張子は`.ik`。
+　これのパーサーを書こう。
+ここで突如TypeScriptを持ち出してきてパーサーを書きます。
+　名前とか構文どうしようって延々悩んでしまった。
+後々必要に応じていっぱい変えていくつもりでやっていかなきゃとは思っているんだけど、
+最初から細かいところを気にし始めてしまう悪い癖が出るなどした。
+
+　下記したが、だいたいこんな感じに書いた。
+ほんとは空白や改行を許容するとか、
+パース結果をトークンに変換するとかをやるのでもっと複雑。
+@code defineFunction.ts
+  const defineFunction = chainN(
+    chainR(sames("f "), {name}),
+    option(chainR(sames(":"), {type})),
+    chainN(
+      sames("="),
+      sames("{"),
+      {function literal},
+      sames("}")
+    ),
+  );
+  defineFunction("f main: void = {test} ")
+  // ["main", "void", "test"]
+
+　次に、雑なんだけどこんな感じで、コンパイル結果にそのまま埋め込む構文を
+定義しちゃう。関数の中身はともかく、`target triple` はずっとこの記法になるかなぁ。
+という感じ。
+@code main.ik
+  raw("
+  |target triple = "x86_64-unknown-unknown-elf"
+  ")
+  f KernelMain: void = {
+    raw("
+    |  br label %1
+    |1:
+    |  call void asm sideeffect "hlt", ""()
+    |  br label %1
+    ")
+  }
+
+　ダブルクォーテーションとパイプで構成されるテキストリテラルの
+パーサー(トークナイザー)を書く。トークナイズの例まで示すとこんな感じ。
+　パイプ無しでも次のダブルクォ—トまでを値として読むをやるので、paledOrCloseなんていう
+ちょっとわかんない変数名になっている。
+@code textLiteral.ts
+  const syntax = chainR(sames('"'), chainL({paledOrClose}, sames('"')));
+  const textLiteral = tokenize(syntax, (it) => ({ kind: "text literal", value: it }));
+
+
+# おわり
+　なんでこの文脈(読書)でいきなり言語自作やり始めたの？
+　や、やりたかったから…………。
+　ちょっと進んだらUSBとかで詰みそうな気がするんですが。
+まあオブジェクトファイル生成してるわけだし、ふつーにライブラリ呼べるのかな……。

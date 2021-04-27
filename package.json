@@ -12,8 +12,8 @@
     "fix:prettier": "npm run lint:prettier -- --write",
     "fix:style": "npm run lint:style -- --fix",
     "fix": "run-s fix:*",
-    "dev": "run-s fix compile",
-    "demon": "nodemon -e scss,m5 --ignore \"out/*\" --exec \"npm run dev\"",
+    "routine": "run-s fix compile",
+    "monitor": "nodemon -e scss,m5 --ignore \"out/*\" --exec \"npm run routine\"",
     "new": "node new.js"
   },
   "devDependencies": {

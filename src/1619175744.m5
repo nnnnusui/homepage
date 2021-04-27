@@ -86,6 +86,9 @@
       chainL(option(orders), sames("}"))
     );
   　ordersの中身は今のところ`RawLiteral`しか無い。
+  　テストコード書きやすいようにするなどもしている(
+  @link 047947 https://github.com/nnnnusui/ikata/commit/047947bb5fd159782681ce64ef1749a4ee738261|
+  )。
 
   # Define function
   　最初の関数宣言の右辺に`FunctionLiteral`が来るように規定して、一先ず関数宣言の完成。
@@ -121,7 +124,8 @@
 　これ、
 @link 読書 ./1618939566.html|
 中に脇道に逸れた形で、つまりこのコードはコンパイルしてリンクしたら
-`kernel.elf`と命名してqemuでブートローダーから読んで実行する。
+`kernel.elf`と命名してブートローダーから読んで実行する。
+　現時点、見かけじゃ動いてるかわからないので、qemuなんかで実行する。
 @code qemu
   info registers
   x /5i 0x{ここにRIPレジスタの値-1}

@@ -3,7 +3,6 @@
 
 # エントリポイントを書けるようにしよう
 　まあまずは呼び出す場所を定義出来ないといけないと思うので、そうする。
-　KernelMainって名前は
 
 @code main.ik
   f KernelMain: void = {
@@ -13,12 +12,12 @@
 　@link ikata-lang https://github.com/nnnnusui/ikata|。
 拡張子は`.ik`。
 　これのパーサーを書こう。
-ここで突如TypeScriptを持ち出してきてパーサーを書きます。
+　ここで突如TypeScriptを持ち出してきてパーサーを書きます。
 　名前とか構文どうしようって延々悩んでしまった。
 後々必要に応じていっぱい変えていくつもりでやっていかなきゃとは思っているんだけど、
 最初から細かいところを気にし始めてしまう悪い癖が出るなどした。
 
-　下記したが、だいたいこんな感じに書いた。
+　下に記したが、だいたいこんな感じに書いた。
 ほんとは空白や改行を許容するとか、
 パース結果をトークンに変換するとかをやるのでもっと複雑。
 @code defineFunction.ts
@@ -35,7 +34,8 @@
   defineFunction("f main: void = {test} ")
   // ["main", "void", "test"]
 
-　次に、雑なんだけどこんな感じで、コンパイル結果にそのまま埋め込む構文を
+# LLVM-IRコードをそのまま埋め込む構文
+　雑なんだけどこんな感じで、コンパイル結果にそのまま埋め込む構文を
 定義しちゃう。関数の中身はともかく、`target triple` はずっとこの記法になるかなぁ。
 という感じ。
 @code main.ik
@@ -51,16 +51,43 @@
     ")
   }
 
-　ダブルクォーテーションとパイプで構成されるテキストリテラルの
-パーサー(トークナイザー)を書く。トークナイズの例まで示すとこんな感じ。
-　パイプ無しでも次のダブルクォ—トまでを値として読むをやるので、paledOrCloseなんていう
-ちょっとわかんない変数名になっている。(命名ﾑｽﾞ)
-@code textLiteral.ts
-  const syntax = chainR(sames('"'), chainL({paledOrClose}, sames('"')));
-  const textLiteral = tokenize(syntax, (it) => ({ kind: "text literal", value: it }));
+  # Text literal
+  　ダブルクォーテーションとパイプで構成されるテキストリテラルの
+  パーサー(トークナイザー)を書く。細部は省くけど、トークナイズの例まで示すとこんな感じ。
+  　パイプ無しでも次のダブルクォ—トまでを値として読むをやるので、paledOrCloseなんていう
+  ちょっとわかんない変数名になっている。(命名ﾑｽﾞ)
+  @code textLiteral.ts
+    const syntax = chainR(sames('"'), chainL({paledOrClose}, sames('"')));
+    const textLiteral = tokenize(syntax, (it) => ({ kind: "text literal", value: it }));
 
-　値のリテラル、取り敢えずの最小の単位なので、ここでテストも書いちゃう。
-@link 書いた https://github.com/nnnnusui/ikata/commit/45beb3422c7054d64a784b581db28cc1842c7ba2|。
+  　値のリテラル、取り敢えずの最小の単位なので、ここでテストも書いちゃう。
+  　書いた(
+  @link 45beb3 https://github.com/nnnnusui/ikata/commit/45beb3422c7054d64a784b581db28cc1842c7ba2|
+  )。
+
+  # Raw literal
+  　次に`raw("")`構文の定義。RawLiteral(
+  @link 81e4a5 https://github.com/nnnnusui/ikata/commit/81e4a5d7c0e7d319459459837ab963f52502e83a|
+  )トークン。
+  @code rawLiteral.ts
+    const rawLiteral = chainR(
+      sames("raw("),
+      chainL(textLiteral, sames(")"))
+    );
+  　現時点では全部パーサーにハードコーディングされたデータで解釈するので全部リテラル。
+
+# 関数内に処理を入れられるようにする
+  # Function literal
+  　関数宣言の右辺の構文定義。
+  @code functionLiteral.ts
+    const functionLiteral = chainR(
+      sames("{"),
+      chainL(option(orders), sames("}"))
+    );
+  　ordersの中身は今のところ`RawLiteral`しか無い。
+
+  # Define function
+  　最初の関数宣言の右辺に`FunctionLiteral`が来るように規定して、一先ず関数宣言の完成。
 
 
 # おわり

@@ -10,8 +10,7 @@
   }
 
 　@link ikata-lang https://github.com/nnnnusui/ikata|。
-拡張子は`.ik`。
-　これのパーサーを書こう。
+拡張子は`.ik`。これのパーサーを書こう。
 　ここで突如TypeScriptを持ち出してきてパーサーを書きます。
 　名前とか構文どうしようって延々悩んでしまった。
 後々必要に応じていっぱい変えていくつもりでやっていかなきゃとは思っているんだけど、
@@ -58,12 +57,14 @@
   ちょっとわかんない変数名になっている。(命名ﾑｽﾞ)
   @code textLiteral.ts
     const syntax = chainR(sames('"'), chainL({paledOrClose}, sames('"')));
-    const textLiteral = tokenize(syntax, (it) => ({ kind: "text literal", value: it }));
+    const textLiteral = tokenize(syntax, (it) =>
+      ({ kind: "text literal", value: it })
+    );
 
   　値のリテラル、取り敢えずの最小の単位なので、ここでテストも書いちゃう。
   　書いた(
   @link 45beb3 https://github.com/nnnnusui/ikata/commit/45beb3422c7054d64a784b581db28cc1842c7ba2|
-  )。
+  )。`mocha`, `chai` を使っている。
 
   # Raw literal
   　次に`raw("")`構文の定義。RawLiteral(
@@ -74,7 +75,7 @@
       sames("raw("),
       chainL(textLiteral, sames(")"))
     );
-  　現時点では全部パーサーにハードコーディングされたデータで解釈するので全部リテラル。
+  　現時点では全てパーサーにハードコーディングされたデータで解釈するので、なんというか全部リテラルだね。
 
 # 関数内に処理を入れられるようにする
   # Function literal
@@ -89,9 +90,62 @@
   # Define function
   　最初の関数宣言の右辺に`FunctionLiteral`が来るように規定して、一先ず関数宣言の完成。
 
+# 最上層(ファイル単位)のパース
+@code main.ts
+  const topLevel = or(defineFunction, rawLiteral);
+  const syntax = repeat(chainR(option(interval), topLevel));
+  const parse = (source: string) => syntax(source);
+  // run parse(`ここにソースコード`)
+　こう。
+
+# このままコンパイル(トランスパイル)までやり
+　やった(
+@link 81d715 https://github.com/nnnnusui/ikata/commit/81d715e44de99fe9ef428af0a16e1842d4e3cd01|
+)。このトランスパイル処理のいい感じの書き方わかんない。
+後々いい感じになってくれると思う。知らんけど。
+
+# コマンドにしますか？
+　しましょうか。`cac`, `glob` を依存に追加してやります。
+　やりました(
+@link 24af6b https://github.com/nnnnusui/ikata/commit/24af6b07aefb869ca358d0f25cae4802d3dd348b|
+)。
+@code compileCommandSyntax
+  ikatac -o <outputRoot> <inputRoot>
+　ファイル指定ならそれを、ディレクトリ指定ならそれ以下に属する全ての
+`.ik`ファイルを対象としてコンパイルする。
+　outputRootの指定が無ければ各`.ik`ファイルと同じディレクトリに、
+あれば {outputRoot + 各`.ik`ファイルのinputRootからの相対パス} に
+`.ll`ファイルを出力する。
+
+# 実行
+　これ、
+@link 読書 ./1618939566.html|
+中に脇道に逸れた形で、つまりこのコードはコンパイルしてリンクしたら
+`kernel.elf`と命名してqemuでブートローダーから読んで実行する。
+@code qemu
+  info registers
+  x /5i 0x{ここにRIPレジスタの値-1}
+　正しいLLVM-IRを吐けていれば無限ループが観測できる。
+
+　今回はここまで。
 
 # おわり
-　なんでこの文脈(読書)でいきなり言語自作やり始めたの？
+　なんでこの文脈(
+@link 読書 ./1618939566.html|
+)でいきなり言語自作やり始めたの？
 　や、やりたかったから…………。
-　ちょっと進んだらUSBとかで詰みそうな気がするんですが。
+　↑ この文、前々回の時には書いてたんだけどここまで延期しちゃった。
+　次はwhile? for? その前にif? トランスパイル先の %数値, :数値 はどう解決するの？
+次回、プロジェクト、ﾀﾋす(頓挫)！w
+　あとはちょっと進んだらUSBとかで詰みそうな気がするんですが。
 まあオブジェクトファイル生成してるわけだし、ふつーにライブラリ呼べるのかな……。
+
+@list links
+  @link ikata-lang@0.1.2 https://github.com/nnnnusui/ikata/tree/v0.1.2|
+    `いかた`って何さ。なんだろうね〜。
+  @link combinator-node https://github.com/nnnnusui/combinator-node|
+    　ぱーすに使った。
+    　ぶよぐのぱーさもこれに依存させたいな。めんどいな。
+  @link deno.combinator https://github.com/nnnnusui/deno.combinator|
+    　Denoで書こうとした名残り。
+    でもvscodeで"syntax highlight"したいとか思うと、結局nodeに移行してたんだなぁ。

@@ -16,3 +16,12 @@ p,
 ul {
   display: block;
 }
+
+code {
+  white-space: pre;
+}
+pre {
+  display: block;
+  overflow-x: scroll;
+  white-space: pre-wrap;
+}

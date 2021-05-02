@@ -1,0 +1,26 @@
+:root {
+  font-family: "Noto Sans JP", serif;
+}
+
+h1 {
+  font-family: "M PLUS Rounded 1c", serif;
+  font-size: 220%;
+}
+
+code {
+  font-family: "Cutive Mono", monospace;
+}
+
+section {
+  font-size: 98%;
+  h1 {
+    font-size: 160%;
+  }
+}
+
+.list,
+.code {
+  h1 {
+    font-size: 1rem;
+  }
+}

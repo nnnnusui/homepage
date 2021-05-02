@@ -1,73 +1,8 @@
-* {
-  all: unset;
-}
-head {
-  display: none;
-}
+@use "variable" as *;
+@use "reset";
+@use "base";
+@use "coloring";
 
-html,
-body,
-main,
-header,
-footer,
-section,
-p {
-  display: block;
-}
-
-$page-color: (
-  start: #302b2bff,
-  end: #080707ff,
-);
-$article-color: (
-  start: #bebebe25,
-  end: #4d4a4a77,
-);
-$page-start-color: map-get(
-  $map: $page-color,
-  $key: "start",
-);
-$page-end-color: map-get(
-  $map: $page-color,
-  $key: "end",
-);
-$article-start-color: map-get(
-  $map: $article-color,
-  $key: "start",
-);
-$article-end-color: map-get(
-  $map: $article-color,
-  $key: "end",
-);
-
-$base-color: #302b2bff;
-$main-color: #eeebdd;
-
-:root {
-  font-family: "Noto Sans JP", serif;
-  background-color: $page-start-color;
-}
-html {
-  min-height: 100vh;
-  color: $main-color;
-  background: linear-gradient(
-    to bottom right,
-    $page-start-color,
-    $page-end-color
-  );
-}
-body {
-  --max-width: 48rem;
-  --min-padding: 0.35rem;
-  max-width: var(--max-width);
-  min-height: 100vh;
-  margin: 0 auto;
-  background: linear-gradient(
-    to bottom right,
-    $article-start-color,
-    $article-end-color
-  );
-}
 header {
   max-width: calc(var(--max-width) - 1.5rem * 2);
   height: 3rem;
@@ -76,12 +11,6 @@ header {
   nav li:not(:first-of-type):before {
     margin: 0 0.15rem;
     content: "> ";
-  }
-  a {
-    color: #54a1ff;
-    &:visited {
-      color: #eb4034;
-    }
   }
 }
 footer {
@@ -103,7 +32,6 @@ ul {
   display: block;
   margin-left: 1rem;
   list-style-type: none;
-  background-color: $base-color;
   p {
     margin-bottom: unset;
     line-height: unset;
@@ -128,15 +56,8 @@ ul {
       height: 0.4rem;
       margin-left: -1rem;
       content: "";
-      background-color: $main-color;
       transform: rotate(45deg);
     }
-  }
-}
-a {
-  color: #29a0f0;
-  &:visited {
-    color: #f77b86;
   }
 }
 
@@ -175,7 +96,6 @@ section {
     padding-left: $padding;
     margin-top: 1.75rem;
     margin-bottom: 0.75rem;
-    background-color: $base-color;
     h1 {
       font-size: 1rem;
     }
@@ -183,7 +103,6 @@ section {
       position: absolute;
       top: -1rem;
       padding: 0.01rem 0.25rem;
-      background-color: $base-color;
     }
     ul {
       margin: unset;

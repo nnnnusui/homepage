@@ -1,0 +1,27 @@
+$page-color: (
+  start: #302b2bff,
+  end: #080707ff,
+);
+$article-color: (
+  start: #bebebe25,
+  end: #4d4a4a77,
+);
+$page-start-color: map-get(
+  $map: $page-color,
+  $key: "start",
+);
+$page-end-color: map-get(
+  $map: $page-color,
+  $key: "end",
+);
+$article-start-color: map-get(
+  $map: $article-color,
+  $key: "start",
+);
+$article-end-color: map-get(
+  $map: $article-color,
+  $key: "end",
+);
+
+$base-color: #302b2bff;
+$main-color: #eeebdd;

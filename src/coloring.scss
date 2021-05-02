@@ -1,0 +1,63 @@
+@use "variable" as *;
+
+:root {
+  background-color: map-get($page-color, "start");
+}
+
+html {
+  color: $main-color;
+  background: linear-gradient(
+    to bottom right,
+    map-get($page-color, "start"),
+    map-get($page-color, "end")
+  );
+}
+
+body {
+  background: linear-gradient(
+    to bottom right,
+    map-get($article-color, "start"),
+    map-get($article-color, "end")
+  );
+}
+
+a {
+  color: #29a0f0;
+  &:visited {
+    color: #f77b86;
+  }
+}
+
+ul {
+  background-color: $base-color;
+  li {
+    &::before {
+      background-color: $main-color;
+    }
+  }
+}
+
+header {
+  a {
+    color: #54a1ff;
+    &:visited {
+      color: #eb4034;
+    }
+  }
+}
+
+section {
+  .list,
+  .code {
+    background-color: $base-color;
+    h1 {
+      background-color: $base-color;
+    }
+  }
+  .list {
+    border-color: $main-color;
+    h1 {
+      border-color: $main-color;
+    }
+  }
+}

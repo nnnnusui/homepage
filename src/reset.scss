@@ -1,0 +1,17 @@
+* {
+  all: unset;
+}
+head {
+  display: none;
+}
+
+html,
+body,
+main,
+header,
+footer,
+section,
+h1,
+p {
+  display: block;
+}

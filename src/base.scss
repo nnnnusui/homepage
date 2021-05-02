@@ -1,0 +1,13 @@
+@use "variable" as *;
+
+:root {
+  font-family: "Noto Sans JP", serif;
+}
+
+body {
+  --max-width: 48rem;
+  --min-padding: 0.35rem;
+  max-width: var(--max-width);
+  min-height: 100vh;
+  margin: 0 auto;
+}

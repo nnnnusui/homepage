@@ -29,7 +29,6 @@ main {
 }
 
 ul {
-  display: block;
   margin-left: 1rem;
   list-style-type: none;
   p {
@@ -62,17 +61,22 @@ ul {
 }
 
 h1 {
-  display: block;
   font-family: "M PLUS Rounded 1c", serif;
   font-size: 220%;
 }
 p {
   margin-bottom: 0.28rem;
-  font-size: 100%;
   line-height: 1.55rem;
   text-indent: 0.75rem;
-  word-break: break-all;
 }
+// section {
+//   border-left: 0.2rem solid;
+//   h1 {
+//     position: sticky;
+//     top: 0;
+//     background-color: black;
+//   }
+// }
 section {
   margin-top: 1.4rem;
   margin-left: 0.55rem;

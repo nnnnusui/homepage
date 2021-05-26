@@ -1,0 +1,152 @@
+# Chrome拡張書いた - SpeakTweetDeck
+　TweetDeckをブラウザに読み上げてもらうやつ。
+@link これ https://chrome.google.com/webstore/detail/speaktweetdeck/anfnedbpfjbakobfboifpocmhoohmlin|。
+
+# 経緯
+　Twitterを読み上げてもらいたいなーとは時折思っていた。その時折が襲来した。
+ちょっと前にChrome拡張をほんの少し触ったのを思い出しつつ、
+これでTweetDeckを読み上げてもらうのがいいんじゃないかと具体的なところを想像した。
+　徐にggってみたらChrome拡張として書いている人を
+@link 見つけた https://chao.tokyo/archives/1141|。
+　"Web Speech API" なんてあったんですね。ブラウザ、すご………。
+　使ってる技術の参考がメインだしコードめっちゃ別物になったしライセンスは問題ないと思う。問題ないよね……？
+
+# 製品概要
+　別にここに書かなくても
+@link ストアの概要欄 https://chrome.google.com/webstore/detail/speaktweetdeck/anfnedbpfjbakobfboifpocmhoohmlin|
+でいい気はした。
+@list 機能
+  追加されたボタンでタイムライン毎に読み上げオンオフできる
+  読み上げ速度なんかを調整するための設定画面がある
+  ついでに各ツイートに読み上げボタンがつく
+という。
+　もっとね。[許可/拒否]フィルタリングとか、別名付与とか、辞書登録とか欲しいよね。
+欲しいね……。欲しいのかな。わからんくなってきた。あれば良い。
+　1番惹かれるのはVOICEROIDに読み上げてもらうとかかしら。持ってないけど。
+
+# 技術的概要
+　"Web Speech API" に文章を投げて、読み上げてもらっている。
+　htmlのclass名を頼りにTweetDeck内から目的の情報を漁っている。
+ため、アプデか何かで構造が変化すると動かなくなる。言うて世、全部そう。
+　書いてる途中にBetterTweetDeckを参考にしようと見に行ったんだけど、めっちゃjQueryしてたので 
+ここまではやらないかな…… と思いつつそっ閉じした。
+　TypeScriptとsassを使っている。詳細は
+@link リポジトリ https://github.com/nnnnusui/SpeakTweetDeck|
+を参照のこと。丸投げ。構築手順とか下にメモっとくか〜 (既に忘れてそう)
+
+# Chrome拡張の作り方
+　@link 公式のTutorial https://developer.chrome.com/docs/extensions/mv3/getstarted/|
+を見ればいいとは思うけど、簡単な概要をば。
+  # manifest.json
+  　version3になったのは結構最近っぽい。
+  ので、適当にggってるとversion2の情報ばかりでてきてちょっとめんどくさかったりする。
+  @code manifest.json
+    {
+      "name": "example",
+      "description": "説明",
+      "version": "0.1.0",
+      "manifest_version": 3
+    }
+  　これだけあれば既にChromeが読み込めるらしい。
+  　@link chrome://extensions|を開く。
+  　右上の "デベロッパー モード" をonにして、"パッケージ化されていない拡張機能"
+  から manifest.json が入っているディレクトリ(フォルダ)を選択して読み込める。
+  　.zipでもブラウザにドラッグ&ドロップで放りこめば読み込める。
+  　拡張機能の[有効/無効]トグルボタンの隣についてる更新ボタン押さないと、
+  記述を変更しても反映されないので気をつけてね。
+
+  # main.js
+  　適当にスクリプトを書いてみる。
+  @code main.js
+    alert('Hello, chrome extension.');
+  　これを読み込んでもらうための記述をmanifest.jsonに追記。
+  　これはTweetDeckを開いたら読み込む例。
+  @code manifest.json
+    {
+      ...,
+      "content_scripts": [{
+        "matches": [ "https://tweetdeck.twitter.com/*" ],
+        "js": ["main.js"]
+      }]
+    }
+  　他はggってもろて……。前述した
+  @link 公式のTutorial https://developer.chrome.com/docs/extensions/mv3/getstarted/|
+  には拡張機能がインストールされたら実行する処理の書き方とか載ってた。
+  @code それのmanifest.json
+    {
+      ...,
+      "background": {
+        "service_worker": "background.js"
+      }
+    }
+
+  # TypeScript (Node.js)
+  　main.jsをTypeScriptをコンパイルした結果として入手すればよい。
+  　webpackを使うことになる。なんか使わずにやろうとして無理ってなった記憶があるが、
+  どう無理だったか覚えてない。悲しい。
+  　Webpackの設定は
+  @link こちら https://github.com/nnnnusui/SpeakTweetDeck/blob/main/webpack.config.ts|。
+  @code webpack関連のパッケージインストール
+    npm i -D webpack webpack-cli @types/webpack ts-node ts-loader
+
+  # 書く
+  　お好きに機能を書いていただいて……。
+
+
+# Chrome拡張をストアに公開する
+　@link DeveloperDashboard https://chrome.google.com/webstore/developer/dashboard|
+での作業。
+  # 課金
+  　ストアに何某かを公開する権利を得るために、"$5の課金" が必要なので注意。
+
+  # ファイルアップロード
+  　.zipをに纏めた拡張機能をアップロードする。
+
+  # ファイルに情報付与
+  　アップロードしたファイルの情報を色々設定する。
+  項目を移動する前に "下書きとして保存する" が必要なので編集時には注意。
+
+  @list 公開のために必須とされている情報: ストアの掲載情報
+    説明
+      　日本語で書いて全然いいんじゃないかな。
+      　1文だけで送ったら1度弾かれた。ちゃんと書いた。
+    言語
+      母国語とかでいいんじゃないかな。販売地域の設定は別にある。
+    ショップアイコン
+      これの登録ついでにmanifest.jsonにもアイコン登録しとけばいいと思う。
+    スクリーンショット 1枚以上
+      今回は説明画像を置いた。
+
+  @list 公開のために必須とされている情報: プライバシーへの取り組み
+    単一用途の説明
+      簡潔に1文で書いた。
+    権限が必要な理由
+      　"content_scripts" はホスト権限を要求するらしい。
+      　読み上げとインターフェース追加のためにページ内の情報取得するよ〜って書いた。
+    リモートコード
+      　.zip内で動作が完結するなら"いいえ"を選択。
+      　.zip外のスクリプトを読み込むなら"はい"。
+
+  　ストアの掲載情報 > 追加フィールド > GoogleアナリティクスID 
+  、"UA-" から始まる形式にしか対応してなくて んー？ となったが、
+  DL数統計とかは何もしなくても取ってくるっぽいし別にいらない気もする。
+
+  # 審査の申請、公開
+  　情報を記述し終えたら、"審査のため送信" を押して2,3日ほど待つ。審査ありがとうございます……。
+  　審査が通ればストアに公開される。うおおおDLし放題！！！！(?)
+
+# おわり
+　聴覚で常にTLを追うことができる程度の能力を得た。
+　でもわりかしこう、「これいる？」感はある。
+曲聴く時には邪魔だし。グローバルミュートボタンつけといてよかった。
+　サブモニターをチラ見する頻度が激減したのは面白い。
+でもメインモニターに集中してるといつの間にかちゃんと聴くの忘れてるから、これはもしや脱Twitterツール……？
+書いてしまったな、恐ろしいものを……。
+　読み上げ音声と辞書をマシにできればなんかすごいQOL上がる気もする。
+　どうせなら画像の拡大とか動画再生も自動化してもらいたいな。音声操作で読み上げ中のTweetをいいねしてもらったり。プロジェクト名変わりそう。めんど
+
+　あとどうせならスマホ(手元ならiPhone)でも読み上げてもらいたいよね…。
+これコンパイル結果をbookmarkletに突っ込めばいけるんじゃとかちょっと思ったけど、
+いつかやるかもしれないしやらないかもしれない。PWAアプリにbookmarklet与えられないっぽくて悲しかった。
+
+　おわり、長……。

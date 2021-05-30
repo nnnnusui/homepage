@@ -1,0 +1,80 @@
+# Unity - 物理Component
+　物理挙動をやっていただきたい。
+
+# Component
+  # @link Rigidbody https://docs.unity3d.com/ja/2020.3/Manual/class-Rigidbody.html|
+  @code
+    [Add Component] > "Physics" > "Rigidbody"
+  　オブジェクトに物理挙動を付与できるようになる。
+  　例えば弾いたような力を与えるとか。
+  @code pulse.cs
+    this.rigidbody.AddForce(new Vector3(-45f, 0, 0.8f), ForceMode.Impulse);
+  　デフォルトで重力が有効("Use Grabity" で on/off)。
+  　isKinematicは特殊なので今回は触れない。
+
+  # @link Collider https://docs.unity3d.com/ja/2020.3/Manual/Collider2D.html|
+  @code
+    [Add Component] > "Physics" > "xxxxx Collider"
+  　オブジェクトに衝突判定を付与できる。
+  　形状毎に、[Box, Circle, Capsule, Polygon, Edge, Composite] といった種類がある。
+  　計算処理を軽くするため、形状はオブジェクトより大雑把な形をしていてよい。
+  　Materialアセットを与えて、衝突時の物理挙動に関するパラメーターを設定する。
+  　isTriggerは特殊なので今回は触れない。
+
+    # asset: Physic Material
+    @code
+      Assets: 右クリック > "Create" > "Physic Material"
+    　摩擦と跳ね返りに関するパラメーターが設定できる。
+    　"xxxxx Combine" で、接した2つのオブジェクトのパラメーターをどう合成するか、設定できる。
+    [Average, Multiply, Minimum, Maximum] のどれか。
+    　"Bounciness" のデフォルト値は0で、例えばこれを1に設定した時、
+    "Bounce Combine" をMaximumにすれば、Physics Material の付与されていないColliderに衝突しても
+    減衰無しで跳ね返る。
+
+
+# Parameter
+　こう、ここら辺の値を上手いことやっていい感じに運動させたい。
+　運動が減衰してほぼ停止した状態から完全停止する所の挙動が、
+どうすればいい感じになるのかわからぬ……。
+
+  # Rigidbody: Drag
+  　移動の空気抵抗。これにより速度が減衰していく。
+  
+  # Rigidbody: Angular Drag
+  　回転の空気抵抗。
+  　これ単体では運動を完全には止められない。
+  
+  # Collider: Material > Dynamic Friction
+  　運動時に発生する摩擦。
+  
+  # Collider: Material > Friction Combine
+  　接する2つの衝突対象がある時、摩擦の値を算出する際、其々の持つ摩擦に関する値をどう用いるか。
+
+
+# Scriptから付与する
+@code GrantByScript.cs
+  public class Ball : MonoBehaviour
+  {
+      private Rigidbody rigidbody;
+      void Start()
+      {
+          var rigidbody = gameObject.AddComponent<Rigidbody>();
+          rigidbody.drag = 0.2f;
+          rigidbody.angularDrag = 0.2f;
+          this.rigidbody = rigidbody;
+      }
+  }
+　同じパラメーターを複数のオブジェクトに与えていくのと、
+そのパラメーターを編集するのがGUIだとつらかったのでスクリプトから。
+　特定の親の子全体 とか、特定のタグ を条件にGUIからでも一括付与する方法があったりは
+するのだろうか。
+　ちょっと違うけど
+@link Prefab https://miyagame.net/prefab/|
+というのがあった。SceneからAssetへのドラッグ&ドロップで、オブジェクトをAssetとして扱えるらしい。
+
+
+# おわり
+　ボールいっぱい並べて弾いてビリヤードみたいで面白いなーとかやっていたが、
+ビリヤードやったことないので現実でのボールの動きが全然想像できないなとなった。
+　や、動画なんかを見ればいい話ではありますが……。
+　こーゆーの結局内部の式とか分かってないといい感じに設定できなさそうね。

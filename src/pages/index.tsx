@@ -10,6 +10,13 @@ const Home: NextPage = () => {
       <p className="url">nnnnusui.ga</p>
       <ul className="domains">
         <li>
+          <a href="/rhythm">
+            rhythm
+            <span style={{ fontSize: ".75em" }}>[beta]</span>
+          </a>
+        </li>
+        <li></li>
+        <li>
           <a href="/blog">blog</a>
         </li>
       </ul>

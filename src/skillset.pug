@@ -1,0 +1,236 @@
+mixin time(datetime)
+  time(datetime=datetime) #{datetime}
+mixin since(args)
+  span.since
+    if (args.on === undefined)
+      +time(args.date)
+    else 
+      a(href=args.on)
+        +time(args.date)
+
+mixin project(args)
+  section.project
+    h1
+      a(href=args.repository)= args.name
+    +time(args.until)
+    p.description= args.description
+
+- const proficiencies = ["introducing", "introduced", "a-little-used", "used-to", "familiar"]
+mixin skillset(args)
+  section.skillset(class=[args.kind, args.proficiency])
+    h1
+      span.name= args.name
+      if (args.since !== undefined)
+        +since(args.since)
+    if (args.projects !== undefined)
+      section.projects.spoiler.opened
+        h1(onclick="event.currentTarget.parentElement.classList.contains('opened') ? event.currentTarget.parentElement.classList.remove('opened') : event.currentTarget.parentElement.classList.add('opened')") projects
+        each it in args.projects
+          +project(it)
+
+
+- 
+  const skillsets = [
+    {
+      kind: "tool",
+      name: "Git",
+      proficiency: "introducing",
+      since: {
+        date: "2018/05/23",
+        on: "https://github.com/nnnnusui/helloGit/commit/528553339072bc66e4cb3bf236f854cb646008a7",
+      },
+    },
+    {
+      kind: "service",
+      name: "GitHub Actions",
+      proficiency: "introduced",
+      since: {
+        date: "2020/09/18",
+        on: "https://github.com/nnnnusui/tryActions/commits/main",
+      },
+    },
+
+    {
+      kind: "language",
+      name: "Java",
+      proficiency: "familiar",
+      since: {
+        date: "2017/05",
+      },
+    },
+    {
+      kind: "language",
+      name: "Kotlin",
+      proficiency: "introduced",
+      since: {
+        date: "2018/05/23",
+        on: "https://github.com/nnnnusui/JsonParser/commit/71fccdd9eab666eea0998c977bde200537f8eee3",
+      },
+      projects: [
+        {
+          repository: "https://github.com/nnnnusui/BMPnWAV-Converter",
+          until: "2019/05/22",
+          name: "BMPnWAV-Converter",
+          description: "GUI. 任意のファイルを [.bmp, .wav] に変換する. 或いは復元する"
+        },
+        {
+          repository: "https://github.com/nnnnusui/websocket/tree/backup",
+          until: "2019/04/15",
+          name: "websocket",
+          description: "CoroutineとWebsocketのおべんきょの残滓"
+        },
+        {
+          repository: "https://github.com/nnnnusui/servlet",
+          until: "2018/12/02",
+          name: "servlet",
+          description: "基礎からのWebアプリケーション開発入門 を読みつつ書いたHTTPサーバー"
+        },
+        {
+          repository: "https://github.com/nnnnusui/othello/tree/kotlin",
+          until: "2018/11/14",
+          name: "othello",
+          description: "任意次元オセロ の盤上の処理"
+        }
+      ]
+    },
+    {
+      kind: "language",
+      name: "Scala",
+      proficiency: "a-little-used",
+      since: {
+        date: "2019/05/27",
+      },
+      projects: [
+        {
+          repository: "https://github.com/nnnnusui/zisui/blob/master/src/main/scala/com/github/nnnnusui/zisui/epub/Epub.scala",
+          until: "2020/01/15",
+          name: "zisui",
+          description: "連番画像をEpubにまとめるだけ"
+        },
+        {
+          repository: "https://github.com/nnnnusui/SlideshowTemplateGenerator",
+          until: "2019/12/24",
+          name: "SlideshowTemplateGenerator",
+          description: "GUI. Drag&Dropで画像を取り込み、BPMなどを指定し、AviUtlで読み込めるプロジェクトファイルという形でスライドショーを出力する"
+        },
+        {
+          repository: "https://github.com/nnnnusui/StateAnchor",
+          until: "2019/07/28",
+          name: "StateAnchor",
+          description: "Minecraft のMOD. 特定の状態のブロックを置ける. ほぼ作りかけ"
+        }
+      ]
+    },
+
+    {
+      kind: "tool",
+      name: "Gradle",
+      proficiency: "introducing",
+    },
+
+    {
+      kind: "language",
+      name: "TypeScript",
+      proficiency: "a-little-used",
+      since: {
+        date: "2021/01/17",
+        on: "https://github.com/nnnnusui/WebPianoRoll/commit/f32a73d97d76283c817a75aa1d194c1b6e18d589",
+      },
+    },
+    {
+      kind: "library",
+      name: "React Hooks",
+      proficiency: "introduced",
+      since: {
+        date: "2021/01/17",
+        on: "https://github.com/nnnnusui/WebPianoRoll/commit/f32a73d97d76283c817a75aa1d194c1b6e18d589",
+      },
+    },
+
+    {
+      kind: "language",
+      name: "pug",
+      proficiency: "introducing",
+      since: {
+        date: "2021/06/21",
+        on: "https://github.com/nnnnusui/Rhythm/blob/d31f72ed8c63bcd2c4c33c030d161f3aa1c97bb8/src/index.pug",
+      }
+    },
+    {
+      kind: "language",
+      name: "scss",
+      proficiency: "introducing",
+    },
+    {
+      kind: "language",
+      name: "stylus",
+      proficiency: "introducing",
+      since: {
+        date: "2021/06/23",
+        on: "https://github.com/nnnnusui/Rhythm/blob/d8a42a314893c6d5e6e19f2a5ec0553916553474/src/style/game/logic.styl",
+      }
+    },
+
+    {
+      kind: "language",
+      name: "Rust",
+      proficiency: "introducing",
+      since: {
+        date: "2020/08/30",
+        on: "https://github.com/nnnnusui/WinAPI-on-Rust/commit/69565b1b4ecf695f6256a23dd5dba0724f10d02e",
+      },
+      projects: [
+        {
+          repository: "https://github.com/nnnnusui/longpress",
+          until: "2021/03/20",
+          name: "Longpress",
+          description: "直後のフォーカスウィンドウに右クリック長押しを送信する だけ",
+        },
+        {
+          repository: "https://github.com/nnnnusui/WindowRelocator",
+          until: "2020/10/13",
+          name: "Window ReLocator",
+          description: "ウィンドウ位置をcsvに保存 => 呼び出す"
+        }
+      ]
+    },
+
+    {
+      kind: "language",
+      name: "bash",
+      proficiency: "introducing",
+    },
+    {
+      kind: "language",
+      name: "commandLine",
+      proficiency: "introduced",
+    },
+    {
+      kind: "language",
+      name: "PowerShell",
+      proficiency: "introduced",
+    },
+
+    {
+      kind: "platform",
+      name: "GCP - [GCE, CloudDNS]",
+      proficiency: "introducing",
+    },
+    {
+      kind: "os",
+      name: "Windows10",
+      proficiency: "introducing",
+    },
+    {
+      kind: "os",
+      name: "Ubuntu",
+      proficiency: "introducing",
+    },
+    {
+      kind: "os",
+      name: "MacOS",
+      proficiency: "introducing",
+    },
+  ]
+each it in skillsets
+  +skillset(it)

@@ -1,0 +1,118 @@
+&
+*
+  all unset
+h1
+  display block
+  font-size 1.2em
+a
+  color inherit
+  text-decoration underline
+  cursor pointer
+section
+  display block
+p
+  display block
+  text-indent 1em
+
+
+section.spoiler
+  >h1
+    cursor pointer
+    font-size .8em
+    &:before
+      content '▼'
+      font-size .4em
+      padding-right .8em
+    &:hover
+      color lightblue
+  &:not(.opened)
+    >h1
+      &:before
+        content '▶︎'
+      &:after
+        content '...'
+        padding-left .2em
+    *:not(h1)
+      display none
+
+section > section
+  padding-left 1em
+  font-size 90%
+
+
+&> h1
+  background rgba(black, .2)
+  &:before
+    content '#'
+    opacity .6
+    padding-right .35em
+  &:after
+    content ''
+    display block
+    width 100%
+    height .1em
+    background #bebebe
+&.introducing > h1:after
+  background linear-gradient(90deg, #00a4ff, white, white, white, white)
+&.introduced > h1:after
+  background linear-gradient(90deg, #00a4ff, #27ff04, white, white, white)
+&.a-little-used > h1:after
+  background linear-gradient(90deg, #00a4ff, #27ff04, #ff7c00, white, white)
+&.used-to > h1:after
+  background linear-gradient(90deg, #00a4ff, #27ff04, #ff7c00, #ff2222, white)
+&.familiar > h1:after
+  background linear-gradient(90deg, #00a4ff, #27ff04, #ff7c00, #ff2222, #ff0000)
+  
+
+.since
+  margin-left .65em
+  font-size .65em
+  opacity .8
+  &:after
+    content '~'
+    margin-left .25em
+
+.projects
+  padding-top .45em
+  .project
+    > h1
+      display inline-block
+      padding-right .4em
+      &:before
+        content '-'
+        opacity .6
+        padding-right .35em
+    time
+      font-size .9em
+      &:before
+        content '~'
+        padding-right .4em
+
+// .proficiency
+//   position relative
+//   width 5em
+//   height 5em
+//   clip-path circle(50% at 50% 50%);
+//   background-color black
+//   &:before
+//     position absolute
+//     content ''
+//     display block
+//     width 100%
+//     height 100%
+//     clip-path circle(49% at 50% 50%);
+//   &:after
+//     position absolute
+//     content ''
+//     display block
+//     width 100%
+//     height 100%
+//     clip-path circle(40% at 50% 50%);
+//     background-color white
+
+//   &.familiar:before
+//     background conic-gradient(from 315deg, #bebebe 22.5%, #00a4ff, #27ff04, #ff7c00, #ff0000 77.5%)
+  
+//   &.a-little-used:before
+//     background conic-gradient(from 315deg, #bebebe 22.5%, #00a4ff, #27ff04, #ff7c00, white 77.5%)
+  

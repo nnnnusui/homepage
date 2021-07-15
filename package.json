@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "parcel src/index.pug --no-cache",
-    "build": "parcel build src/index.pug --public-url ./skillset"
+    "build": "parcel build src/index.pug --public-url ./"
   },
   "devDependencies": {
     "@parcel/transformer-pug": "^2.0.0-beta.2",

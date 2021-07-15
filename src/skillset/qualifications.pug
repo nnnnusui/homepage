@@ -1,0 +1,22 @@
+-
+  const qualifications = [
+    {date: "2019/06", text: "データベーススペシャリスト試験　合格"},
+    {date: "2018/06", text: "応用情報技術者試験　合格"},
+    {date: "2018/01", text: "情報検定　情報活用試験　２級　合格"},
+    {date: "2017/11", text: "基本情報技術者試験　合格"},
+    {date: "2017/10", text: "情報検定　情報システム試験　システムエンジニア認定　合格"},
+    {date: "2017/10", text: "情報検定　情報システム試験　プログラマ認定　合格"},
+    {date: "2017/07", text: "ITパスポート試験　合格"}
+  ]
+
+h1 所持資格
+table
+  thead
+    tr
+      th 年月
+      th 資格
+  tbody
+    each it in qualifications 
+      tr
+        td= it.date
+        td= it.text

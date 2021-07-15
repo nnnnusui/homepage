@@ -1,0 +1,28 @@
+name: Deploy skillset
+
+on: [push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - run: npm ci
+      - run: npm run build
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          name: deploy_key
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          config: |
+            Host deploy
+              HostName ${{ secrets.SSH_HOSTNAME }}
+              User ${{ secrets.SSH_USERNAME }}
+              IdentityFile ~/.ssh/deploy_key
+      - name: Run deploy script
+        run: rsync -acvz out/ deploy:${{ secrets.DEPLOY_TARGET }}/skillset

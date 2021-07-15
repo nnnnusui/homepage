@@ -25,4 +25,4 @@ jobs:
               User ${{ secrets.SSH_USERNAME }}
               IdentityFile ~/.ssh/deploy_key
       - name: Run deploy script
-        run: rsync -acvz out/ deploy:${{ secrets.DEPLOY_TARGET }}/skillset
+        run: rsync -acvz dist/ deploy:${{ secrets.DEPLOY_TARGET }}/skillset

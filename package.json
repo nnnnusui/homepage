@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "dev": "parcel src/index.pug --no-cache",
+    "build": "parcel build src/index.pug"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@parcel/transformer-pug": "^2.0.0-beta.2",
+    "@parcel/transformer-stylus": "^2.0.0-beta.2",
+    "parcel": "^2.0.0-beta.2"
+  }
+}

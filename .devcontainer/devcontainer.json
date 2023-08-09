@@ -1,0 +1,21 @@
+{
+	"name": "homepage",
+	"service": "workspace",
+	"workspaceFolder": "/work",
+	"dockerComposeFile": "docker-compose.yml",
+	"onCreateCommand": "pnpm install",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"SamKirkland.plop-templates",
+				"dbaeumer.vscode-eslint",
+				"sysoev.language-stylus",
+				"AntiAntiSepticeye.vscode-color-picker",
+				"eamodio.gitlens",
+				"GitHub.vscode-github-actions",
+				"ms-azuretools.vscode-docker"
+			]
+		}
+	},
+	"remoteUser": "node"
+}

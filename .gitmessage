@@ -1,0 +1,25 @@
+[branchname]
+#🐛: 
+# └ Fix a bug.
+#♻️: 
+# └ Refactor code.
+#🚧: 
+# └ Trial phase.
+#🧹: 
+# └ Remove unused things (ex: comments, memo, temporaries)
+#📏: 
+# └ Fix format of the code
+#📝: 
+# └ Add or update documentation
+#🛠️: 
+# └ Add or update development environment
+#🔥: 
+# └ Remove code or files
+#📁: 
+# └ Change directories structure
+#🗂: 
+# └ Edit path mappings
+#📦️: 
+# └ Add or update packages
+#👀: 
+# └ Merge pull request

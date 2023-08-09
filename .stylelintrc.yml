@@ -1,0 +1,4 @@
+extends:
+  - "stylelint-plugin-stylus/standard"
+rules:
+  number-leading-zero: never

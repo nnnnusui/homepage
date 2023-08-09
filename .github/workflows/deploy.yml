@@ -35,4 +35,4 @@ jobs:
               IdentityFile ~/.ssh/deploy_key
 
       - name: Run deploy script
-        run: rsync -e "ssh -o StrictHostKeyChecking=no" -acvz dist/public/ deploy:${{ secrets.DEPLOY_TARGET }}
+        run: rsync -e "ssh -o StrictHostKeyChecking=no" -acvz --delete dist/public/ deploy:${{ secrets.DEPLOY_TARGET }}

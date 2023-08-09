@@ -4,6 +4,7 @@ FROM node:${VARIANT}
 # Install apps
   RUN apk update
   RUN apk add git
+  RUN apk add bash
   RUN npm install -g pnpm
   RUN npm install -g plop
 

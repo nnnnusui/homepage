@@ -1,7 +1,7 @@
 import styles from "./index.module.styl";
-import { PageTitle } from "../components/PageTitle";
 
 import { PageInfo } from "@/components/_PageInfo";
+import { PageTitle } from "@/components/PageTitle";
 
 export default function Home() {
   return (

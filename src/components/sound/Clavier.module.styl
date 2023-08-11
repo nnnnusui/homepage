@@ -1,0 +1,25 @@
+.Clavier
+  content ''
+
+.Control
+  content ''
+  display flex
+
+.KeyBoard
+  content ''
+  display flex
+  flex-direction column
+  align-items center
+
+.Key
+  content ''
+  width 1.5em
+  aspect-ratio 1 / 1
+  text-align center
+  color var(--main-color)
+  background var(--base-color)
+  border solid 1px
+  border-radius 50%
+  &.OnPress
+    color var(--base-color)
+    background var(--main-color)

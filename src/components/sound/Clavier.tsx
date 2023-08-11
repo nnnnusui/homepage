@@ -1,8 +1,9 @@
+import clsx from "clsx";
 import { Component, For, createEffect, createSignal, onCleanup } from "solid-js";
 
 import { AudioVisualizer } from "./AudioVisualizer";
+import styles from "./Clavier.module.styl";
 
-import { useColors } from "@/fn/state/root/colors";
 import { useKeys } from "@/fn/state/root/keys";
 
 export const Clavier: Component = () => {
@@ -38,19 +39,10 @@ export const Clavier: Component = () => {
   const [keys, setKeys] = useKeys;
   return (
     <div
-      style={{
-        display: "flex",
-        "flex-direction": "column",
-        "justify-content": "center",
-        "align-items": "center",
-      }}
+      class={styles.Clavier}
     >
       <div
-        style={{
-          width: "100%",
-          display: "flex",
-          "align-items": "stretch",
-        }}
+        class={styles.Control}
       >
         <select
           value={waveType()}
@@ -71,11 +63,7 @@ export const Clavier: Component = () => {
         <AudioVisualizer analyser={analyser} />
       </div>
       <div
-        style={{
-          display: "flex",
-          "flex-direction": "column",
-          "align-items": "center",
-        }}
+        class={styles.KeyBoard}
       >
         <For each={keyMap}>{(keyLine, row) =>
           <div>
@@ -125,9 +113,9 @@ type Key = {
   oscillatorConnectTarget: AudioNode
 }
 const Key: Component<Key> = (props) => {
-  const [colors] = useColors;
   const [getOscillator, setOscillator] = createSignal<OscillatorNode>();
 
+  const onPress = () => props.onPress;
   const pitch = () => props.pitch;
   const waveType = () => props.waveType;
   const display = () => tones.at(pitch() % tones.length) ?? "";
@@ -136,7 +124,7 @@ const Key: Component<Key> = (props) => {
   const hertz = () => getHertz(pitch());
 
   createEffect(() => {
-    if(props.onPress) {
+    if(onPress()) {
       const oscillator = new OscillatorNode(audioContext(), {
         type: waveType(),
         frequency: hertz(),
@@ -151,25 +139,18 @@ const Key: Component<Key> = (props) => {
     }
   });
 
-  const mainColor = () => props.onPress ? colors.base : colors.main;
-  const baseColor = () => props.onPress ? colors.main : colors.base;
   return (
     <button
+      class={clsx(
+        styles.Key,
+        onPress() && styles.OnPress,
+      )}
       onPointerDown={(event) => {
         event.currentTarget.setPointerCapture(event.pointerId);
         props.setOnPress(true);
       }}
       onPointerUp={() => props.setOnPress(false)}
       onPointerCancel={() => props.setOnPress(false)}
-      style={{
-        width: "1.5em",
-        "aspect-ratio": "1 / 1",
-        "text-align": "center",
-        background: baseColor(),
-        color: mainColor(),
-        "border-radius": "50%",
-        border: "solid 1px",
-      }}
     >
       {display()}
     </button>

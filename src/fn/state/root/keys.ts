@@ -8,10 +8,7 @@ const createKeys = () => {
   const [store, setStore] = createStore<Keys>({ onPresses: {} });
 
   const onKeyDown: JSX.EventHandlerUnion<HTMLElement, KeyboardEvent>
-    = (event) => {
-      console.log("press");
-      setStore("onPresses", event.key, true);
-    };
+    = (event) => setStore("onPresses", event.key, true);
   const onKeyUp: JSX.EventHandlerUnion<HTMLElement, KeyboardEvent>
     = (event) => setStore("onPresses", event.key, false);
 

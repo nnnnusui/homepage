@@ -13,14 +13,20 @@ import {
 import "./root.styl";
 import _Head from "./_Head";
 
+import { useKeys } from "@/fn/state/root/keys";
+
 export default function Root() {
+  const [,,keyEvent] = useKeys;
 
   return (
     <Html lang="en">
       <Head>
         <_Head />
       </Head>
-      <Body>
+      <Body
+        onKeyDown={keyEvent.onKeyDown}
+        onKeyUp={keyEvent.onKeyUp}
+      >
         <Suspense>
           <ErrorBoundary>
             {/* <A href="/">Index</A> */}

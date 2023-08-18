@@ -91,7 +91,7 @@ const keyMap = [
   "zxcvbnm,./",
 ].map((it) => it.split(""));
 const tones = [
-  "C","C#","D","D#","E","F","F#","G","G#","A","A#","B",
+  "A","A#","B","C","C#","D","D#","E","F","F#","G","G#",
 ];
 const getHertz = (pitch: number) => {
   const reference = 440.0;

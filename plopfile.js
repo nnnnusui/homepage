@@ -1,11 +1,7 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const { globSync } = require("glob");
-const templateRoot = ".template";
-
-module.exports = (
+export default function (
   /** @type {import('plop').NodePlopAPI} */
   plop
-) => {
+) {
   plop.setGenerator("component", {
     description: "solidjs component",
     prompts: [
@@ -21,15 +17,13 @@ module.exports = (
         message: "Component name:",
       },
     ],
-    actions: (prompt) => {
-      const dest = `${prompt.destinationpath}/${prompt.name}`;
-      const src = `${templateRoot}/component`;
-      return globSync("**/*", { cwd: src })
-        .map((path) => ({
-          type: "add",
-          path: `${dest}/${path}`,
-          templateFile: `${src}/${path}`,
-        }));
-    },
+    actions: [
+      {
+        type: "addMany",
+        destination: "{{destinationpath}}",
+        base: ".template/components",
+        templateFiles: ".template/components/**/*.hbs",
+      },
+    ],
   });
-};
+}

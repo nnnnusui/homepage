@@ -4,4 +4,10 @@
     "source.fixAll.eslint": true,
   },
   "task.allowAutomaticTasks": "on",
+  "files.exclude": {
+    "**/.DS_Store": true,
+    ".pnpm-store": true,
+    ".solid": true,
+    "node_modules": true,
+  }
 }

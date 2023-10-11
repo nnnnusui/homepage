@@ -1,25 +1,28 @@
-[branchname]
-#🐛: 
+#:bug: 
 # └ Fix a bug.
-#♻️: 
+#:recycle: 
 # └ Refactor code.
-#🚧: 
+#:construction: 
 # └ Trial phase.
-#🧹: 
+#:broom: 
 # └ Remove unused things (ex: comments, memo, temporaries)
-#📏: 
+#:straight_ruler: 
 # └ Fix format of the code
-#📝: 
+#:memo: 
 # └ Add or update documentation
-#🛠️: 
+#:hammer_and_wrench: 
 # └ Add or update development environment
-#🔥: 
+#:octocat: 
+# └ Add or update github workflow
+#:fire: 
 # └ Remove code or files
-#📁: 
+#:file_folder: 
 # └ Change directories structure
-#🗂: 
+#:card_index_dividers: 
 # └ Edit path mappings
-#📦️: 
+#:package: 
 # └ Add or update packages
-#👀: 
+#:eyes: 
 # └ Merge pull request
+#:bookmark: 
+# └ New version

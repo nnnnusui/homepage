@@ -7,6 +7,11 @@
   "main": "index.html",
   "scripts": {
     "dev": "solid-start dev",
+    "test": "echo no impl",
+    "lint": "pnpm /^lint:.*/",
+    "lint:ts": "tsc --skipLibCheck",
+    "lint:eslint": "eslint src",
+    "lint:stylelint": "stylelint \"**/*.styl\"",
     "build": "solid-start build",
     "start": "solid-start start"
   },
@@ -33,7 +38,10 @@
     "solid-start-node": "^0.3.4",
     "solid-start-static": "^0.3.4",
     "stylelint": "^15.10.3",
+    "stylelint-config-recess-order": "^4.3.0",
+    "stylelint-declaration-block-no-ignored-properties": "^2.7.0",
     "stylelint-plugin-stylus": "^0.18.0",
+    "stylelint-stylistic": "^0.4.3",
     "stylus": "^0.59.0",
     "typescript": "^4.9.5",
     "vite": "^4.4.9",

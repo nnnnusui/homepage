@@ -3,10 +3,12 @@
 
 .Control
   content ''
+
   display flex
 
 .KeyBoard
   content ''
+
   display flex
   flex-direction column
   align-items center
@@ -15,11 +17,13 @@
   content ''
   width 1.5em
   aspect-ratio 1 / 1
-  text-align center
-  color var(--main-color)
+
   background var(--base-color)
-  border solid 1px
+  color var(--main-color)
   border-radius 50%
+  border solid 1px
+
+  text-align center
   &.OnPress
-    color var(--base-color)
     background var(--main-color)
+    color var(--base-color)

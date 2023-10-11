@@ -9,6 +9,7 @@
 			"extensions": [
 				"SamKirkland.plop-templates",
 				"dbaeumer.vscode-eslint",
+				"stylelint.vscode-stylelint",
 				"sysoev.language-stylus",
 				"AntiAntiSepticeye.vscode-color-picker",
 				"bierner.emojisense",

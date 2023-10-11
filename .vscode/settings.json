@@ -1,7 +1,9 @@
 {
   "eslint.format.enable": true,
+  "stylelint.validate": ["stylus"],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true,
+    "source.fixAll.stylelint": true,
   },
   "task.allowAutomaticTasks": "on",
   "files.exclude": {

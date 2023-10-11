@@ -11,3 +11,6 @@ FROM node:${VARIANT}
 # Build workspace
   ARG workspace
   WORKDIR "${workspace}"
+
+# Set environment
+  RUN git config --system commit.template "${workspace}/.gitmessage"

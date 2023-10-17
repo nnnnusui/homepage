@@ -1,8 +1,10 @@
 // unset ->
-*:not(input)
+:where(:not(input,
+[draggable]))
   all unset
 
   display revert
+
 a
   cursor pointer
 

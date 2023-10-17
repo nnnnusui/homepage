@@ -1,14 +1,16 @@
+import clsx from "clsx";
 import {
-  Component,
+  JSX,
 } from "solid-js";
 
 import styles from "./{{properCase name}}.module.styl";
 
-export const {{properCase name}}: Component = (props) => {
+export const {{properCase name}} = (
+): JSX.Element => {
 
   return (
     <div
-      class={ styles.{{properCase name}} }
+      class={clsx(styles.{{properCase name}})}
     >
       
     </div>

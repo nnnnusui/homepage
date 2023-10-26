@@ -1,0 +1,26 @@
+.ModeSelector
+  content ''
+
+  display flex
+  flex-direction column
+  gap .2em
+
+.ModeSelectOption
+  content ''
+
+  border dashed 1px transparent
+  &:focus-within
+    border-color currentColor
+
+.Selected
+  content ''
+
+  background-color white
+  color black
+  &:focus-within
+    border-color currentColor
+
+.RadioInput
+  content ''
+
+  display none

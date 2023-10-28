@@ -10,6 +10,7 @@ plugins:
   - "@typescript-eslint"
   - import
   - unused-imports
+  - eslint-plugin-no-relative-import-paths
   - solid
 extends:
   - eslint:recommended
@@ -49,7 +50,15 @@ rules:
           pattern: "@/components"
           group: internal
           position: before
+  import/first: warn
+  import/newline-after-import: warn
   unused-imports/no-unused-imports-ts: warn
+  no-relative-import-paths/no-relative-import-paths:
+    - warn
+    -
+      rootDir: "src"
+      prefix: "@"
+      allowSameFolder: true
 # <<
   "@typescript-eslint/no-empty-function": off
   "@typescript-eslint/no-namespace": off
@@ -62,7 +71,9 @@ rules:
   semi:
     - warn
     - always
-  indent:
+  "@typescript-eslint/member-delimiter-style": warn
+  indent: off
+  "@typescript-eslint/indent":
     - warn
     - 2
   comma-dangle:

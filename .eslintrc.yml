@@ -26,30 +26,29 @@ rules:
     - warn
     -
       groups:
-        - builtin
-        - external
-        - internal
         -
-          - parent
-          - sibling
-        - object
+          - builtin
+          - external
+        -
+          - object
+          - internal
+        - sibling
         - type
         - index
+      pathGroups:
+        -
+          pattern: "@/**"
+          group: internal
+          position: before
+        -
+          pattern: "~/**"
+          group: internal
+          position: before
       newlines-between: always
-      pathGroupsExcludedImportTypes:
-        - builtin
       alphabetize:
         order: asc
         caseInsensitive: true
-      pathGroups:
-        -
-          pattern: "@/page"
-          group: internal
-          position: before
-        -
-          pattern: "@/components"
-          group: internal
-          position: before
+      distinctGroup: false
   import/first: warn
   import/newline-after-import: warn
   unused-imports/no-unused-imports-ts: warn
@@ -76,6 +75,12 @@ rules:
   "@typescript-eslint/indent":
     - warn
     - 2
+  no-multiple-empty-lines: 
+    - warn
+    - 
+      max: 1
+      maxBOF: 0
+      maxEOF: 0
   comma-dangle:
     - warn
     - always-multiline

@@ -7,7 +7,7 @@
   "main": "index.html",
   "scripts": {
     "dev": "solid-start dev",
-    "test": "echo no impl",
+    "test": "vitest",
     "lint": "pnpm /^lint:.*/",
     "lint:ts": "tsc --skipLibCheck",
     "lint:eslint": "eslint src",
@@ -47,7 +47,8 @@
     "stylus": "^0.59.0",
     "typescript": "^4.9.5",
     "vite": "^4.4.11",
-    "vite-tsconfig-paths": "^4.2.1"
+    "vite-tsconfig-paths": "^4.2.1",
+    "vitest": "^0.34.6"
   },
   "homepage": "https://github.com/nnnnusui/homepage#readme",
   "bugs": {

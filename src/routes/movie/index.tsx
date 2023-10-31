@@ -3,6 +3,7 @@ import {
 } from "solid-js";
 
 import { PageInfo } from "@/components/_PageInfo";
+import { Timeline } from "@/components/movie/Timeline";
 import { WebGpuViewer } from "@/components/movie/WebGpuViewer";
 
 import styles from "./Movie.module.styl";
@@ -19,6 +20,7 @@ export const Movie = (
         description={"In production..."}
       />
       <WebGpuViewer />
+      <Timeline />
     </div>
   );
 };

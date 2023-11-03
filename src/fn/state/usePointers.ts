@@ -23,7 +23,6 @@ export const usePointers = (
             setPointers(pointers.length, pointer);
           };
           const onPointerMove = (event: HtmlEvent<PointerEvent>) => {
-            if (!event.currentTarget.hasPointerCapture(event.pointerId)) return;
             const pointer = getPointerFromEvent(event);
             setPointers((it) => it.pointerId === pointer.pointerId, pointer);
           };

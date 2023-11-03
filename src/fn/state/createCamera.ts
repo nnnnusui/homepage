@@ -1,4 +1,5 @@
 import {
+  JSX,
   Setter,
   createEffect,
   createSignal,
@@ -11,6 +12,8 @@ import { DeepPartial } from "@/type/DeepPartial";
 import { Camera } from "@/type/struct/Camera";
 import { Position } from "@/type/struct/Position";
 import { Size } from "@/type/struct/Size";
+
+import { usePointers } from "./usePointers";
 
 export const createCamera = (args?: {
   initState?: DeepPartial<Camera>;
@@ -139,6 +142,15 @@ export const createCamera = (args?: {
     return current;
   };
 
+  // scale and translate by pointers
+  const { set: setPointers } = usePointers((pointers) => {
+    const points = pointers.map((pointer) => ({
+      x: pointer.currentOffsetX,
+      y: pointer.currentOffsetY,
+    }));
+    setByPositions(points, true);
+  });
+
   return {
     get get() {
       return {
@@ -163,6 +175,25 @@ export const createCamera = (args?: {
         scale: setScale,
         byPositions: setByPositions,
         init: () => setState(initState),
+        getEventListeners: (args: {
+          scaleRatioOnWheel: Size;
+        }) => {
+          const onWheel: JSX.EventHandlerUnion<HTMLElement, WheelEvent>
+            = (event) => {
+              const targetRect = event.currentTarget.getBoundingClientRect();
+              const cursorOnScreen = {
+                x: event.clientX - targetRect.left,
+                y: event.clientY - targetRect.top,
+              };
+              const scalar = args.scaleRatioOnWheel;
+              const calculator = event.deltaY < 0 ? "/" : "*";
+              setScale((prev) => Calc[calculator](prev, scalar), { origin: cursorOnScreen });
+            };
+          return {
+            ...setPointers.getEventListeners(),
+            onWheel,
+          };
+        },
       };
     },
   };

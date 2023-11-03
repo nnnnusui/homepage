@@ -1,10 +1,12 @@
 import {
   Setter,
+  createEffect,
   createSignal,
 } from "solid-js";
 import { createStore } from "solid-js/store";
 
 import { Calc } from "@/fn/calc";
+import { merge } from "@/fn/merge";
 import { DeepPartial } from "@/type/DeepPartial";
 import { Camera } from "@/type/struct/Camera";
 import { Position } from "@/type/struct/Position";
@@ -12,6 +14,12 @@ import { Size } from "@/type/struct/Size";
 
 export const createCamera = (args?: {
   initState?: DeepPartial<Camera>;
+  bound?: {
+    translate?: {
+      min?: DeepPartial<Position>;
+      max?: DeepPartial<Position>;
+    };
+  };
 }) => {
   const initState = Camera.from(args?.initState ?? {});
   const [state, setState] = createStore(initState);
@@ -109,6 +117,15 @@ export const createCamera = (args?: {
           translate: nextTranslateRaw,
         };
       });
+
+  createEffect(() => {
+    const onDown = stateInAction();
+    if (onDown) return;
+    if (!args?.bound?.translate) return;
+    const min = merge(Position.from(Number.NEGATIVE_INFINITY), args?.bound?.translate?.min ?? {});
+    const max = merge(Position.from(Number.POSITIVE_INFINITY), args?.bound?.translate?.max ?? {});
+    setState("translate", (prev) => Calc.opposite(Calc.clamp(Calc.opposite(prev), min, max)));
+  });
 
   return {
     get get() {

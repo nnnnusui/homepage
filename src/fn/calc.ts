@@ -22,14 +22,19 @@ export const Calc = (() => {
   const minus = getCalc((lhs, rhs) => lhs - rhs);
   const times = getCalc((lhs, rhs) => lhs * rhs);
   const div = getCalc((lhs, rhs) => lhs / rhs);
+  const max = getCalc((lhs, rhs) => Math.max(lhs, rhs));
+  const min = getCalc((lhs, rhs) => Math.min(lhs, rhs));
   return {
     get: getCalc,
     "+": plus,
     "-": minus,
     "*": times,
     "/": div,
-    max: getCalc((lhs, rhs) => Math.max(lhs, rhs)),
-    min: getCalc((lhs, rhs) => Math.min(lhs, rhs)),
+    max,
+    min,
+    clamp: <
+      T extends CalcableObj
+    >(target: T, minVal: T, maxVal: T) => max(minVal, min(target, maxVal)),
     positiveDiff: getCalc((lhs, rhs) => Math.max(lhs, rhs) - Math.min(lhs, rhs)),
     opposite: <
       T extends CalcableObj

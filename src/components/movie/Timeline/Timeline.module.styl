@@ -14,13 +14,37 @@
     "bottom map" auto \
     / 1fr auto
 
+.Content
+  content ''
+  grid-area main
+
 .VerticalScroller
   content ''
   grid-area right
   width 4em
-  height 100%
 
   background-color rgba(160, 255, 255, .4)
+
+  display flex
+  flex-direction column
+
+  .ThumbContainer
+    content ''
+    height 100%
+
+  .BeforeThumb
+    content ''
+    height calc(100% * var(--camera-progress-y))
+
+  .Thumb
+    content ''
+    height calc(100% * var(--camera-ratio-y))
+
+    background-color rgba(160, 0, 255, .4)
+
+  .ThumbMargin
+    content ''
+    height calc(100% * var(--camera-ratio-y))
 
 .HorizontalScroller
   content ''
@@ -41,7 +65,6 @@
 .Layers
   content ''
   pointer-events none
-  grid-area main
   position absolute
   top calc(var(--camera-y) * 1px)
   left calc(var(--camera-x) * 1px)

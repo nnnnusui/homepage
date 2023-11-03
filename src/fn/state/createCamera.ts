@@ -118,6 +118,7 @@ export const createCamera = (args?: {
         };
       });
 
+  // translate bound.
   createEffect(() => {
     const onDown = stateInAction();
     if (onDown) return;
@@ -127,6 +128,17 @@ export const createCamera = (args?: {
     setState("translate", (prev) => Calc.opposite(Calc.clamp(Calc.opposite(prev), min, max)));
   });
 
+  const range = (): Position => {
+    const min = merge(Position.from(Number.NEGATIVE_INFINITY), args?.bound?.translate?.min ?? {});
+    const max = merge(Position.from(Number.POSITIVE_INFINITY), args?.bound?.translate?.max ?? {});
+    const range = Calc["-"](max, min);
+    return range;
+  };
+  const progress = (): Position => {
+    const current = Calc["/"](position(), range());
+    return current;
+  };
+
   return {
     get get() {
       return {
@@ -134,6 +146,8 @@ export const createCamera = (args?: {
         get scale() { return state.scale; },
         get translate() { return state.translate; },
         get position() { return position(); },
+        get range() { return range(); },
+        get progress() { return progress(); },
         get inAction() { return inAction(); },
         absAtFromAtCamera: (atCamera: Position) =>  {
           const atScaled = Calc["+"](position(), atCamera);

@@ -1,33 +1,15 @@
 import {
-  JSX,
   createEffect,
 } from "solid-js";
 import { createStore } from "solid-js/store";
 
-type EventHandler = JSX.EventHandler<HTMLElement, PointerEvent>
-type EventHandlerArg = Parameters<EventHandler>[0]
-type Pointer = {
-  raw: EventHandlerArg;
-  pointerId: number;
-  currentOffsetX: number;
-  currentOffsetY: number;
-}
-type Pointers = Pointer[];
-export const usePointers = (
-  effect: (pointers: Pointers) => void
-) => {
-  const [pointers, setPointers] = createStore<Pointers>([]);
-  createEffect(() => effect(pointers));
+import { HtmlEvent } from "@/type/HtmlEvent";
 
-  const getPointerFromEvent = (event: EventHandlerArg): Pointer => {
-    const targetRect = event.currentTarget.getBoundingClientRect();
-    return {
-      raw: event,
-      pointerId: event.pointerId,
-      currentOffsetX: event.clientX - targetRect.left,
-      currentOffsetY: event.clientY - targetRect.top,
-    };
-  };
+export const usePointers = (
+  effect: (pointers: Pointer[]) => void
+) => {
+  const [pointers, setPointers] = createStore<Pointer[]>([]);
+  createEffect(() => effect(pointers));
 
   return {
     get get() { return pointers; },
@@ -35,27 +17,20 @@ export const usePointers = (
       return {
         state: setPointers,
         getEventListeners: () => {
-          const onPointerDown: EventHandler
-            = (event) => {
-              event.currentTarget.setPointerCapture(event.pointerId);
-              const pointer = getPointerFromEvent(event);
-              setPointers(pointers.length, pointer);
-            };
-          const onPointerMove: EventHandler
-            = (event) => {
-              const pointer = getPointerFromEvent(event);
-              setPointers((prev) => prev.map((it) =>
-                it.pointerId === pointer.pointerId
-                  ? pointer
-                  : it
-              ));
-            };
-          const onPointerUp: EventHandler
-            = (event) => {
-              setPointers((prev) => prev.filter((it) =>
-                it.pointerId !== event.pointerId,
-              ));
-            };
+          const onPointerDown = (event: HtmlEvent<PointerEvent>) => {
+            event.currentTarget.setPointerCapture(event.pointerId);
+            const pointer = getPointerFromEvent(event);
+            setPointers(pointers.length, pointer);
+          };
+          const onPointerMove = (event: HtmlEvent<PointerEvent>) => {
+            const pointer = getPointerFromEvent(event);
+            setPointers((it) => it.pointerId === pointer.pointerId, pointer);
+          };
+          const onPointerUp = (event: HtmlEvent<PointerEvent>) => {
+            setPointers((prev) => prev.filter((it) =>
+              it.pointerId !== event.pointerId,
+            ));
+          };
           return {
             onPointerDown,
             onPointerMove,
@@ -66,5 +41,22 @@ export const usePointers = (
         },
       };
     },
+  };
+};
+
+type Pointer = {
+  raw: HtmlEvent<PointerEvent>;
+  pointerId: number;
+  currentOffsetX: number;
+  currentOffsetY: number;
+}
+
+const getPointerFromEvent = (event: HtmlEvent<PointerEvent>): Pointer => {
+  const targetRect = event.currentTarget.getBoundingClientRect();
+  return {
+    raw: event,
+    pointerId: event.pointerId,
+    currentOffsetX: event.clientX - targetRect.left,
+    currentOffsetY: event.clientY - targetRect.top,
   };
 };

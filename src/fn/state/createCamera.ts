@@ -1,5 +1,4 @@
 import {
-  JSX,
   Setter,
   createSignal,
 } from "solid-js";
@@ -11,9 +10,7 @@ import { Camera } from "@/type/struct/Camera";
 import { Position } from "@/type/struct/Position";
 import { Size } from "@/type/struct/Size";
 
-import { usePointers } from "./usePointers";
-
-export const useCamera = (args?: {
+export const createCamera = (args?: {
   initState?: DeepPartial<Camera>;
 }) => {
   const initState = Camera.from(args?.initState ?? {});
@@ -54,8 +51,12 @@ export const useCamera = (args?: {
     points: Position[],
     keepRatio = false,
   ) => {
+    if (points.length === 0) {
+      setStateInAction();
+      return;
+    }
     const onDown = stateInAction();
-    if (!onDown || onDown.pointsCount !== points.length) {
+    if (onDown?.pointsCount !== points.length) {
       const sumMax = points.reduce((max, it) => Calc.max(max, it), Position.init());
       const distance = Calc.positiveDiff(
         sumMax,
@@ -109,15 +110,6 @@ export const useCamera = (args?: {
         };
       });
 
-  // scale and translate by pointers
-  const { set: setPointers } = usePointers((pointers) => {
-    const points = pointers.map((pointer) => ({
-      x: pointer.currentOffsetX,
-      y: pointer.currentOffsetY,
-    }));
-    setByPositions(points, true);
-  });
-
   return {
     get get() {
       return {
@@ -140,25 +132,6 @@ export const useCamera = (args?: {
         scale: setScale,
         byPositions: setByPositions,
         init: () => setState(initState),
-        getEventListeners: (args: {
-          scaleRatioOnWheel: Size;
-        }) => {
-          const onWheel: JSX.EventHandlerUnion<HTMLElement, WheelEvent>
-            = (event) => {
-              const targetRect = event.currentTarget.getBoundingClientRect();
-              const cursorOnScreen = {
-                x: event.clientX - targetRect.left,
-                y: event.clientY - targetRect.top,
-              };
-              const scalar = args.scaleRatioOnWheel;
-              const calculator = event.deltaY < 0 ? "/" : "*";
-              setScale((prev) => Calc[calculator](prev, scalar), { origin: cursorOnScreen });
-            };
-          return {
-            ...setPointers.getEventListeners(),
-            onWheel,
-          };
-        },
       };
     },
   };

@@ -15,8 +15,21 @@
     / 1fr auto
 
 .Content
+  --cell-size-x 128px
+  --cell-size-y 128px
+  --grid-color #808080
   content ''
   grid-area main
+
+  background-image \
+    repeating-linear-gradient(var(--grid-color) 0 1px, transparent 1px 100%),
+    repeating-linear-gradient(90deg, var(--grid-color) 0 1px, transparent 1px 100%)
+  background-size \
+    calc(var(--cell-size-x) * var(--camera-width)) \
+    calc(var(--cell-size-y) * var(--camera-height))
+  background-position \
+    calc(1px * var(--camera-x)) \
+    calc(1px * var(--camera-y))
 
 .VerticalScroller
   content ''
@@ -25,31 +38,9 @@
 
   background-color rgba(160, 255, 255, .4)
 
-  display flex
-  flex-direction column
-
-  .ThumbContainer
-    content ''
-    height 100%
-
-  .BeforeThumb
-    content ''
-    height calc(100% * var(--camera-progress-y))
-
-  .Thumb
-    content ''
-    height calc(100% * var(--camera-ratio-y))
-
-    background-color rgba(160, 0, 255, .4)
-
-  .ThumbMargin
-    content ''
-    height calc(100% * var(--camera-ratio-y))
-
 .HorizontalScroller
   content ''
   grid-area bottom
-  width 100%
   height 4em
 
   background-color rgba(255, 160, 255, .4)

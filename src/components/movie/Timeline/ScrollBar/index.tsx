@@ -14,7 +14,7 @@ import styles from "./ScrollBar.module.styl";
 
 export const ScrollBar = (p: {
   class: string;
-  direction: "vertical" | "horizontal";
+  direction: "vertical" | "horizontal" | "map";
   camera: ReturnType<typeof createCamera>;
   cameraSize: Size;
 }): JSX.Element => {
@@ -31,10 +31,17 @@ export const ScrollBar = (p: {
     offsetInThumb: Position;
   }>();
   const setCameraByRatio = (ratio: Size) => {
-    if (p.direction === "horizontal") {
-      p.camera.set.state("translate", "x", p.camera.get.range.x * (-1 * ratio.width));
-    } else {
-      p.camera.set.state("translate", "y", p.camera.get.range.y * (-1 * ratio.height));
+    const next = Calc["*"](p.camera.get.range, Size.toPosition(Calc.opposite(ratio)));
+    switch (p.direction) {
+      case "vertical":
+        p.camera.set.state("translate", "y", next.y);
+        break;
+      case "horizontal":
+        p.camera.set.state("translate", "x", next.x);
+        break;
+      case "map":
+        p.camera.set.state("translate", next);
+        break;
     }
   };
 
@@ -44,6 +51,7 @@ export const ScrollBar = (p: {
         styles.ScrollBar,
         p.direction === "vertical" && styles.Vertical,
         p.direction === "horizontal" && styles.Horizontal,
+        p.direction === "map" && styles.Map,
         p.class,
       )}
       style={{
@@ -51,6 +59,7 @@ export const ScrollBar = (p: {
         "--camera-ratio-y": cameraRatio().height,
         "--camera-progress-x": camera().progress.x,
         "--camera-progress-y": camera().progress.y,
+        "--thumb-size-height": thumbSize().height,
       }}
       onPointerDown={(event) => {
         event.currentTarget.setPointerCapture(event.pointerId);
@@ -72,25 +81,18 @@ export const ScrollBar = (p: {
       }}
     >
       <div
-        class={styles.ThumbContainer}
-      >
-        <div
-          class={styles.Thumb}
-          ref={setThumbRef}
-          onPointerDown={(event) => {
-            const targetRect = event.currentTarget.getBoundingClientRect();
-            const offset = {
-              x: event.clientX - targetRect.left,
-              y: event.clientY - targetRect.top,
-            };
-            setInAction({
-              offsetInThumb: offset,
-            });
-          }}
-        />
-      </div>
-      <div
-        class={styles.ThumbMargin}
+        class={styles.Thumb}
+        ref={setThumbRef}
+        onPointerDown={(event) => {
+          const targetRect = event.currentTarget.getBoundingClientRect();
+          const offset = {
+            x: event.clientX - targetRect.left,
+            y: event.clientY - targetRect.top,
+          };
+          setInAction({
+            offsetInThumb: offset,
+          });
+        }}
       />
     </div>
   );

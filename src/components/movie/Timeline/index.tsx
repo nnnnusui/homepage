@@ -85,7 +85,12 @@ export const Timeline = (p: {
         camera={camera}
         cameraSize={cameraSize()}
       />
-      <div class={styles.MiniMap} />
+      <ScrollBar
+        class={styles.MiniMap}
+        direction="map"
+        camera={camera}
+        cameraSize={cameraSize()}
+      />
     </div>
   );
 };

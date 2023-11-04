@@ -1,23 +1,10 @@
 .ScrollBar
-  --size 4em
-  content ''
-
-  display flex
-
-  &.Vertical
-    height 100%
-    flex-direction column
-  &.Horizontal
-    width 100%
-    flex-direction row
-
-.ThumbContainer
   content ''
   position relative
-  width 100%
-  height 100%
 
 .Thumb
+  --max-y calc(100% - (100% * var(--camera-ratio-y)))
+  --max-x calc(100% - (100% * var(--camera-ratio-x)))
   content ''
   position absolute
   top 0
@@ -27,18 +14,11 @@
 
   background-color rgba(160, 0, 255, .4)
 
+  .Map &
   .Vertical &
-    top clamp(0%, calc(100% * var(--camera-progress-y)), 100%)
+    top clamp(0%, calc(var(--max-y) * var(--camera-progress-y)), var(--max-y))
     height calc(100% * var(--camera-ratio-y))
+  .Map &
   .Horizontal &
-    left clamp(0%, calc(100% * var(--camera-progress-x)), 100%)
-    width calc(100% * var(--camera-ratio-x))
-
-.ThumbMargin
-  content ''
-  width 100%
-  height 100%
-  .Vertical &
-    height calc(100% * var(--camera-ratio-y))
-  .Horizontal &
+    left clamp(0%, calc(var(--max-x) * var(--camera-progress-x)), var(--max-x))
     width calc(100% * var(--camera-ratio-x))

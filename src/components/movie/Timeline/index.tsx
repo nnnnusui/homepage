@@ -6,11 +6,11 @@ import {
   createSignal,
 } from "solid-js";
 
+import { MiniMap } from "@/components/ui/MiniMap";
 import { createCamera } from "@/fn/state/createCamera";
 import { Position } from "@/type/struct/Position";
 import { Size } from "@/type/struct/Size";
 
-import { ScrollBar } from "./ScrollBar";
 import styles from "./Timeline.module.styl";
 
 export const Timeline = (p: {
@@ -73,19 +73,19 @@ export const Timeline = (p: {
           )}</For>
         </div>
       </div>
-      <ScrollBar
+      <MiniMap
         class={styles.VerticalScroller}
         direction="vertical"
         camera={camera}
         cameraSize={cameraSize()}
       />
-      <ScrollBar
+      <MiniMap
         class={styles.HorizontalScroller}
         direction="horizontal"
         camera={camera}
         cameraSize={cameraSize()}
       />
-      <ScrollBar
+      <MiniMap
         class={styles.MiniMap}
         direction="map"
         camera={camera}

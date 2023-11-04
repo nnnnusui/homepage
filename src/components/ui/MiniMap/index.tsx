@@ -1,7 +1,8 @@
 import { createElementSize } from "@solid-primitives/resize-observer";
 import clsx from "clsx";
 import {
-  JSX, createSignal,
+  JSX,
+  createSignal,
 } from "solid-js";
 
 import { Calc } from "@/fn/calc";
@@ -10,9 +11,9 @@ import { HtmlEvent } from "@/type/HtmlEvent";
 import { Position } from "@/type/struct/Position";
 import { Size } from "@/type/struct/Size";
 
-import styles from "./ScrollBar.module.styl";
+import styles from "./MiniMap.module.styl";
 
-export const ScrollBar = (p: {
+export const MiniMap = (p: {
   class: string;
   direction: "vertical" | "horizontal" | "map";
   camera: ReturnType<typeof createCamera>;
@@ -48,7 +49,7 @@ export const ScrollBar = (p: {
   return (
     <div
       class={clsx(
-        styles.ScrollBar,
+        styles.MiniMap,
         p.direction === "vertical" && styles.Vertical,
         p.direction === "horizontal" && styles.Horizontal,
         p.direction === "map" && styles.Map,

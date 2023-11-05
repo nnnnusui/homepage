@@ -41,8 +41,8 @@ export const Timeline = (p: {
       style={{
         "--camera-x": camera.get.scaledTranslate.x,
         "--camera-y": camera.get.scaledTranslate.y,
-        "--scale-width": camera.get.scale.width,
-        "--scale-height": camera.get.scale.height,
+        "--camera-scale-width": camera.get.scale.width,
+        "--camera-scale-height": camera.get.scale.height,
       }}
     >
       <div

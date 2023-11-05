@@ -34,7 +34,7 @@ export const Calc = (() => {
     min,
     clamp: <
       T extends CalcableObj
-    >(target: T, minVal: T, maxVal: T) => max(minVal, min(target, maxVal)),
+    >(minVal: T, target: T, maxVal: T) => max(minVal, min(target, maxVal)),
     positiveDiff: getCalc((lhs, rhs) => Math.max(lhs, rhs) - Math.min(lhs, rhs)),
     opposite: <
       T extends CalcableObj

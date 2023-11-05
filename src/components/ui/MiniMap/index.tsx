@@ -19,7 +19,8 @@ export const MiniMap = (p: {
   camera: ReturnType<typeof createCamera>;
   cameraSize: Size;
 }): JSX.Element => {
-  const cameraRatio = () => Calc["/"](p.cameraSize, Size.fromPosition(p.camera.get.range));
+  const cameraSize = () => Calc["/"](p.cameraSize, p.camera.get.scale);
+  const cameraRatio = () => Calc["/"](cameraSize(), Size.fromPosition(p.camera.get.range));
   const [getThumbRef, setThumbRef] = createSignal<HTMLDivElement>();
   const thumbSizeRaw = createElementSize(getThumbRef);
   const thumbSize = () => Size.from({

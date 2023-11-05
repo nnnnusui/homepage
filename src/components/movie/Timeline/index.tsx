@@ -8,7 +8,6 @@ import {
 
 import { MiniMap } from "@/components/ui/MiniMap";
 import { createCamera } from "@/fn/state/createCamera";
-import { usePointers } from "@/fn/state/usePointers";
 import { Position } from "@/type/struct/Position";
 import { Size } from "@/type/struct/Size";
 
@@ -19,20 +18,15 @@ export const Timeline = (p: {
 }): JSX.Element => {
   const camera = createCamera({
     bound: {
-      position: {
-        min: Position.init(),
-        max: Position.from(5000),
+      upper: {
+        position: Position.from(1000),
+      },
+      lower: {
+        position: Position.init(),
       },
     },
   });
   const layers = () => (Array.from(Array(100).keys()));
-  const { set: setPointers } = usePointers((pointers) => {
-    const points = pointers.map((pointer) => ({
-      x: pointer.currentOffsetX,
-      y: pointer.currentOffsetY,
-    }));
-    camera.set.byPositions(points, true);
-  });
 
   const [getCameraRef, setCameraRef] = createSignal<HTMLDivElement>();
   const cameraSizeRaw = createElementSize(getCameraRef);
@@ -45,16 +39,18 @@ export const Timeline = (p: {
     <div
       class={clsx(styles.Timeline, p.class)}
       style={{
-        "--camera-x": camera.get.translate.x,
-        "--camera-y": camera.get.translate.y,
-        "--camera-width": camera.get.scale.width,
-        "--camera-height": camera.get.scale.height,
+        "--camera-x": camera.get.scaledTranslate.x,
+        "--camera-y": camera.get.scaledTranslate.y,
+        "--scale-width": camera.get.scale.width,
+        "--scale-height": camera.get.scale.height,
       }}
     >
       <div
         class={styles.Content}
         ref={setCameraRef}
-        {...setPointers.getEventListeners()}
+        {...camera.set.getEventListeners({
+          scaleRatioOnWheel: Size.from(1.1),
+        })}
       >
         <section
           style={{

@@ -40,12 +40,14 @@ export const Position = (() => {
       prevScale: Size;
       nextScale: Size;
     }) => {
-      const cameraAtAbsScaled = p.prev;
+      const cameraAtAbs = p.prev;
+      const cameraAtAbsScaled = Calc["*"](cameraAtAbs, Position.fromSize(p.prevScale));
       const cursorAtAbsScaled = Calc["+"](cameraAtAbsScaled, p.prevOrigin);
       const cursorAtAbs = Calc["/"](cursorAtAbsScaled, Position.fromSize(p.prevScale));
       const cursorAtAbsNextScaled = Calc["*"](cursorAtAbs, Position.fromSize(p.nextScale));
-      const screenAtAbsNextScaled = Calc["-"](cursorAtAbsNextScaled, p.nextOrigin);
-      return screenAtAbsNextScaled;
+      const cameraAtAbsNextScaled = Calc["-"](cursorAtAbsNextScaled, p.nextOrigin);
+      const cameraAtAbsNext = Calc["/"](cameraAtAbsNextScaled, Position.fromSize(p.nextScale));
+      return cameraAtAbsNext;
     },
   };
 })();

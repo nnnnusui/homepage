@@ -1,6 +1,5 @@
 import {
   JSX,
-  createEffect,
   createSignal,
 } from "solid-js";
 import { createStore } from "solid-js/store";
@@ -18,15 +17,18 @@ import { usePointers } from "./usePointers";
 export const createCamera = (args?: {
   initState?: DeepPartial<Camera>;
   bound?: {
-    position?: {
-      min?: DeepPartial<Position>;
-      max?: DeepPartial<Position>;
-    };
+    upper?: DeepPartial<Camera>;
+    lower?: DeepPartial<Camera>;
   };
 }) => {
-  const initState = Camera.from(args?.initState ?? {});
-  const [state, setState] = createStore(initState);
+  const initState = () => Camera.from(args?.initState ?? {});
+  const min = () => merge(Position.from(Number.NEGATIVE_INFINITY), args?.bound?.lower?.position ?? {});
+  const max = () => merge(Position.from(Number.POSITIVE_INFINITY), args?.bound?.upper?.position ?? {});
+  const range = () => Calc["-"](max(), min());
+
+  const [state, setState] = createStore(initState());
   const translate = () => Calc.opposite(state.position);
+  const progress = () => Calc["/"](state.position, range());
 
   const setScale = (
     setter: Size | ((prev: Size) => Size),
@@ -58,7 +60,7 @@ export const createCamera = (args?: {
       })();
       return {
         scale: nextScale,
-        position: nextPosition,
+        position: Calc.clamp(min(), nextPosition, max()),
       };
     });
   };
@@ -122,27 +124,6 @@ export const createCamera = (args?: {
     }
   };
 
-  // translate bound.
-  createEffect(() => {
-    const onDown = stateInAction();
-    if (onDown) return;
-    if (!args?.bound?.position) return;
-    const min = merge(Position.from(Number.NEGATIVE_INFINITY), args?.bound?.position?.min ?? {});
-    const max = merge(Position.from(Number.POSITIVE_INFINITY), args?.bound?.position?.max ?? {});
-    setState("position", (prev) => Calc.clamp(prev, min, max));
-  });
-
-  const range = (): Position => {
-    const min = merge(Position.from(Number.NEGATIVE_INFINITY), args?.bound?.position?.min ?? {});
-    const max = merge(Position.from(Number.POSITIVE_INFINITY), args?.bound?.position?.max ?? {});
-    const range = Calc["-"](max, min);
-    return range;
-  };
-  const progress = (): Position => {
-    const current = Calc["/"](state.position, range());
-    return current;
-  };
-
   // scale and translate by pointers
   const { set: setPointers } = usePointers((pointers) => {
     const points = pointers.map((pointer) => ({
@@ -159,6 +140,7 @@ export const createCamera = (args?: {
         get scale() { return state.scale; },
         get position() { return state.position; },
         get translate() { return translate(); },
+        get scaledTranslate() { return Calc["*"](translate(), Position.fromSize(state.scale)); },
         get range() { return range(); },
         get progress() { return progress(); },
         get inAction() { return inAction(); },
@@ -175,9 +157,9 @@ export const createCamera = (args?: {
         scale: (next: DeepPartial<Size>) =>
           toPartial(setState)("scale")((prev) => merge(prev, next)),
         position: (next: DeepPartial<Position>) =>
-          toPartial(setState)("position")((prev) => merge(prev, next)),
+          toPartial(setState)("position")((prev) => Calc.clamp(min(), merge(prev, next), max())),
         translate: (next: DeepPartial<Position>) =>
-          toPartial(setState)("position")((prev) => merge(prev, Calc.opposite(next))),
+          toPartial(setState)("position")((prev) => Calc.clamp(min(), merge(prev, Calc.opposite(next)), max())),
         byPositions: setByPositions,
         init: () => setState(initState),
         getEventListeners: (args: {

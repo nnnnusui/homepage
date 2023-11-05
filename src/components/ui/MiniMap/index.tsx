@@ -19,8 +19,7 @@ export const MiniMap = (p: {
   camera: ReturnType<typeof createCamera>;
   cameraSize: Size;
 }): JSX.Element => {
-  const camera = () => p.camera.get;
-  const cameraRatio = () => Calc["/"](p.cameraSize, Size.fromPosition(camera().range));
+  const cameraRatio = () => Calc["/"](p.cameraSize, Size.fromPosition(p.camera.get.range));
   const [getThumbRef, setThumbRef] = createSignal<HTMLDivElement>();
   const thumbSizeRaw = createElementSize(getThumbRef);
   const thumbSize = () => Size.from({
@@ -32,16 +31,16 @@ export const MiniMap = (p: {
     offsetInThumb: Position;
   }>();
   const setCameraByRatio = (ratio: Size) => {
-    const next = Calc["*"](p.camera.get.range, Size.toPosition(Calc.opposite(ratio)));
+    const next = Calc["*"](p.camera.get.range, Position.fromSize(Calc.opposite(ratio)));
     switch (p.direction) {
       case "vertical":
-        p.camera.set.state("translate", "y", next.y);
+        p.camera.set.translate({ y: next.y });
         break;
       case "horizontal":
-        p.camera.set.state("translate", "x", next.x);
+        p.camera.set.translate({ x: next.x });
         break;
       case "map":
-        p.camera.set.state("translate", next);
+        p.camera.set.translate(next);
         break;
     }
   };
@@ -58,14 +57,14 @@ export const MiniMap = (p: {
       style={{
         "--camera-ratio-x": cameraRatio().width,
         "--camera-ratio-y": cameraRatio().height,
-        "--camera-progress-x": camera().progress.x,
-        "--camera-progress-y": camera().progress.y,
+        "--camera-progress-x": p.camera.get.progress.x,
+        "--camera-progress-y": p.camera.get.progress.y,
         "--thumb-size-height": thumbSize().height,
       }}
       onPointerDown={(event) => {
         event.currentTarget.setPointerCapture(event.pointerId);
         if (getInAction()) return;
-        const offsetInThumb = Calc["/"](Size.toPosition(thumbSize()), 2);
+        const offsetInThumb = Calc["/"](Position.fromSize(thumbSize()), 2);
         const ratio = getScrollRatio(event, thumbSize(), offsetInThumb);
         setInAction({ offsetInThumb });
         setCameraByRatio(ratio);

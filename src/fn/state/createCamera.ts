@@ -1,6 +1,5 @@
 import {
   JSX,
-  Setter,
   createEffect,
   createSignal,
 } from "solid-js";
@@ -8,6 +7,7 @@ import { createStore } from "solid-js/store";
 
 import { Calc } from "@/fn/calc";
 import { merge } from "@/fn/merge";
+import { toPartial } from "@/fn/toPartial";
 import { DeepPartial } from "@/type/DeepPartial";
 import { Camera } from "@/type/struct/Camera";
 import { Position } from "@/type/struct/Position";
@@ -18,7 +18,7 @@ import { usePointers } from "./usePointers";
 export const createCamera = (args?: {
   initState?: DeepPartial<Camera>;
   bound?: {
-    translate?: {
+    position?: {
       min?: DeepPartial<Position>;
       max?: DeepPartial<Position>;
     };
@@ -26,37 +26,49 @@ export const createCamera = (args?: {
 }) => {
   const initState = Camera.from(args?.initState ?? {});
   const [state, setState] = createStore(initState);
-  const position = () => Calc.opposite(state.translate);
+  const translate = () => Calc.opposite(state.position);
 
-  const setScale: SetScale = (setter, options) => {
+  const setScale = (
+    setter: Size | ((prev: Size) => Size),
+    options?: {
+      origin: Position;
+      nextOrigin?: Position;
+      prev?: Camera;
+    }
+  ) => {
     setState((prev) => {
-      const prevScale = options?.prevScale ?? prev.scale;
+      const prevScale = options?.prev?.scale ?? prev.scale;
       const nextScaleRaw = typeof setter === "function" ? setter(prevScale) : setter;
       const nextScale = Calc.orElse((it) => isFinite(it) && 0 < it)(nextScaleRaw, prevScale);
-      const nextTranslate = (() => {
+      const prevPosition = options?.prev?.position ?? prev.position;
+      const nextPosition = (() => {
         if (options){
           const origin = options.origin;
           const nextOrigin = options.nextOrigin ?? origin;
-          const prevTranslate = options.prevTranslate ?? prev.translate;
-          return getScaledTranslate({
-            prevOriginOnScreen: origin,
-            nextOriginOnScreen: nextOrigin,
-            prevTranslate: prevTranslate,
+          return Position.scaled({
+            prev: prevPosition,
+            prevOrigin: origin,
+            nextOrigin: nextOrigin,
             prevScale: prevScale,
             nextScale: nextScale,
           });
         } else {
-          return prev.translate;
+          return prevPosition;
         }
       })();
       return {
         scale: nextScale,
-        translate: nextTranslate,
+        position: nextPosition,
       };
     });
   };
 
-  const [stateInAction, setStateInAction] = createSignal<StateInAction>();
+  const [stateInAction, setStateInAction] = createSignal<{
+    pointsCount: number;
+    distance: Size;
+    origin: Position;
+    camera: Camera;
+  }>();
   const inAction = () => stateInAction()?.pointsCount !== 0 ?? false;
   const setByPositions = (
     points: Position[],
@@ -79,10 +91,9 @@ export const createCamera = (args?: {
       );
       setStateInAction(() => ({
         pointsCount: points.length,
-        scale: state.scale,
-        translate: state.translate,
         origin: origin,
         distance: Size.fromPosition(distance),
+        camera: { ...state },
       }));
     } else {
       if (points.length === 0) return;
@@ -102,43 +113,33 @@ export const createCamera = (args?: {
           = keepRatio
             ? Math.max(scaleScalarRaw.width, scaleScalarRaw.height)
             : scaleScalarRaw;
-      const nextScale = Calc["*"](onDown.scale, scaleScalar);
+      const nextScale = Calc["*"](onDown.camera.scale, scaleScalar);
       setScale(nextScale, {
         origin: onDown.origin,
         nextOrigin: current.origin,
-        prevScale: onDown.scale,
-        prevTranslate: onDown.translate,
+        prev: onDown.camera,
       });
     }
   };
-  const setTranslate: Setter<Translate>
-    = (setter) =>
-      setState((prev) => {
-        const nextTranslateRaw = typeof setter === "function" ? setter(prev.translate) : setter;
-        return {
-          ...prev,
-          translate: nextTranslateRaw,
-        };
-      });
 
   // translate bound.
   createEffect(() => {
     const onDown = stateInAction();
     if (onDown) return;
-    if (!args?.bound?.translate) return;
-    const min = merge(Position.from(Number.NEGATIVE_INFINITY), args?.bound?.translate?.min ?? {});
-    const max = merge(Position.from(Number.POSITIVE_INFINITY), args?.bound?.translate?.max ?? {});
-    setState("translate", (prev) => Calc.opposite(Calc.clamp(Calc.opposite(prev), min, max)));
+    if (!args?.bound?.position) return;
+    const min = merge(Position.from(Number.NEGATIVE_INFINITY), args?.bound?.position?.min ?? {});
+    const max = merge(Position.from(Number.POSITIVE_INFINITY), args?.bound?.position?.max ?? {});
+    setState("position", (prev) => Calc.clamp(prev, min, max));
   });
 
   const range = (): Position => {
-    const min = merge(Position.from(Number.NEGATIVE_INFINITY), args?.bound?.translate?.min ?? {});
-    const max = merge(Position.from(Number.POSITIVE_INFINITY), args?.bound?.translate?.max ?? {});
+    const min = merge(Position.from(Number.NEGATIVE_INFINITY), args?.bound?.position?.min ?? {});
+    const max = merge(Position.from(Number.POSITIVE_INFINITY), args?.bound?.position?.max ?? {});
     const range = Calc["-"](max, min);
     return range;
   };
   const progress = (): Position => {
-    const current = Calc["/"](position(), range());
+    const current = Calc["/"](state.position, range());
     return current;
   };
 
@@ -156,14 +157,14 @@ export const createCamera = (args?: {
       return {
         get state() { return state; },
         get scale() { return state.scale; },
-        get translate() { return state.translate; },
-        get position() { return position(); },
+        get position() { return state.position; },
+        get translate() { return translate(); },
         get range() { return range(); },
         get progress() { return progress(); },
         get inAction() { return inAction(); },
         absAtFromAtCamera: (atCamera: Position) =>  {
-          const atScaled = Calc["+"](position(), atCamera);
-          const absAt = Calc["/"](atScaled, Size.toPosition(state.scale));
+          const atScaled = Calc["+"](state.position, atCamera);
+          const absAt = Calc["/"](atScaled, Position.fromSize(state.scale));
           return absAt;
         },
       };
@@ -171,8 +172,12 @@ export const createCamera = (args?: {
     get set() {
       return {
         state: setState,
-        translate: setTranslate,
-        scale: setScale,
+        scale: (next: DeepPartial<Size>) =>
+          toPartial(setState)("scale")((prev) => merge(prev, next)),
+        position: (next: DeepPartial<Position>) =>
+          toPartial(setState)("position")((prev) => merge(prev, next)),
+        translate: (next: DeepPartial<Position>) =>
+          toPartial(setState)("position")((prev) => merge(prev, Calc.opposite(next))),
         byPositions: setByPositions,
         init: () => setState(initState),
         getEventListeners: (args: {
@@ -197,38 +202,4 @@ export const createCamera = (args?: {
       };
     },
   };
-};
-
-const getScaledTranslate = (args: {
-  prevOriginOnScreen: Position;
-  nextOriginOnScreen: Position;
-  prevScale: Size;
-  nextScale: Size;
-  prevTranslate: Position;
-}) => {
-  const cameraAtAbsScaled = Calc.opposite(args.prevTranslate);
-  const cursorAtAbsScaled = Calc["+"](cameraAtAbsScaled, args.prevOriginOnScreen);
-  const cursorAtAbs = Calc["/"](cursorAtAbsScaled, Size.toPosition(args.prevScale));
-  const cursorAtAbsNextScaled = Calc["*"](cursorAtAbs, Size.toPosition(args.nextScale));
-  const screenAtAbsNextScaled = Calc["-"](cursorAtAbsNextScaled, args.nextOriginOnScreen);
-  const nextTranslate = Calc.opposite(screenAtAbsNextScaled);
-  return nextTranslate;
-};
-
-type SetState<T> = Parameters<Setter<T>>[0]
-type Translate = Camera["translate"];
-type Scale = Camera["scale"];
-type SetScale = (setter: SetState<Scale>, options?: {
-  origin: Position;
-  nextOrigin?: Position;
-  prevScale?: Scale;
-  prevTranslate?: Translate;
-}) => void;
-
-type StateInAction = {
-  pointsCount: number;
-  distance: Size;
-  origin: Position;
-  translate: Translate;
-  scale: Scale;
 };

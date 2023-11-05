@@ -6,12 +6,12 @@ import { Size } from "./Size";
 
 export type Camera = {
   scale: Size;
-  translate: Position;
+  position: Position;
 };
 export const Camera = (() => {
-  const init = () => ({
+  const init = (): Camera => ({
     scale: Size.init(),
-    translate: Position.init(),
+    position: Position.init(),
   });
   return {
     init,
@@ -19,7 +19,7 @@ export const Camera = (() => {
       const base = merge(init(), partial);
       return {
         scale: Size.from(base.scale),
-        translate: Position.from(base.translate),
+        position: Position.from(base.position),
       };
     },
   };

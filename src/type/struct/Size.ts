@@ -28,10 +28,6 @@ export const Size = (() => {
         height: base.height,
       };
     },
-    toPosition: (size: Size): Position => ({
-      x: size.width,
-      y: size.height,
-    }),
     fromPosition: (position: Position): Size => ({
       width: position.x,
       height: position.y,

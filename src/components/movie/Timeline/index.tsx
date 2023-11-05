@@ -8,6 +8,7 @@ import {
 
 import { MiniMap } from "@/components/ui/MiniMap";
 import { createCamera } from "@/fn/state/createCamera";
+import { usePointers } from "@/fn/state/usePointers";
 import { Position } from "@/type/struct/Position";
 import { Size } from "@/type/struct/Size";
 
@@ -18,13 +19,20 @@ export const Timeline = (p: {
 }): JSX.Element => {
   const camera = createCamera({
     bound: {
-      translate: {
+      position: {
         min: Position.init(),
-        max: Position.from(1000),
+        max: Position.from(5000),
       },
     },
   });
   const layers = () => (Array.from(Array(100).keys()));
+  const { set: setPointers } = usePointers((pointers) => {
+    const points = pointers.map((pointer) => ({
+      x: pointer.currentOffsetX,
+      y: pointer.currentOffsetY,
+    }));
+    camera.set.byPositions(points, true);
+  });
 
   const [getCameraRef, setCameraRef] = createSignal<HTMLDivElement>();
   const cameraSizeRaw = createElementSize(getCameraRef);
@@ -46,9 +54,7 @@ export const Timeline = (p: {
       <div
         class={styles.Content}
         ref={setCameraRef}
-        {...camera.set.getEventListeners({
-          scaleRatioOnWheel: Size.from(1.1),
-        })}
+        {...setPointers.getEventListeners()}
       >
         <section
           style={{

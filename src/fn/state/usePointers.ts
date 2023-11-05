@@ -1,15 +1,14 @@
 import {
-  createEffect,
+  createEffect, createSignal,
 } from "solid-js";
-import { createStore } from "solid-js/store";
 
 import { HtmlEvent } from "@/type/HtmlEvent";
 
 export const usePointers = (
   effect: (pointers: Pointer[]) => void
 ) => {
-  const [pointers, setPointers] = createStore<Pointer[]>([]);
-  createEffect(() => effect(pointers));
+  const [pointers, setPointers] = createSignal<Pointer[]>([]);
+  createEffect(() => effect(pointers()));
 
   return {
     get get() { return pointers; },
@@ -20,16 +19,15 @@ export const usePointers = (
           const onPointerDown = (event: HtmlEvent<PointerEvent>) => {
             event.currentTarget.setPointerCapture(event.pointerId);
             const pointer = getPointerFromEvent(event);
-            setPointers(pointers.length, pointer);
+            setPointers((prev) => [...prev, pointer]);
           };
           const onPointerMove = (event: HtmlEvent<PointerEvent>) => {
+            if (!event.currentTarget.hasPointerCapture(event.pointerId)) return;
             const pointer = getPointerFromEvent(event);
-            setPointers((it) => it.pointerId === pointer.pointerId, pointer);
+            setPointers((prev) => prev.map((it) => it.pointerId === pointer.pointerId ? pointer : it));
           };
           const onPointerUp = (event: HtmlEvent<PointerEvent>) => {
-            setPointers((prev) => prev.filter((it) =>
-              it.pointerId !== event.pointerId,
-            ));
+            setPointers((prev) => prev.filter((it) => it.pointerId !== event.pointerId));
           };
           return {
             onPointerDown,

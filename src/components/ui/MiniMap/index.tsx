@@ -21,11 +21,17 @@ export const MiniMap = (p: {
 }): JSX.Element => {
   const cameraSize = () => Calc["/"](p.cameraSize, p.camera.get.scale);
   const cameraRatio = () => Calc["/"](cameraSize(), Size.fromPosition(p.camera.get.range));
+  const [getMapRef, setMapRef] = createSignal<HTMLDivElement>();
+  const mapSizeRaw = createElementSize(getMapRef);
+  const mapSize = () => Size.from({
+    width: mapSizeRaw.width ?? 1,
+    height: mapSizeRaw.height ?? 1,
+  });
   const [getThumbRef, setThumbRef] = createSignal<HTMLDivElement>();
   const thumbSizeRaw = createElementSize(getThumbRef);
   const thumbSize = () => Size.from({
-    width: thumbSizeRaw.width ?? 0,
-    height: thumbSizeRaw.height ?? 0,
+    width: thumbSizeRaw.width ?? 1,
+    height: thumbSizeRaw.height ?? 1,
   });
 
   const [getInAction, setInAction] = createSignal<{
@@ -55,6 +61,7 @@ export const MiniMap = (p: {
         p.direction === "map" && styles.Map,
         p.class,
       )}
+      ref={setMapRef}
       style={{
         "--camera-ratio-x": cameraRatio().width,
         "--camera-ratio-y": cameraRatio().height,
@@ -82,20 +89,88 @@ export const MiniMap = (p: {
       }}
     >
       <div
-        class={styles.Thumb}
+        class={styles.ScrollerThumb}
         ref={setThumbRef}
         onPointerDown={(event) => {
-          const targetRect = event.currentTarget.getBoundingClientRect();
-          const offset = {
-            x: event.clientX - targetRect.left,
-            y: event.clientY - targetRect.top,
-          };
+          const offset = getTargetOffset(event);
           setInAction({
             offsetInThumb: offset,
           });
         }}
-      />
+      >
+        <ScalerThumb
+          setDataOnStart={(event) => {
+            const pixelProgress = Calc["*"](p.camera.get.progress, Position.fromSize(mapSize()));
+            const scrollerOffset = getTargetOffset(event, getThumbRef());
+            const downPos = Calc["-"](scrollerOffset, pixelProgress);
+            return ({
+              downPos,
+              pixelProgress,
+              scrollerOffset,
+              thumbSize: thumbSize(),
+              mapSize: mapSize(),
+              scale: { ...p.camera.get.scale },
+              progress: { ...p.camera.get.progress },
+            });
+          }}
+          useScalar={(scalar, onStart) => {
+            const remain = Calc["-"](Position.from(1), onStart.progress);
+            const base = Calc["+"](remain, Position.fromSize(onStart.thumbSize));
+            const ratioScalar = Calc["/"](scalar, base);
+            const scaleScalar = Calc["/"](Size.from(1), Size.fromPosition(Calc["+"](ratioScalar, 1)));
+            const nextScale = Calc["*"](onStart.scale, scaleScalar);
+            switch (p.direction) {
+              case "vertical":
+                if (!isFinite(nextScale.height)) return;
+                p.camera.set.scale({ height: nextScale.height });
+                break;
+              case "horizontal":
+                p.camera.set.scale({ width: nextScale.width });
+                break;
+              case "map":
+                p.camera.set.scale(nextScale);
+                break;
+            }
+          }}
+        />
+      </div>
     </div>
+  );
+};
+
+const ScalerThumb = <
+  DataOnStart = undefined,
+>(p: {
+  setDataOnStart?: (event: HtmlEvent<PointerEvent>) => DataOnStart;
+  useScalar: (scalar: Position, onStart: DataOnStart) => void;
+}) => {
+  const [getDataOnStart, setDataOnStart] = createSignal<DataOnStart>();
+  const [getInActionStart, setInActionStart] = createSignal<Position>();
+
+  return (
+    <div
+      class={styles.ScalerThumb}
+      onPointerDown={(event) => {
+        event.stopPropagation();
+        event.currentTarget.setPointerCapture(event.pointerId);
+        setDataOnStart(() => p.setDataOnStart?.(event));
+        setInActionStart(Position.from({
+          x: event.clientX,
+          y: event.clientY,
+        }));
+      }}
+      onPointerMove={(event) => {
+        if (!event.currentTarget.hasPointerCapture(event.pointerId)) return;
+        const start = getInActionStart();
+        if (!start) return;
+        const offset = Position.from({
+          x: event.clientX,
+          y: event.clientY,
+        });
+        const scalar = Calc["-"](offset, start);
+        p.useScalar(scalar, getDataOnStart() as DataOnStart);
+      }}
+    />
   );
 };
 
@@ -118,4 +193,16 @@ const getScrollRatio = (
   const scrollRange = Calc["-"](targetSize, thumbSize);
   const ratio = Calc["/"](Size.fromPosition(offset), scrollRange);
   return ratio;
+};
+
+const getTargetOffset = (
+  event: HtmlEvent<PointerEvent>,
+  target = event.currentTarget
+): Position => {
+  const targetRect = target.getBoundingClientRect();
+  const offset = {
+    x: event.clientX - targetRect.left,
+    y: event.clientY - targetRect.top,
+  };
+  return offset;
 };

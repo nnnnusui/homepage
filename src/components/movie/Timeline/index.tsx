@@ -19,7 +19,7 @@ export const Timeline = (p: {
   const camera = createCamera({
     bound: {
       upper: {
-        position: Position.from(1000),
+        position: Position.from(10000),
       },
       lower: {
         position: Position.init(),

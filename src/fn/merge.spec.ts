@@ -79,4 +79,42 @@ describe("merge()", async () => {
       optional: "test",
     });
   });
+
+  it("function and obj", async () => {
+    const merged = merge(
+      () => "functionResult",
+      {
+        objParam: "objParam",
+      }
+    );
+    expect(merged()).toBe("functionResult");
+    expect(merged.objParam).toBe("objParam");
+  });
+
+  it("some function", async () => {
+    const merged = merge(
+      () => "functionResult",
+      () => "overwritedFunctionResult",
+      (str: string) => `secondFunctionResult ${str}`
+    );
+    expect(merged()).toBe("secondFunctionResult undefined");
+    expect(merged("str")).toBe("secondFunctionResult str");
+  });
+
+  it("array", async () => {
+    const merged = merge(
+      [1, 2, 3],
+      () => "functionResult",
+    );
+    expect(merged()).toBe("functionResult");
+    expect(merged[0]).toBe(1);
+  });
+
+  it("some array", async () => {
+    const merged = merge(
+      [1, 2, 3],
+      [4, 5, 6, 7],
+    );
+    expect(merged[0]).toBe(4);
+  });
 });

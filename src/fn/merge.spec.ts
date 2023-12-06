@@ -3,6 +3,32 @@ import { describe, it, expect } from "vitest";
 import { merge } from "./merge";
 
 describe("merge()", async () => {
+  it("returns undefined if empty", async () => {
+    const merged = merge();
+    expect(merged).toBe(undefined);
+  });
+  it("return primitive as is", async () => {
+    const merged = merge("str");
+    expect(merged).toBe("str");
+  });
+  it("only the last primitive", async () => {
+    const merged = merge("str", 42);
+    expect(merged).toBe(42);
+  });
+  it("return object as is", async () => {
+    const merged = merge({ any: "any" });
+    expect(merged).toStrictEqual({ any: "any" });
+  });
+  it("return function as is", async () => {
+    const merged = merge(() => "fn");
+    expect(merged()).toBe("fn");
+  });
+
+  it("primitives are overwritten by object", async () => {
+    const merged = merge("str", { any: "any" }, 42);
+    expect(merged).toStrictEqual({ any: "any" });
+  });
+
   it("flatten", async () => {
     const merged = merge({
       a: "foo",
@@ -85,20 +111,32 @@ describe("merge()", async () => {
       () => "functionResult",
       {
         objParam: "objParam",
-      }
+      },
     );
-    expect(merged()).toBe("functionResult");
     expect(merged.objParam).toBe("objParam");
+    expect(merged()).toBe("functionResult");
+  });
+  it("function and obj are reversible", async () => {
+    const merged = merge(
+      {
+        objParam: "objParam",
+      },
+      () => "functionResult",
+    );
+    expect(merged.objParam).toBe("objParam");
+    expect(merged()).toBe("functionResult");
   });
 
   it("some function", async () => {
     const merged = merge(
       () => "functionResult",
       () => "overwritedFunctionResult",
-      (str: string) => `secondFunctionResult ${str}`
+      (num: number) => num,
+      (str: string) => `secondFunctionResult ${str}`,
     );
-    expect(merged()).toBe("secondFunctionResult undefined");
+    expect(merged()).toBe("overwritedFunctionResult");
     expect(merged("str")).toBe("secondFunctionResult str");
+    expect(merged(1)).toBe("secondFunctionResult 1");
   });
 
   it("array", async () => {

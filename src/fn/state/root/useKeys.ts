@@ -1,9 +1,6 @@
 import { JSX, createRoot } from "solid-js";
 import { createStore } from "solid-js/store";
 
-type Keys = {
-  onPresses: Record<string, boolean>
-}
 const createKeys = () => {
   const [store, setStore] = createStore<Keys>({ onPresses: {} });
 
@@ -12,7 +9,7 @@ const createKeys = () => {
   const onKeyUp: JSX.EventHandlerUnion<HTMLElement, KeyboardEvent>
     = (event) => setStore("onPresses", event.key, false);
 
-  return [
+  return () => [
     store,
     {
       set: setStore,
@@ -23,4 +20,9 @@ const createKeys = () => {
     },
   ] as const;
 };
+
 export const useKeys = createRoot(createKeys);
+
+type Keys = {
+  onPresses: Record<string, boolean>;
+};

@@ -1,4 +1,4 @@
-ARG VARIANT="20-alpine"
+ARG VARIANT="25-alpine"
 FROM node:${VARIANT}
 
 # Install apps

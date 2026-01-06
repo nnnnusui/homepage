@@ -1,12 +1,11 @@
-
-export type Font = {
-  family: string
-  url: string
-}
-
 export const getRandomFont = (): Font => {
   const randomIndex = Math.floor(Math.random() * fonts.length);
-  return fonts[randomIndex];
+  return fonts[randomIndex]!;
+};
+
+type Font = {
+  family: string;
+  url: string;
 };
 
 const fonts: Font[] = [

@@ -8,11 +8,12 @@ const createColors = () => {
     accent: "#cc3232",
   });
 
-  return [
+  return () => [
     store,
     {
       set: setStore,
     },
   ] as const;
 };
+
 export const useColors = createRoot(createColors);

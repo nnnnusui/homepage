@@ -8,6 +8,8 @@
 # └ Remove unused things (ex: comments, memo, temporaries)
 #:straight_ruler: 
 # └ Fix format of the code
+#:triangular_ruler: 
+# └ Fix type error
 #:memo: 
 # └ Add or update documentation
 #:hammer_and_wrench: 
@@ -26,3 +28,5 @@
 # └ Merge pull request
 #:bookmark: 
 # └ New version
+#:lipstick: 
+# └ Add or update UI and style files

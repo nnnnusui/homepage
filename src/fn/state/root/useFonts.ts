@@ -1,15 +1,11 @@
 import { createRoot } from "solid-js";
 import { createStore } from "solid-js/store";
 
-export type Font = {
-  family: string
-  url: string
-}
 const createFonts = () => {
   const [fonts, setFonts] = createStore<Font[]>([]);
   const add = (font: Font) => setFonts((prev) => [...prev, font]);
 
-  return [
+  return () => [
     fonts,
     {
       set: setFonts,
@@ -17,4 +13,10 @@ const createFonts = () => {
     },
   ] as const;
 };
+
 export const useFonts = createRoot(createFonts);
+
+type Font = {
+  family: string;
+  url: string;
+};

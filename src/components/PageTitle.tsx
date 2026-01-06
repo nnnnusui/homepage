@@ -1,22 +1,18 @@
-import {
-  createSignal,
-  createEffect,
-  ParentComponent,
-} from "solid-js";
+import { batch, createSignal, JSX, onMount } from "solid-js";
 
-import styles from "./PageTitle.module.styl";
+import { getRandomFont } from "~/fn/getRandomFont";
+import { useFonts } from "~/fn/state/root/useFonts";
 
-import { getRandomFont } from "@/fn/getRandomFont";
-import { useFonts } from "@/fn/state/root/fonts";
-
-export const PageTitle: ParentComponent = (props) => {
-  const [, setFonts] = useFonts;
+export const PageTitle = (p: {
+  children: JSX.Element;
+}) => {
+  const [, setFonts] = useFonts();
   const font = getRandomFont();
 
-  const [getRef, setRef] = createSignal<HTMLElement>();
+  let ref!: HTMLHeadingElement;
+  const [fontLoaded, setFontLoaded] = createSignal(false);
   const [scale, setScale] = createSignal(1);
-  createEffect(() => {
-    const ref = getRef();
+  onMount(() => {
     if (!ref) return;
     const text = [...new Set(ref.textContent)].join("");
     if (!text) return;
@@ -26,26 +22,34 @@ export const PageTitle: ParentComponent = (props) => {
       ...font,
       url: importUrl,
     });
-    const parentWidth = ref.parentElement?.getBoundingClientRect().width;
-    if (!parentWidth) return;
-    document.fonts.ready.then(() => {
-      if (!document.fonts.check(`1px ${font.family}`)) return;
-      const currentWidth = ref.getBoundingClientRect().width;
-      const widthScaling = parentWidth / currentWidth * 0.7;
-      setScale(widthScaling);
-    });
+    setTimeout(() => {
+      const parentWidth = ref.parentElement?.getBoundingClientRect().width;
+      if (!parentWidth) return;
+      document.fonts.ready.then(() => {
+        batch(() => {
+          setFontLoaded(true);
+          if (!document.fonts.check(`1px ${font.family}`)) return;
+          const currentWidth = ref.getBoundingClientRect().width;
+          const widthScaling = parentWidth / currentWidth * 0.7;
+          setScale(widthScaling);
+        });
+      });
+    }, 100);
   });
 
   return (
     <h1
-      class={ styles.PageTitle }
+      ref={ref}
+      class="font-[inherit] w-fit text-[calc(1vmin*var(--scale))] leading-[1em]"
+      classList={{
+        invisible: !fontLoaded(),
+      }}
       style={{
         "font-family": font.family,
         "--scale": scale(),
       }}
-      ref={setRef}
     >
-      {props.children}
+      {p.children}
     </h1>
   );
 };

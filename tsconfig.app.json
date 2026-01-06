@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "allowJs": true,
+    "noEmit": true,
+    "strict": true,
+    "types": ["vinxi/types/client"],
+    "isolatedModules": true,
+    "paths": {
+      "~/*": ["./src/*"],
+    },
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "plugins": [
+      {
+        "name": "eslint-plugin-import-access",
+        "jsdoc": {
+          "defaultImportability": "package",
+        },
+      },
+    ],
+  },
+  "include": ["src/**/*", "*.config.ts"],
+}

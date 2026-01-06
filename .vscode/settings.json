@@ -1,15 +1,27 @@
 {
+  "editor.indentSize": 2,
   "eslint.format.enable": true,
   "stylelint.validate": ["stylus"],
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true,
-    "source.fixAll.stylelint": true,
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.stylelint": "explicit",
   },
   "task.allowAutomaticTasks": "on",
   "files.exclude": {
     "**/.DS_Store": true,
-    ".pnpm-store": true,
-    ".solid": true,
-    "node_modules": true,
-  }
+  },
+  "files.readonlyInclude": {
+    "node_modules/**/*": true,
+  },
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "*": "$(capture).d.ts, $(capture).d.ts.map",
+    "package.json": "pnpm-lock.yaml",
+    "tsconfig.json": "tsconfig.*.json, *.config.ts, .stylelintrc.yml",
+  },
+  "workbench.editor.labelFormat": "default",
+  "workbench.editor.customLabels.patterns": {
+    "**/index.tsx": "${dirname}/.tsx",
+  },
 }

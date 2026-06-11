@@ -1,4 +1,6 @@
 {
+  "include": ["**/*.ts"],
+  "exclude": ["src/**/*"],
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
@@ -10,7 +12,7 @@
     "allowJs": true,
     "noEmit": true,
     "strict": true,
-    "types": ["vinxi/types/client"],
+    "types": ["@types/node"],
     "isolatedModules": true,
     "paths": {
       "~/*": ["./src/*"],
@@ -26,6 +28,4 @@
       },
     ],
   },
-  "include": ["**/*.ts"],
-  "exclude": ["src/**/*"],
 }

@@ -1,22 +1,26 @@
 {
-	"name": "homepage",
-	"service": "workspace",
-	"workspaceFolder": "/work",
-	"dockerComposeFile": "docker-compose.yml",
-	"onCreateCommand": "pnpm install",
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"SamKirkland.plop-templates",
-				"dbaeumer.vscode-eslint",
-				"stylelint.vscode-stylelint",
-				"sysoev.language-stylus",
-				"bierner.emojisense",
-				"eamodio.gitlens",
-				"GitHub.vscode-github-actions",
-				"ms-azuretools.vscode-docker"
-			]
-		}
-	},
-	"remoteUser": "root"
+  "name": "homepage",
+  "service": "workspace",
+  "workspaceFolder": "/work",
+  "dockerComposeFile": "docker-compose.yml",
+  "onCreateCommand": "pnpm install & pnpm approve-builds",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "yoavbls.pretty-ts-errors",
+        "SamKirkland.plop-templates",
+        "dbaeumer.vscode-eslint",
+        "stylelint.vscode-stylelint",
+        "sysoev.language-stylus",
+        "vitest.explorer",
+        "ms-playwright.playwright",
+        "ygkn.storybook-opener",
+        "bierner.emojisense",
+        "eamodio.gitlens",
+        "GitHub.vscode-github-actions",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  },
+  "remoteUser": "ubuntu"
 }

@@ -1,5 +1,5 @@
 {
-  "include": ["**/*.ts"],
+  "include": ["**/*.ts", ".storybook/**/*"],
   "exclude": ["src/**/*"],
   "compilerOptions": {
     "target": "ESNext",

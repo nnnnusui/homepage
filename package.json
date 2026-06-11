@@ -7,13 +7,16 @@
   "type": "module",
   "scripts": {
     "clean": "node --import tsx develop/script/clean-up.ts",
-    "dev": "vinxi dev",
+    "dev": "pnpm /^dev:.*/",
+    "dev:server": "vinxi dev --host",
+    "dev:storybook": "storybook dev -p 6006 --no-open",
     "test": "echo no impl",
     "lint": "pnpm /^lint:.*/",
     "lint:ts": "tsc --skipLibCheck",
     "lint:eslint": "eslint src",
     "lint:stylelint": "stylelint \"**/*.styl\"",
     "build": "vinxi build",
+    "build-storybook": "storybook build",
     "start": "vinxi start"
   },
   "dependencies": {
@@ -24,18 +27,28 @@
     "vinxi": "^0.5.11"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^5.2.1",
     "@eslint/js": "^9.39.4",
+    "@storybook/addon-a11y": "10.4.3",
+    "@storybook/addon-docs": "10.4.3",
+    "@storybook/addon-vitest": "10.4.3",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@stylistic/stylelint-plugin": "^4.0.1",
     "@tailwindcss/vite": "^4.3.0",
     "@types/node": "^25.9.2",
     "@typescript-eslint/parser": "^8.61.0",
+    "@vitest/browser-playwright": "^4.1.8",
+    "@vitest/coverage-v8": "^4.1.8",
     "eslint": "^9.39.4",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-import-access": "^3.1.0",
     "eslint-plugin-solid": "^0.14.5",
+    "eslint-plugin-storybook": "10.4.3",
     "eslint-plugin-unused-imports": "^4.4.1",
     "globals": "^17.6.0",
+    "playwright": "^1.60.0",
+    "storybook": "10.4.3",
+    "storybook-solidjs-vite": "^10.1.1",
     "stylelint": "^16.26.1",
     "stylelint-config-recess-order": "^7.7.0",
     "stylelint-config-standard": "^39.0.1",
@@ -44,7 +57,9 @@
     "stylelint-stylus": "^1.0.0",
     "tailwindcss": "^4.3.0",
     "tsx": "^4.22.4",
-    "typescript-eslint": "^8.61.0"
+    "typescript-eslint": "^8.61.0",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^4.1.8"
   },
   "engines": {
     "node": ">=22"

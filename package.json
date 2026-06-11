@@ -6,6 +6,7 @@
   "license": "SEE LICENSE IN LICENSE.md",
   "type": "module",
   "scripts": {
+    "clean": "node --import tsx develop/script/clean-up.ts",
     "dev": "vinxi dev",
     "test": "echo no impl",
     "lint": "pnpm /^lint:.*/",
@@ -42,6 +43,7 @@
     "stylelint-order": "^7.0.1",
     "stylelint-stylus": "^1.0.0",
     "tailwindcss": "^4.3.0",
+    "tsx": "^4.22.4",
     "typescript-eslint": "^8.61.0"
   },
   "engines": {

@@ -1,12 +1,10 @@
-// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
-import storybook from "eslint-plugin-storybook";
-
 import stylistic from "@stylistic/eslint-plugin";
 import typescriptEslintParser from "@typescript-eslint/parser";
 import { defineConfig } from "eslint/config";
 import importPlugin from "eslint-plugin-import";
 import importAccess from "eslint-plugin-import-access/flat-config";
 import solid from "eslint-plugin-solid/configs/typescript";
+import storybook from "eslint-plugin-storybook";
 import unusedImports from "eslint-plugin-unused-imports";
 import globals from "globals";
 import tseslint from "typescript-eslint";

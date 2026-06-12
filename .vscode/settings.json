@@ -6,6 +6,7 @@
     "source.fixAll.eslint": "explicit",
     "source.fixAll.stylelint": "explicit",
   },
+  "js/ts.tsdk.path": "./node_modules/typescript/lib",
   "task.allowAutomaticTasks": "on",
   "files.exclude": {
     "**/.DS_Store": true,

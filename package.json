@@ -6,6 +6,7 @@
   "license": "SEE LICENSE IN LICENSE.md",
   "type": "module",
   "scripts": {
+    "plopTemplates": "pnpm cross-env NODE_OPTIONS='--import tsx' plop --plopfile=develop/script/plopfile.ts",
     "clean": "node --import tsx develop/script/clean-up.ts",
     "dev": "pnpm /^dev:.*/",
     "dev:server": "vinxi dev --host",
@@ -39,6 +40,7 @@
     "@typescript-eslint/parser": "^8.61.0",
     "@vitest/browser-playwright": "^4.1.8",
     "@vitest/coverage-v8": "^4.1.8",
+    "cross-env": "^10.1.0",
     "eslint": "^9.39.4",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-import-access": "^3.1.0",

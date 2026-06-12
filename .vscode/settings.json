@@ -25,4 +25,6 @@
   "workbench.editor.customLabels.patterns": {
     "**/index.tsx": "${dirname}/.tsx",
   },
+  "plopTemplates.configFileName": "script/plopfile.ts",
+  "plopTemplates.plopCommand": "plopTemplates",
 }

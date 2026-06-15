@@ -45,7 +45,9 @@ Created with AI (Claude 3.5 Sonnet) in Cursor
 #### Message Rules
 
 - Write commit messages in English.
-- If a valid emoji-prefix is defined in `.gitmessage`, add it at the beginning of the first line.
+- **Emoji-prefix usage:**
+  - **No prefix** for changes in `src/` that add new features to main code (excluding stories and spec files).
+  - If a valid emoji-prefix is defined in `.gitmessage`, add it at the beginning of the first line.
 - Use only one emoji-prefix.
 - Use the emoji-prefix as a placeholder in the `:emoji:` format.
 - Keep the first line concise whenever possible.

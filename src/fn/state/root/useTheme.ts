@@ -49,19 +49,21 @@ const createTheme = () => {
   return () => ({
     set: state.set,
     get style() { return `
-      .light {
-        --base-color: ${getModeColor(state().base, false)};
-        --main-color: ${getModeColor(state().main, false)};
-        --accent-color: ${getModeColor(state().accent, false)};
-        background-color: var(--base-color);
-        color: var(--main-color);
-      }
-      .dark {
-        --base-color: ${getModeColor(state().base, true)};
-        --main-color: ${getModeColor(state().main, true)};
-        --accent-color: ${getModeColor(state().accent, true)};
-        background-color: var(--base-color);
-        color: var(--main-color);
+      @layer base {
+        .light {
+          --base-color: ${getModeColor(state().base, false)};
+          --main-color: ${getModeColor(state().main, false)};
+          --accent-color: ${getModeColor(state().accent, false)};
+          background-color: var(--base-color);
+          color: var(--main-color);
+        }
+        .dark {
+          --base-color: ${getModeColor(state().base, true)};
+          --main-color: ${getModeColor(state().main, true)};
+          --accent-color: ${getModeColor(state().accent, true)};
+          background-color: var(--base-color);
+          color: var(--main-color);
+        }
       }
     `;},
     get base() { return getModeColor(state().base, darkMode()); },

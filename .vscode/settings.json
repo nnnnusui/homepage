@@ -1,4 +1,5 @@
 {
+  "editor.tabSize": 2,
   "editor.indentSize": 2,
   "eslint.format.enable": true,
   "stylelint.validate": ["css", "stylus"],
@@ -29,4 +30,5 @@
   },
   "plopTemplates.configFileName": "script/plopfile.ts",
   "plopTemplates.plopCommand": "plopTemplates",
+  "storybook-opener.openInEditor.enable": true,
 }

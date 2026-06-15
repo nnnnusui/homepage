@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+/* stylelint-disable-next-line stylus/at-rule-no-unknown */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :where(*:not(svg *)) {
+    all: unset;
+
+    box-sizing: border-box;
+
+    display: revert;
+  }
+}

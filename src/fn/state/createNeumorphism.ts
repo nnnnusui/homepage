@@ -20,7 +20,7 @@ export const createNeumorphism = (p: {
     `rgba(${rgb.red}, ${rgb.green}, ${rgb.blue}, ${clamp(alpha, 0, 1).toFixed(3)})`;
 
   const lightElevation = () => p.light?.elevation ?? 0.8;
-  const lightAngle = () => p.light?.angle ?? 315;
+  const lightAngle = () => p.light?.angle ?? 225;
   const proximity = () => clamp(p.light?.proximity ?? 0, 0, 1);
   const overElement = () => p.light?.overElement ?? false;
   const centerLight = () => (overElement() ? proximity() : 0);

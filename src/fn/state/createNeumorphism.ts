@@ -27,8 +27,8 @@ export const createNeumorphism = (p: {
   const size = () => 100;
   const background = () => Rgb.fromRgbHexStr(p.baseColor);
   const shape = () => p.shape || "flat";
-  const depth = () => p.depth ?? 0.2;
-  const clarity = () => p.clarity ?? 0.2;
+  const depth = () => p.depth ?? 0.4;
+  const clarity = () => p.clarity ?? 0.6;
 
   // ---- geometry ------------------------------------------------------------
   const baseOffset = () => size() * (0.02 + depth() * 0.06);

@@ -1,0 +1,26 @@
+.ButtonStyled {
+  cursor: pointer;
+  position: relative;
+
+  padding: 10px 14px;
+  border-radius: 6px;
+
+  text-align: left;
+  letter-spacing: .01em;
+  font-weight: 600;
+  color: var(--text-color);
+
+  zoom: min(progress(100cql, 0px, 20rem), 1);
+
+  &:hover {
+    color: color-mix(in srgb, var(--main-color) 88%, #36404f);
+  }
+
+  &:focus-visible {
+    outline: 1px solid color-mix(in srgb, var(--main-color) 20%, var(--base-color));
+  }
+
+  &:active {
+    transform: translateY(1px) scale(.996);
+  }
+}

@@ -11,6 +11,7 @@
         "SamKirkland.plop-templates",
         "dbaeumer.vscode-eslint",
         "stylelint.vscode-stylelint",
+        "bradlc.vscode-tailwindcss",
         "sysoev.language-stylus",
         "vitest.explorer",
         "ms-playwright.playwright",

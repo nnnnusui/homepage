@@ -1,8 +1,8 @@
 import { createEffect, createRoot, onCleanup, onMount } from "solid-js";
 
+import { Arrays } from "~/fn/arrays";
 import { Objects } from "~/fn/objects";
 import { Wve } from "~/type/struct/Wve";
-import { KeybindAst } from "./KeybindAst";
 
 const createInteractionRegistry = () => {
   const registry = Wve.create({
@@ -37,9 +37,10 @@ const createInteractionRegistry = () => {
       if (!bindings) return current;
       if (current.length === 0) return bindings;
       return current.map((currentBind) => {
-        return bindings.filter((it) => {
-          if (!["Equal", "Subset", "Superset", "Overlap"].includes(KeybindAst.compare(currentBind.binding, it.binding).kind)) return false;
-          return it;
+        return bindings.map((it) => {
+          const allMatch = Arrays.zip({ mode: "longest" }, currentBind.binding, it.binding)
+            .every(([current, it]) => current === it);
+          return allMatch ? it : currentBind;
         })[0] ?? currentBind;
       });
     }, [] as { id: string; binding: InteractionBinding }[]);
@@ -78,7 +79,7 @@ export const useInteractionRegistry = createRoot(createInteractionRegistry);
 export type InteractionNodeId = string;
 export type InteractionLeafId = string;
 
-export type InteractionBinding = KeybindAst; // legacy: ["pointer.down", "pointer.up"]
+export type InteractionBinding = string[]; // legacy: ["pointer.down", "pointer.up"]
 export type InteractionEffect = () => void;
 
 export type InteractionInputEvent

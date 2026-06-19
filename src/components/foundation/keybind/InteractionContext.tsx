@@ -62,10 +62,10 @@ export const useInteractionContext = () => {
   };
 
   const props = () => ({
-    onFocus: (e: FocusEvent) => { (e.currentTarget as HTMLElement).style.outline = "2px dotted blue"; registry.set("nodes", nodeId(), "focus", Date.now()); },
-    onBlur: (e: FocusEvent) => { (e.currentTarget as HTMLElement).style.outline = ""; registry.set("nodes", nodeId(), "focus", false); },
-    onPointerEnter: (e: PointerEvent) => { (e.currentTarget as HTMLElement).style.outline = "2px dotted red"; registry.set("nodes", nodeId(), "hover", Date.now()); },
-    onPointerLeave: (e: PointerEvent) => { (e.currentTarget as HTMLElement).style.outline = ""; registry.set("nodes", nodeId(), "hover", false); },
+    // onFocus: (e: FocusEvent) => { (e.currentTarget as HTMLElement).style.outline = "2px dotted blue"; registry.set("nodes", nodeId(), "focus", Date.now()); },
+    // onBlur: (e: FocusEvent) => { (e.currentTarget as HTMLElement).style.outline = ""; registry.set("nodes", nodeId(), "focus", false); },
+    // onPointerEnter: (e: PointerEvent) => { (e.currentTarget as HTMLElement).style.outline = "2px dotted red"; registry.set("nodes", nodeId(), "hover", Date.now()); },
+    // onPointerLeave: (e: PointerEvent) => { (e.currentTarget as HTMLElement).style.outline = ""; registry.set("nodes", nodeId(), "hover", false); },
   });
 
   return {

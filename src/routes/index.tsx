@@ -1,5 +1,6 @@
 import { PageTitle } from "~/components/PageTitle";
 import { PageInfo } from "~/components/route/PageInfo";
+import { ToggleDarkMode } from "~/components/ToggleDarkMode";
 
 export default function Home() {
   return (
@@ -9,11 +10,9 @@ export default function Home() {
         description="In production..."
       />
       <PageTitle>N4U</PageTitle>
-      {/* <Show when={started()} fallback={"plz click..."}>
-        <div>
-          <Clavier />
-        </div>
-      </Show> */}
+      <div class="absolute inset-0 p-32 flex justify-center items-end">
+        <ToggleDarkMode />
+      </div>
     </main>
   );
 }

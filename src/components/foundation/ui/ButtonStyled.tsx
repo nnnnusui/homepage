@@ -25,7 +25,6 @@ export const ButtonStyled = (p: Override<
   return (
     <Button {...p}
       onApply={p.onApply}
-      {...focus.props}
       {...hover.props}
       class={cn(styles.ButtonStyled, p.class)}
       ref={chainUseDirective([
@@ -36,6 +35,8 @@ export const ButtonStyled = (p: Override<
             return "convex";
           },
         })),
+        focus.with,
+        hover.with,
       ])}
     />
   );

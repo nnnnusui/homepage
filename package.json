@@ -11,7 +11,7 @@
     "dev": "pnpm /^dev:.*/",
     "dev:server": "vinxi dev --host",
     "dev:storybook": "storybook dev -p 6006 --no-open",
-    "test": "echo no impl",
+    "test": "vitest",
     "lint": "pnpm /^lint:.*/",
     "lint:ts": "tsc --skipLibCheck",
     "lint:eslint": "eslint src",

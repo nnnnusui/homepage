@@ -8,8 +8,8 @@ export const createNeumorphism = (p: {
   depth?: number;
   clarity?: number;
   light?: {
-    angle: number;
-    elevation: number;
+    angle?: number;
+    elevation?: number;
     proximity?: number;
     overElement?: boolean;
   };

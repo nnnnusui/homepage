@@ -1,0 +1,60 @@
+.Resizable {
+  --resizerThumbColor: blue;
+  --resizerWidth: 4px;
+  position: relative;
+  width: var(--width, 100%);
+  height: var(--height, 100%);
+}
+
+.Resizers {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+
+  &.InAction {
+    background-color: rgba(117, 0, 0, .193);
+  }
+
+  > * {
+    pointer-events: auto;
+  }
+}
+
+.Resizer {
+  position: absolute;
+  &:hover {
+    background-color: var(--resizerThumbColor);
+  }
+
+  &.Left {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: var(--resizerWidth);
+    transform: translateX(-50%);
+  }
+
+  &.Right {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: var(--resizerWidth);
+    transform: translateX(50%);
+  }
+
+  &.Top {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--resizerWidth);
+    transform: translateY(-50%);
+  }
+
+  &.Bottom {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--resizerWidth);
+    transform: translateY(50%);
+  }
+}

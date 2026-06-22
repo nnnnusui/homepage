@@ -1,0 +1,7 @@
+.DragDetector {
+  cursor: grab;
+
+  &.Dragging {
+    cursor: grabbing;
+  }
+}

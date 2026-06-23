@@ -22,7 +22,7 @@ const Neumorphisms = () => {
   });
 
   return (
-    <div class="size-full flex gap-8">
+    <div class="size-full flex items-center gap-8">
       <For each={["flat", "concave", "convex", "pressed"] as const}>{(shape) => (
         <div
           class={cn("size-40 flex justify-center items-center")}

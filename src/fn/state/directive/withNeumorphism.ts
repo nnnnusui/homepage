@@ -1,6 +1,6 @@
 import { createEffect, onCleanup , Accessor , onMount } from "solid-js";
 
-import { UseRef } from "~/fn/chainUseDirective";
+import { UseRef } from "~/fn/chainUseRef";
 import { Override } from "~/type/Override";
 import { Pos } from "~/type/struct/Pos";
 import { createNeumorphism } from "../createNeumorphism";

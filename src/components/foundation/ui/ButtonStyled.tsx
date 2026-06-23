@@ -1,6 +1,6 @@
 import { ComponentProps } from "solid-js";
 
-import { chainUseDirective } from "~/fn/chainUseDirective";
+import { chainUseRef } from "~/fn/chainUseRef";
 import { cn } from "~/fn/cn";
 import { createFocus } from "~/fn/state/createFocus";
 import { createHover } from "~/fn/state/createHover";
@@ -27,7 +27,7 @@ export const ButtonStyled = (p: Override<
       onApply={p.onApply}
       {...hover.props}
       class={cn(styles.ButtonStyled, p.class)}
-      ref={chainUseDirective([
+      ref={chainUseRef([
         withNeumorphism(() => ({
           get shape() {
             if (p.pressed) return "pressed";

@@ -1,4 +1,4 @@
-import { UseRef } from "./chainUseDirective";
+import { UseRef } from "~/fn/chainUseRef";
 
 /** @public */
 export const withRef = <Element extends HTMLElement = HTMLElement>(

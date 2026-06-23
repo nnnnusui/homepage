@@ -1,4 +1,4 @@
-import { chainUseDirective } from "~/fn/chainUseDirective";
+import { chainUseRef } from "~/fn/chainUseRef";
 import { cn } from "~/fn/cn";
 import { withNeumorphism } from "~/fn/state/directive/withNeumorphism";
 
@@ -13,7 +13,7 @@ export const KeyboardKey = (p: {
 
   return (
     <div class={cn(styles.KeyboardKey, "size-full aspect-square rounded-r-4 flex items-center justify-center text-xs font-semibold")}
-      ref={chainUseDirective([
+      ref={chainUseRef([
         withNeumorphism(() => ({
           clarity: .8,
           depth: .5,

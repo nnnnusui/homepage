@@ -1,7 +1,7 @@
 import { onMount, For } from "solid-js";
 import type { Meta, StoryObj } from "storybook-solidjs-vite";
 
-import { chainUseDirective } from "~/fn/chainUseDirective";
+import { chainUseRef } from "~/fn/chainUseRef";
 import { cn } from "~/fn/cn";
 import { Wve } from "~/type/struct/Wve";
 import { withNeumorphism } from "./withNeumorphism";
@@ -26,7 +26,7 @@ const Neumorphisms = () => {
       <For each={["flat", "concave", "convex", "pressed"] as const}>{(shape) => (
         <div
           class={cn("size-40 flex justify-center items-center")}
-          ref={chainUseDirective([
+          ref={chainUseRef([
             withNeumorphism(() => ({
               get shape() { return shape; },
               get light() { return pointerPos(); },

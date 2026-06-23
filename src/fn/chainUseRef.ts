@@ -11,7 +11,7 @@ export type UseDirective = <
 >(ref: Element, p: Props) => void;
 
 /** @public */
-export const chainUseDirective = <Element extends HTMLElement = HTMLElement>(
+export const chainUseRef = <Element extends HTMLElement = HTMLElement>(
   directives: readonly UseRef<Element>[],
 ) => (ref: Element) => {
   directives.forEach((directive) => {

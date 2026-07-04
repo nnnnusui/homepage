@@ -1,0 +1,13 @@
+.GridViewport {
+  cursor: grab;
+  grid-area: viewport;
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+}
+
+.IsDragging {
+  cursor: grabbing;
+}

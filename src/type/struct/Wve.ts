@@ -29,6 +29,11 @@ import { ValueOf } from "../ValueOf";
  */
 export type Wve<T> = Atomic<T> & {
   /**
+   * Creates a read-only view of the Wve store
+   */
+  readonly: () => ReadonlyWve<T>;
+
+  /**
    * Creates a substore for a specific path in nested objects
    * @param keys - Property path to access
    */
@@ -64,6 +69,13 @@ export type Wve<T> = Atomic<T> & {
 };
 
 /**
+ * Read-only view of Wve. This type does not expose `set`.
+ * @typeParam T - The type of data held by the store
+ * @public
+ */
+export type ReadonlyWve<T> = (() => T) & Omit<Wve<T>, "set">;
+
+/**
  * Factory functions for creating and manipulating Wve stores
  * @public
  */
@@ -74,6 +86,7 @@ export const Wve = (() => {
   const completion = <T>(atomic: Atomic<T>): Wve<T> => {
     const wve = atomic as Wve<T>;
     return Object.assign(wve, {
+      readonly: readonly(wve),
       partial: partial(wve),
       filter: filter(wve),
       with: withFn(wve),
@@ -130,6 +143,11 @@ export const Wve = (() => {
     const set = (...args) => accessor()?.set(...args);
     return completion(atomicFrom(get, set));
   };
+
+  /**
+   * Creates a read-only view of the Wve store
+   */
+  const readonly = <T>(wve: Wve<T>) => (): ReadonlyWve<T> => wve;
 
   /**
    * Creates a substore for a specific path in nested objects
@@ -209,6 +227,9 @@ export const Wve = (() => {
     as,
   };
 })();
+
+/** @public */
+export type WveValue<T> = T extends Wve<infer V> ? V : never;
 
 /**
  * Type providing basic store operations

@@ -1,0 +1,9 @@
+.GridRoot {
+  display: grid;
+  grid-template:
+    "top-left top-center top-right" auto
+    "left viewport right" 1fr
+    "bottom-left bottom-center bottom-right" auto
+    / auto 1fr auto;
+  overflow: hidden;
+}

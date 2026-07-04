@@ -1,4 +1,5 @@
 import { Override } from "~/type/Override";
+import { Size } from "./Size";
 
 /** @public */
 export type Pos = {
@@ -9,9 +10,9 @@ export type Pos = {
 /** @public */
 export const Pos = (() => {
   const init = (): Pos => ({ x: 0, y: 0 });
-  const fromPartial = (partial: Partial<Pos> | number) => {
+  const from = (partial: Partial<Pos> | number): Pos => {
     const part = typeof partial === "object"
-      ? { x: partial.x, y: partial.y }
+      ? { x: partial.x ?? 0, y: partial.y ?? 0 }
       : { x: partial, y: partial };
     return {
       ...init(),
@@ -41,10 +42,12 @@ export const Pos = (() => {
       y: eventPos.y - rect.top + relativeTo.scrollTop,
     };
   };
+  const fromSize = (size: Size): Pos => ({ x: size.width, y: size.height });
 
   return {
     init,
+    from,
     fromEvent,
-    fromPartial,
+    fromSize,
   };
 })();

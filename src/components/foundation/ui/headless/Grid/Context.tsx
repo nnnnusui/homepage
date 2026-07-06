@@ -20,6 +20,7 @@ export type GridContextProps = {
   viewportOriginRatio: Pos;
   physicalScroll: Pos;
   virtualPointerPos: Pos;
+  dragPanDisabled: boolean;
   getPhysicalScrollFromVirtualScroll: (from: Pos) => Pos;
   getViewportPhysicalPosFromViewportVirtualPos: (from: Pos) => Pos;
   getViewportVirtualPosFromViewportPhysicalPos: (from: Pos) => Pos;

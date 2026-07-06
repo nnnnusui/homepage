@@ -1,0 +1,134 @@
+.PianoRoll {
+  width: 100%;
+  height: 100%;
+
+  background: var(--color-surface-base, #0f0f0f);
+
+  display: flex;
+  overflow: hidden;
+
+  font-family: monospace;
+  color: var(--color-text, #fff);
+}
+
+.Container {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  gap: 0;
+}
+
+.PianoKeys {
+  flex-shrink: 0;
+  width: 60px;
+
+  background: var(--color-surface-light, #1a1a1a);
+  border-right: 1px solid var(--color-border, #333);
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.Key {
+  user-select: none;
+
+  background: var(--color-surface-light, #1a1a1a);
+  border-bottom: 1px solid var(--color-border, #333);
+  transition: background-color .2s;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Key:hover {
+  background: var(--color-surface-hover, #252525);
+}
+
+.IsBlackKey {
+  background: #000 !important;
+
+  color: #aaa;
+}
+
+.KeyLabel {
+  opacity: .7;
+
+  font-size: 11px;
+}
+
+.GridContainer {
+  cursor: grabbing;
+
+  overflow: auto;
+
+  &.IsPanning {}
+}
+
+.GridWrapper {
+  flex: 1;
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.GridOverlay {
+  .IsDragging {
+    cursor: grabbing;
+
+    overflow: hidden;
+  }
+
+  .GridOverlay {
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    color: var(--color-text, #888);
+  }
+
+  /* Scrollbar styling
+  .GridContainer::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  .GridContainer::-webkit-scrollbar-track {
+    background: var(--color-surface-base, #0f0f0f);
+  }
+
+  .GridContainer::-webkit-scrollbar-thumb {
+    background: var(--color-text-secondary, #555);
+    border-radius: 5px;
+  }
+
+  .GridContainer::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text, #888);
+
+    .ScrollbarTrack {
+      position: relative;
+      height: 10px;
+
+      background: var(--color-surface-base, #0f0f0f);
+      border-top: 1px solid var(--color-border, #333);
+    }
+
+    .ScrollbarThumb {
+      cursor: pointer;
+      min-width: 50px;
+      height: 100%;
+
+      background: var(--color-text-secondary, #555);
+      border-radius: 5px;
+      transition: background-color .2s;
+    }
+
+    .ScrollbarThumb:hover {
+      background: var(--color-text, #888);
+    }
+  } */
+}

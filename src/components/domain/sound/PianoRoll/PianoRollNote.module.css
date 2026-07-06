@@ -1,0 +1,9 @@
+.PianoRollNote {
+  user-select: none;
+  cursor: grab;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,7 +1,6 @@
 import { ParentProps, splitProps, ValidComponent } from "solid-js";
 
 import { Polymorphic, PolymorphicProps } from "~/components/foundation/render/Polymorphic";
-import { Calc } from "~/fn/objCalc";
 import { Pos } from "~/type/struct/Pos";
 import { Wve } from "~/type/struct/Wve";
 import { useGridContext } from "./Context";
@@ -11,7 +10,7 @@ export const Background = <As extends ValidComponent = typeof defaultAs>(_p: Pol
   const context = useGridContext();
   const state = Wve.from(() => context.state);
 
-  const gridShift = () => Calc["*"](Pos.fromSize(Calc["%"](state().viewportSize, state().gridSize)), context.viewportOriginRatio);
+  const gridShift = () => Pos.init(); // Calc["*"](Pos.fromSize(Calc["%"](state().viewportSize, state().gridSize)), context.viewportOriginRatio)
 
   return (
     <Polymorphic {...wrappedProps}

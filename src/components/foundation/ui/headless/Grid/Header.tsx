@@ -44,6 +44,15 @@ export const Header = <As extends ValidComponent = typeof defaultAs>(_p: Polymor
     ...(!directions().vertical ? [] : [`translateY(${state().overscroll.y}px)`]),
   ].join(" ");
 
+  const sizeStyle = () => ({
+    ...(directions().horizontal ? { } : { ["min-width"]: `${state().gridSize.width}px` }),
+    ...(directions().vertical ? { } : { ["min-height"]: `${state().gridSize.height}px` }),
+  });
+  const virtualSizeStyle = () => ({
+    ...(directions().horizontal ? { width: `${size().innerWidth}px` } : { ["min-width"]: `${state().gridSize.width}px` }),
+    ...(directions().vertical ? { height: `${size().innerHeight}px` } : { ["min-height"]: `${state().gridSize.height}px` }),
+  });
+
   return (
     <Polymorphic {...wrappedProps}
       as={wrappedProps.as ?? defaultAs}
@@ -51,15 +60,13 @@ export const Header = <As extends ValidComponent = typeof defaultAs>(_p: Polymor
       ref={chainUseRef([(ref) => headerRef = ref])}
       style={{
         "grid-area": p.area,
-        width: `${size().viewportWidth ?? state().gridSize.width}px`,
-        height: `${size().viewportHeight ?? state().gridSize.height}px`,
         transform: transform(),
+        ...sizeStyle(),
       }}
     >
       <div class="absolute"
         style={{
-          width: `${size().innerWidth ?? state().gridSize.width}px`,
-          height: `${size().innerHeight ?? state().gridSize.height}px`,
+          ...virtualSizeStyle(),
         }}
       >
         {wrappedProps.children}

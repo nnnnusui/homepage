@@ -19,7 +19,10 @@ export const Viewport = <As extends ValidComponent = typeof defaultAs>(_p: Polym
   const context = useGridContext();
   const state = Wve.from(() => context.state);
   let viewportRef!: HTMLElement;
-  const dragMove = createDragMove({ get viewportRef() { return viewportRef; } });
+  const dragMove = createDragMove({
+    get disabled() { return context.dragPanDisabled; },
+    get viewportRef() { return viewportRef; },
+  });
 
   onMount(() => {
     requestAnimationFrame(() => {
@@ -76,6 +79,7 @@ export const Viewport = <As extends ValidComponent = typeof defaultAs>(_p: Polym
 
 const defaultAs = "div" as const;
 const createDragMove = (p: {
+  disabled?: boolean;
   viewportRef: HTMLElement;
 }) => {
   const context = useGridContext();
@@ -86,6 +90,7 @@ const createDragMove = (p: {
   const viewportSize = createElementSize(() => p.viewportRef);
 
   const onPointerDown = (e: PointerEvent) => {
+    if (p.disabled) return;
     localState.set("drag", {
       isDragging: true,
       startPos: Pos.from({ x: e.clientX, y: e.clientY }),
@@ -96,6 +101,7 @@ const createDragMove = (p: {
     });
   };
   const onPointerMove = (e: PointerEvent) => {
+    if (p.disabled) return;
     const dragState = localState().drag;
     if (!dragState.isDragging || !p.viewportRef) return;
     const pointerPos = Pos.from({ x: e.clientX, y: e.clientY });
@@ -106,7 +112,6 @@ const createDragMove = (p: {
     const nextPhysicalScroll = context.getPhysicalScrollFromVirtualScroll(nextVirtualScroll);
     p.viewportRef.scrollLeft = nextPhysicalScroll.x;
     p.viewportRef.scrollTop = nextPhysicalScroll.y;
-    console.log(p.viewportRef.scrollLeft, p.viewportRef.scrollTop, nextPhysicalScroll);
     batch(() => {
       state.set("scroll", nextVirtualScroll);
       const overscrollLeft = Math.min(rubberBand({ delta: nextPhysicalScrollRaw.x }), 0) * -1;
@@ -118,6 +123,7 @@ const createDragMove = (p: {
     });
   };
   const onPointerUp = (e: PointerEvent) => {
+    if (p.disabled) return;
     localState.set("drag", "isDragging", false);
 
     const overscrollX = state().overscroll.x;

@@ -1,5 +1,6 @@
-import { createEffect, ParentProps } from "solid-js";
+import { createEffect, ParentProps, splitProps, ValidComponent } from "solid-js";
 
+import { Polymorphic, PolymorphicProps } from "~/components/foundation/render/Polymorphic";
 import { chainUseRef } from "~/fn/chainUseRef";
 import { cn } from "~/fn/cn";
 import { Wve } from "~/type/struct/Wve";
@@ -7,9 +8,10 @@ import { useGridContext } from "./Context";
 
 import styles from "./Header.module.css";
 
-export const Header = (p: ParentProps<{
+export const Header = <As extends ValidComponent = typeof defaultAs>(_p: PolymorphicProps<As, ParentProps<{
   area: "top-left" | "top-center" | "top-right" | "left" | "right" | "bottom-left" | "bottom-center" | "bottom-right";
-}>) => {
+}>>) => {
+  const [p, wrappedProps] = splitProps(_p, ["area"]);
   const context = useGridContext();
   const state = Wve.from(() => context.state);
   let headerRef!: HTMLElement;
@@ -43,7 +45,9 @@ export const Header = (p: ParentProps<{
   ].join(" ");
 
   return (
-    <div class={cn(styles.GridHeader, "bg-orange-900 overflow-hidden")}
+    <Polymorphic {...wrappedProps}
+      as={wrappedProps.as ?? defaultAs}
+      class={cn(styles.GridHeader)}
       ref={chainUseRef([(ref) => headerRef = ref])}
       style={{
         "grid-area": p.area,
@@ -58,8 +62,10 @@ export const Header = (p: ParentProps<{
           height: `${size().innerHeight ?? state().gridSize.height}px`,
         }}
       >
-        {p.children}
+        {wrappedProps.children}
       </div>
-    </div>
+    </Polymorphic>
   );
 };
+
+const defaultAs = "div" as const;

@@ -1,10 +1,12 @@
-import { batch , onMount, ParentProps } from "solid-js";
+import { batch, onMount, ParentProps, splitProps, ValidComponent } from "solid-js";
 
+import { Polymorphic, PolymorphicProps } from "~/components/foundation/render/Polymorphic";
 import { playBounceBack } from "~/fn/animate/playBounceBack";
 import { rubberBand } from "~/fn/animate/rubberBand";
 import { chainUseRef } from "~/fn/chainUseRef";
 import { cn } from "~/fn/cn";
 import { Calc } from "~/fn/objCalc";
+import { createElementSize } from "~/fn/state/createElementSize";
 import { withRef } from "~/fn/state/directive/withRef";
 import { Pos } from "~/type/struct/Pos";
 import { Wve } from "~/type/struct/Wve";
@@ -12,7 +14,8 @@ import { useGridContext } from "./Context";
 
 import styles from "./Viewport.module.css";
 
-export const Viewport = (p: ParentProps) => {
+export const Viewport = <As extends ValidComponent = typeof defaultAs>(_p: PolymorphicProps<As, ParentProps>) => {
+  const [, wrappedProps] = splitProps(_p, []);
   const context = useGridContext();
   const state = Wve.from(() => context.state);
   let viewportRef!: HTMLElement;
@@ -26,8 +29,6 @@ export const Viewport = (p: ParentProps) => {
   });
   const virtualWidth = () => context.virtualSize.width;
   const virtualHeight = () => context.virtualSize.height;
-
-  const gridSize = () => state().gridSize;
 
   const onPointerDown = (e: PointerEvent) => {
     viewportRef.setPointerCapture(e.pointerId);
@@ -45,7 +46,8 @@ export const Viewport = (p: ParentProps) => {
   };
 
   return (
-    <div
+    <Polymorphic {...wrappedProps}
+      as={wrappedProps.as ?? defaultAs}
       class={cn(styles.GridViewport, {
         [styles.IsDragging]: dragMove.state().drag.isDragging,
       })}
@@ -56,66 +58,23 @@ export const Viewport = (p: ParentProps) => {
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
+      style={{
+        translate: `${state().overscroll.x}px ${state().overscroll.y}px`,
+      }}
     >
       <div class="absolute"
         style={{
           ...(virtualWidth() ? { width: `${virtualWidth()}px` } : {}),
           ...(virtualHeight() ? { height: `${virtualHeight()}px` } : {}),
-          transform: `translateX(${state().overscroll.x}px) translateY(${state().overscroll.y}px)`,
         }}
       >
-        {/* SVG Grid Lines */}
-        <svg
-          width={virtualWidth()}
-          height={virtualHeight()}
-        >
-          <defs>
-            <pattern
-              id="GridH"
-              x="0"
-              y={gridSize().height}
-              width="100%"
-              height={gridSize().height}
-              patternUnits="userSpaceOnUse"
-            >
-              <line
-                x1="0"
-                y1="0"
-                x2="100%"
-                y2="0"
-                stroke="currentColor"
-                stroke-width="1"
-                opacity="0.1"
-              />
-            </pattern>
-            <pattern
-              id="GridV"
-              x={gridSize().width}
-              y="0"
-              width={gridSize().width}
-              height="100%"
-              patternUnits="userSpaceOnUse"
-            >
-              <line
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="100%"
-                stroke="currentColor"
-                stroke-width="1"
-                opacity="0.1"
-              />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#GridH)" />
-          <rect width="100%" height="100%" fill="url(#GridV)" />
-        </svg>
-        {p.children}
+        {wrappedProps.children}
       </div>
-    </div>
+    </Polymorphic>
   );
 };
 
+const defaultAs = "div" as const;
 const createDragMove = (p: {
   viewportRef: HTMLElement;
 }) => {
@@ -124,12 +83,16 @@ const createDragMove = (p: {
   const localState = Wve.create({
     drag: { isDragging: false, startPos: Pos.init(), startScroll: Pos.init() },
   });
+  const viewportSize = createElementSize(() => p.viewportRef);
 
   const onPointerDown = (e: PointerEvent) => {
     localState.set("drag", {
       isDragging: true,
       startPos: Pos.from({ x: e.clientX, y: e.clientY }),
-      startScroll: Pos.from({ x: p.viewportRef?.scrollLeft ?? 0, y: p.viewportRef?.scrollTop ?? 0 }),
+      startScroll: {
+        x: state().scroll.x,
+        y: state().scroll.y,
+      },
     });
   };
   const onPointerMove = (e: PointerEvent) => {
@@ -137,17 +100,19 @@ const createDragMove = (p: {
     if (!dragState.isDragging || !p.viewportRef) return;
     const pointerPos = Pos.from({ x: e.clientX, y: e.clientY });
     const delta = Calc["-"](dragState.startPos, pointerPos);
-    const newPhysicalScroll = Calc["+"](dragState.startScroll, delta);
-    p.viewportRef.scrollLeft = newPhysicalScroll.x;
-    p.viewportRef.scrollTop = newPhysicalScroll.y;
+    const nextVirtualScrollRaw = Calc["+"](dragState.startScroll, delta);
+    const nextPhysicalScrollRaw = context.getPhysicalScrollFromVirtualScroll(nextVirtualScrollRaw);
+    const nextVirtualScroll = context.getVirtualScrollPosClamped(nextVirtualScrollRaw);
+    const nextPhysicalScroll = context.getPhysicalScrollFromVirtualScroll(nextVirtualScroll);
+    p.viewportRef.scrollLeft = nextPhysicalScroll.x;
+    p.viewportRef.scrollTop = nextPhysicalScroll.y;
+    console.log(p.viewportRef.scrollLeft, p.viewportRef.scrollTop, nextPhysicalScroll);
     batch(() => {
-      const newVirtualScroll = Calc["+"](context.getViewportVirtualPosFromViewportPhysicalPos(newPhysicalScroll), context.viewportOrigin);
-      const newVirtualScrollClamped = context.getVirtualScrollPosClamped(newVirtualScroll);
-      state.set("scroll", newVirtualScrollClamped);
-      const overscrollLeft = Math.min(rubberBand({ delta: newVirtualScroll.x }), 0) * -1;
-      const overscrollRight = Math.min(rubberBand({ delta: context.virtualSize.width - state().viewportSize.width - newPhysicalScroll.x }), 0);
-      const overscrollTop = Math.min(rubberBand({ delta: newPhysicalScroll.y }), 0) * -1;
-      const overscrollBottom = Math.min(rubberBand({ delta: context.virtualSize.height - state().viewportSize.height - newPhysicalScroll.y }), 0);
+      state.set("scroll", nextVirtualScroll);
+      const overscrollLeft = Math.min(rubberBand({ delta: nextPhysicalScrollRaw.x }), 0) * -1;
+      const overscrollRight = Math.min(rubberBand({ delta: context.virtualSize.width - viewportSize().width - nextPhysicalScrollRaw.x }), 0);
+      const overscrollTop = Math.min(rubberBand({ delta: nextPhysicalScrollRaw.y }), 0) * -1;
+      const overscrollBottom = Math.min(rubberBand({ delta: context.virtualSize.height - viewportSize().height - nextPhysicalScrollRaw.y }), 0);
       state.set("overscroll", "x", overscrollLeft + overscrollRight);
       state.set("overscroll", "y", overscrollTop + overscrollBottom);
     });

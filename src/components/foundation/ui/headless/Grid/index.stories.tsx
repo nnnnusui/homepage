@@ -8,14 +8,14 @@ const InfiniteCanvs = () => {
       virtualPadding={{ top: 100, right: 1000, bottom: 100, left: 0 }}
     >
       <Grid.Viewport>
-        <Grid.Content pos={{ x: 1, y: 0 }} size={{ width: 1, height: 1 }} />
+        <Grid.Background />
+        <Grid.Content pos={{ x: 1, y: 0 }} size={{ width: 1, height: 1 }} class="bg-amber-400" />
       </Grid.Viewport>
       <Grid.Header area="bottom-center">
-        <Grid.Content pos={{ x: 0, y: 0 }} size={{ width: 1, height: 1 }} />
-        x
+        <Grid.Content pos={{ x: 0, y: 0 }} size={{ width: 1, height: 1 }} class="bg-amber-400" />
       </Grid.Header>
       <Grid.Header area="left">
-        x
+        <Grid.Content pos={{ x: 0, y: 0 }} size={{ width: 1, height: 1 }} class="bg-amber-400" />
       </Grid.Header>
     </Grid>
   );

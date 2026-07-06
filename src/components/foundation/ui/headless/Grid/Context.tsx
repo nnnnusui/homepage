@@ -15,8 +15,12 @@ export type GridContextProps = {
     viewportRef: HTMLElement | undefined;
   }>;
   virtualSize: Size;
+  virtualBorder: { min: Pos; max: Pos };
   viewportOrigin: Pos;
+  viewportOriginRatio: Pos;
   physicalScroll: Pos;
+  virtualPointerPos: Pos;
+  getPhysicalScrollFromVirtualScroll: (from: Pos) => Pos;
   getViewportPhysicalPosFromViewportVirtualPos: (from: Pos) => Pos;
   getViewportVirtualPosFromViewportPhysicalPos: (from: Pos) => Pos;
   getViewportPhysicalPosClamped: (from: Pos) => Pos;

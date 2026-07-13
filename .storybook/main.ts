@@ -1,6 +1,5 @@
 import tailwindcss from "@tailwindcss/vite";
 import type { StorybookConfig } from "storybook-solidjs-vite";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 const config: StorybookConfig = {
   stories: [
@@ -30,8 +29,11 @@ const config: StorybookConfig = {
       plugins: [
         ...(config.plugins ?? []),
         tailwindcss(),
-        tsconfigPaths(),
       ],
+      resolve: {
+        ...(config.resolve ?? {}),
+        tsconfigPaths: true,
+      },
     };
   },
 };

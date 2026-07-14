@@ -1,5 +1,5 @@
 import { PageInfo } from "~/components/route/PageInfo";
-import { Oscillator } from "~/domain/sound/vst/Oscillator";
+import { WaveTable } from "~/domain/sound/vst/WaveTable";
 
 export default function Test() {
 
@@ -9,7 +9,11 @@ export default function Test() {
         title={(domain) => `test - ${domain}`}
         description="In production..."
       />
-      <Oscillator />
+      <WaveTable>
+        <WaveTable.View3D />
+        <WaveTable.Player />
+        <WaveTable.Editor />
+      </WaveTable>
     </main>
   );
 }

@@ -27,7 +27,7 @@ const degToRad = (deg: number) => (deg * Math.PI) / 180;
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-export const createWavetableDraw = (p: {
+export const createWaveTableDraw = (p: {
   morphTable: Float32Array[];
   canvas: HTMLCanvasElement | undefined;
   currentMorphRatio: number;

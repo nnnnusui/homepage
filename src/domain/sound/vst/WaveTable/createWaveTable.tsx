@@ -21,22 +21,32 @@ export const createWaveTable = (p: { p?: unknown }): WaveTableContextProps => {
 
   const frameCount = () => 64;
   const tableSize = () => 2048;
+  const instance = () => {
+    const frameCountFixed = Math.max(1, Math.floor(frameCount()));
+    const tableSizeFixed = Math.max(1, Math.floor(tableSize()));
+    const samples = getWaveTableInstance({
+      frameCount: frameCountFixed,
+      tableSize: tableSizeFixed,
+      define: state().definition,
+    });
+    return {
+      get samples() { return samples; },
+      get frameCount() { return frameCountFixed; },
+      get tableSize() { return tableSizeFixed; },
+    };
+  };
 
   return {
     state,
-    get instance() {
-      const frameCountFixed = Math.max(1, Math.floor(frameCount()));
-      const tableSizeFixed = Math.max(1, Math.floor(tableSize()));
-      const samples = getWaveTableInstance({
-        frameCount: frameCountFixed,
-        tableSize: tableSizeFixed,
-        define: state().definition,
-      });
-      return {
-        get samples() { return samples; },
-        get frameCount() { return frameCountFixed; },
-        get tableSize() { return tableSizeFixed; },
-      };
+    get instance() { return instance(); },
+    get currentWave() {
+      const morphRatio = state().currentMorphRatio;
+      const frameCount = instance().frameCount;
+      const tableSize = instance().tableSize;
+      const samples = instance().samples;
+      if (frameCount === 0 || tableSize === 0) return undefined;
+      const frameIndex = Math.floor(morphRatio * (frameCount - 1));
+      return samples[frameIndex];
     },
   };
 };
@@ -54,6 +64,7 @@ export type WaveTableContextProps = {
     frameCount: number;
     tableSize: number;
   };
+  currentWave: Float32Array<ArrayBufferLike> | undefined;
 };
 export const WaveTableContext = createContext<WaveTableContextProps>();
 

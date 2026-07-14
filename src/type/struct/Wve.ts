@@ -2,6 +2,7 @@ import { createStore, SetStoreFunction } from "solid-js/store";
 
 import { Objects } from "~/fn/objects";
 import { AnyArray } from "../AnyArray";
+import { AnyObject } from "../AnyObject";
 import { KeyOf } from "../KeyOf";
 import { NestedKeyOf } from "../NestedKeyOf";
 import { NestedValueOf } from "../NestedValueOf";
@@ -219,12 +220,24 @@ export const Wve = (() => {
   const as = <To>(accessor: () => Wve<unknown>): Wve<To> =>
     accessor() as Wve<To>;
 
+  const unwrap = <T>(wveValue: T): T => {
+    const recursive = (value: unknown): unknown => {
+      if (typeof value !== "object") return value;
+      return Objects.entries(value as AnyObject)
+        .reduce((obj, [key, val]) => {
+          return { ...obj, [key]: recursive(val) };
+        }, {} as AnyObject);
+    };
+    return recursive(wveValue) as T;
+  };
+
   return {
     from,
     fromSeparated,
     create,
     mayBe,
     as,
+    unwrap,
   };
 })();
 

@@ -43,11 +43,13 @@ export const Pos = (() => {
     };
   };
   const fromSize = (size: Size): Pos => ({ x: size.width, y: size.height });
+  const toSize = (pos: Pos): Size => ({ width: pos.x, height: pos.y });
 
   return {
     init,
     from,
     fromEvent,
     fromSize,
+    toSize,
   };
 })();

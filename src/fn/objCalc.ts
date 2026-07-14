@@ -32,6 +32,7 @@ export const Calc = (() => {
     floor: <T extends CalcableObj>(lhs: T) => getCalc((lhs) => Math.floor(lhs))(lhs, 1),
     ceil: <T extends CalcableObj>(lhs: T) => getCalc((lhs) => Math.ceil(lhs))(lhs, 1),
     round: <T extends CalcableObj>(lhs: T) => getCalc((lhs) => Math.round(lhs))(lhs, 1),
+    trunc: <T extends CalcableObj>(lhs: T) => getCalc((lhs) => Math.trunc(lhs))(lhs, 1),
     max: getCalc((lhs, rhs) => Math.max(lhs, rhs)),
     min: getCalc((lhs, rhs) => Math.min(lhs, rhs)),
     positiveDiff: getCalc((lhs, rhs) => Math.max(lhs, rhs) - Math.min(lhs, rhs)),

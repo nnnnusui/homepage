@@ -15,6 +15,6 @@ export const chainUseRef = <Element extends HTMLElement = HTMLElement>(
   directives: readonly UseRef<Element>[],
 ) => (ref: Element) => {
   directives.forEach((directive) => {
-    directive(ref);
+    directive?.(ref);
   });
 };

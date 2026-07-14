@@ -2,12 +2,11 @@ import { describe, expect, it, expectTypeOf } from "vitest";
 
 import { Branded, type Unbrand } from "./Branded";
 
-declare const __brandId: unique symbol;
-declare const __brandUserId: unique symbol;
-declare const __brandExtra: unique symbol;
-
 describe("type Branded", () => {
 
+  const __brandId = Symbol("brandId");
+  const __brandUserId = Symbol("brandUserId");
+  const __brandExtra = Symbol("brandExtra");
   type Id = Branded<string, typeof __brandId>;
   type UserId = Branded<Id, typeof __brandUserId>;
 

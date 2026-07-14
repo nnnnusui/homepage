@@ -58,7 +58,7 @@ export const Branded = (() => {
   };
 })();
 
-declare const __brand: unique symbol;
+const __brand = Symbol("brand");
 
 /**
  * Recursively removes all Branded __brand properties, yielding the underlying primitive type.

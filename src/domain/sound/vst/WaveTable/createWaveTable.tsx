@@ -1,4 +1,4 @@
-import { createContext, useContext } from "solid-js";
+import { createContext, createMemo, useContext } from "solid-js";
 
 import { Id } from "~/type/struct/Id";
 import { Wve, WveValue } from "~/type/struct/Wve";
@@ -21,7 +21,7 @@ export const createWaveTable = (p: { p?: unknown }): WaveTableContextProps => {
 
   const frameCount = () => 64;
   const tableSize = () => 2048;
-  const instance = () => {
+  const instance = createMemo(() => {
     const frameCountFixed = Math.max(1, Math.floor(frameCount()));
     const tableSizeFixed = Math.max(1, Math.floor(tableSize()));
     const samples = getWaveTableInstance({
@@ -34,7 +34,7 @@ export const createWaveTable = (p: { p?: unknown }): WaveTableContextProps => {
       get frameCount() { return frameCountFixed; },
       get tableSize() { return tableSizeFixed; },
     };
-  };
+  });
 
   return {
     state,

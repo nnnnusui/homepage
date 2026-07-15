@@ -220,6 +220,26 @@ export const Wve = (() => {
   const as = <To>(accessor: () => Wve<unknown>): Wve<To> =>
     accessor() as Wve<To>;
 
+  const assign = <T, Assign extends AnyObject>(wve: Wve<T>, assign: Assign): Wve<T> & Assign => {
+    Object.keys(assign).forEach((key) => {
+      if (key in wve) return;
+      Object.defineProperty(wve, key, {
+        get() { return assign[key]; },
+        enumerable: true,
+      });
+    });
+    return wve as Wve<T> & Assign;
+  };
+
+  const truck = <T>(any: T): T => {
+    if (typeof any === "object") {
+      Object.keys(any as AnyObject).forEach((key) => {
+        truck((any as AnyObject)[key]);
+      });
+    }
+    return any;
+  };
+
   const unwrap = <T>(wveValue: T): T => {
     const recursive = (value: unknown): unknown => {
       if (typeof value !== "object") return value;
@@ -237,6 +257,8 @@ export const Wve = (() => {
     create,
     mayBe,
     as,
+    assign,
+    truck,
     unwrap,
   };
 })();

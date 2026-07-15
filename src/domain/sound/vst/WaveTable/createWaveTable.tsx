@@ -2,6 +2,7 @@ import { createContext, createMemo, useContext } from "solid-js";
 
 import { Id } from "~/type/struct/Id";
 import { Wve, WveValue } from "~/type/struct/Wve";
+import { createWaveTableNode } from "./createWaveTableNode";
 import { getWaveTableInstance } from "./getWaveTableInstance";
 
 export const createWaveTable = (p: { p?: unknown }): WaveTableContextProps => {
@@ -36,6 +37,15 @@ export const createWaveTable = (p: { p?: unknown }): WaveTableContextProps => {
     };
   });
 
+  const node = createWaveTableNode({
+    get frequency() { return state().frequency; },
+    get morph() { return state().currentMorphRatio; },
+    get gain() { return state().gain; },
+    get waveTableInstance() { return instance().samples; },
+    get frameCount() { return instance().frameCount; },
+    get tableSize() { return instance().tableSize; },
+  });
+
   return {
     state,
     get instance() { return instance(); },
@@ -48,6 +58,7 @@ export const createWaveTable = (p: { p?: unknown }): WaveTableContextProps => {
       const frameIndex = Math.floor(morphRatio * (frameCount - 1));
       return samples[frameIndex];
     },
+    node,
   };
 };
 
@@ -65,6 +76,7 @@ export type WaveTableContextProps = {
     tableSize: number;
   };
   currentWave: Float32Array<ArrayBufferLike> | undefined;
+  node: ReturnType<typeof createWaveTableNode>;
 };
 export const WaveTableContext = createContext<WaveTableContextProps>();
 

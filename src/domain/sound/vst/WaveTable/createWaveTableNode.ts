@@ -2,7 +2,7 @@ import { createEffect, createMemo, onCleanup, onMount } from "solid-js";
 
 import { useAudioEnvironment } from "~/fn/state/root/useAudioEnvironment";
 
-export const createWaveTableSynth = (p: {
+export const createWaveTableNode = (p: {
   frequency: number;
   morph: number;
   gain: number;
@@ -13,22 +13,14 @@ export const createWaveTableSynth = (p: {
   const flatTables = createMemo(() => flattenTables(p.waveTableInstance));
   const audioEnv = useAudioEnvironment();
 
-  let workletNode: AudioWorkletNode | null = null;
-  let gainNode: GainNode | null = null;
-  let analyserNode: AnalyserNode | null = null;
-  const workletModuleUrl: string | null = null;
+  let workletNode: AudioWorkletNode | undefined;
+  const workletNodeResolvers = Promise.withResolvers<AudioWorkletNode>();
   onMount(() => {
     const source = createWorkletModuleSource();
     const blob = new Blob([source], { type: "application/javascript" });
     const workletModuleUrl = URL.createObjectURL(blob);
     audioEnv.useContext(async (context) => {
       await context.audioWorklet.addModule(workletModuleUrl);
-
-      analyserNode = context.createAnalyser();
-      analyserNode.fftSize = 2048;
-
-      gainNode = context.createGain();
-      gainNode.gain.value = 0;
 
       workletNode = new AudioWorkletNode(context, "wavetable-morph-processor", {
         numberOfOutputs: 1,
@@ -42,23 +34,16 @@ export const createWaveTableSynth = (p: {
           gain: p.gain,
         },
       });
-
-      workletNode.connect(gainNode);
-      gainNode.connect(analyserNode);
-      analyserNode.connect(context.destination);
+      workletNodeResolvers.resolve(workletNode);
     });
 
     const teardownAudio = async () => {
       try {
         workletNode?.disconnect();
-        gainNode?.disconnect();
-        analyserNode?.disconnect();
       } catch {
       // no-op
       }
-      workletNode = null;
-      gainNode = null;
-      analyserNode = null;
+      workletNode = undefined;
 
       if (workletModuleUrl) {
         URL.revokeObjectURL(workletModuleUrl);
@@ -75,32 +60,9 @@ export const createWaveTableSynth = (p: {
   createEffect(() => { void p.morph; workletNode?.port.postMessage({ kind: "setMorph", value: p.morph }); });
   createEffect(() => { void p.gain; workletNode?.port.postMessage({ kind: "setGain", value: p.gain }); });
 
-  const start = async () => {
-    const ctx = audioEnv.context;
-    if (!gainNode) return;
-    if (!workletNode) return;
-
-    if (gainNode) {
-      const t = ctx.currentTime;
-      gainNode.gain.cancelScheduledValues(t);
-      gainNode.gain.setValueAtTime(gainNode.gain.value, t);
-      gainNode.gain.linearRampToValueAtTime(p.gain, t + 0.03);
-    }
-
-    workletNode.port.postMessage({ kind: "setFrequency", value: p.frequency });
-    workletNode.port.postMessage({ kind: "setMorph", value: p.morph });
-    workletNode.port.postMessage({ kind: "setGain", value: p.gain });
-  };
-
-  const stop = () => {
-    gainNode?.gain.cancelScheduledValues(audioEnv.context.currentTime ?? 0);
-    gainNode?.gain.setValueAtTime(0, audioEnv.context.currentTime ?? 0);
-  };
-
-  return {
-    start,
-    stop,
-  };
+  return Object.assign(() => workletNode!, {
+    ready: workletNodeResolvers.promise,
+  });
 };
 
 const flattenTables = (tables: Float32Array[]) => {

@@ -27,6 +27,7 @@ export const createEnvelopeNode = (p: {
         outputChannelCount: [1],
         processorOptions: {
           envelope: normalizeEnvelope(p.envelope),
+          retriggerFadeSec: RETRIGGER_FADE_SEC,
         },
       });
 
@@ -76,7 +77,6 @@ const getEnvelopeModuleUrl = () => {
 };
 
 const normalizeEnvelope = (envelope: EnvelopeNodeEnvelope): EnvelopeNodeEnvelope => {
-  console.log("normalizeEnvelope", envelope);
   return {
     delay: Math.max(0, envelope.delay),
     attack: Math.max(0.001, envelope.attack),
@@ -102,6 +102,7 @@ const normalizeCurve = (curve: EnvelopeBezier): EnvelopeBezier => {
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 const ENVELOPE_PROCESSOR_NAME = "envelope-node-processor";
+const RETRIGGER_FADE_SEC = 0.010;
 
 const createEnvelopeProcessorSource = () => {
   return `
@@ -111,10 +112,14 @@ class EnvelopeNodeProcessor extends AudioWorkletProcessor {
 
     const p = options?.processorOptions ?? {};
     this.envelope = this.normalizeEnvelope(p.envelope ?? {});
+    this.retriggerFadeSec = Math.max(0.001, Number(p.retriggerFadeSec ?? ${RETRIGGER_FADE_SEC}));
 
     this.noteOnAtSec = Number.NEGATIVE_INFINITY;
+    this.noteOnStartLevel = 0;
     this.noteOffAtSec = Number.POSITIVE_INFINITY;
     this.releaseStartLevel = 0;
+    this.retriggerAtSec = Number.NEGATIVE_INFINITY;
+    this.retriggerFromLevel = 0;
 
     this.port.onmessage = (event) => {
       const data = event.data;
@@ -124,6 +129,9 @@ class EnvelopeNodeProcessor extends AudioWorkletProcessor {
       }
       if (data.kind === "noteOn") {
         const atSec = Number.isFinite(data.atSec) ? data.atSec : currentTime;
+        this.retriggerFromLevel = this.valueAt(atSec);
+        this.retriggerAtSec = atSec;
+        this.noteOnStartLevel = 0;
         this.noteOnAtSec = atSec;
         this.noteOffAtSec = Number.POSITIVE_INFINITY;
       }
@@ -206,12 +214,12 @@ class EnvelopeNodeProcessor extends AudioWorkletProcessor {
     const settleEnd = decayEnd + settleDuration;
     const sustainSettle = this.lerp(1, env.sustain, 0.65);
 
-    if (elapsed <= delayEnd) return 0;
+    if (elapsed <= delayEnd) return this.noteOnStartLevel;
 
     if (elapsed <= attackEnd) {
       const t = (elapsed - delayEnd) / Math.max(env.attack, 0.001);
       const eased = this.cubicBezierProgress(env.attackCurve, t);
-      return this.lerp(0, 1, eased);
+      return this.lerp(this.noteOnStartLevel, 1, eased);
     }
 
     if (elapsed <= holdEnd) return 1;
@@ -231,16 +239,28 @@ class EnvelopeNodeProcessor extends AudioWorkletProcessor {
     return env.sustain;
   }
 
+  retriggerTailAt(atSec) {
+    if (!Number.isFinite(this.retriggerAtSec) || atSec < this.retriggerAtSec) return 0;
+
+    const elapsed = atSec - this.retriggerAtSec;
+    if (elapsed >= this.retriggerFadeSec) return 0;
+
+    const t = this.clamp(elapsed / Math.max(this.retriggerFadeSec, 0.0005), 0, 1);
+    return this.lerp(this.retriggerFromLevel, 0, t);
+  }
+
   valueAt(atSec) {
     if (!Number.isFinite(this.noteOnAtSec) || atSec < this.noteOnAtSec) return 0;
 
+    const retriggerTail = this.retriggerTailAt(atSec);
+
     if (atSec < this.noteOffAtSec) {
-      return this.valueWithoutRelease(atSec);
+      return this.clamp(this.valueWithoutRelease(atSec) + retriggerTail, 0, 1);
     }
 
     const releaseElapsed = atSec - this.noteOffAtSec;
     const t = this.clamp(releaseElapsed / Math.max(this.envelope.release, 0.001), 0, 1);
-    return this.lerp(this.releaseStartLevel, 0, t);
+    return this.clamp(this.lerp(this.releaseStartLevel, 0, t) + retriggerTail, 0, 1);
   }
 
   process(_inputs, outputs) {

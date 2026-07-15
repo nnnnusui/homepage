@@ -5,11 +5,7 @@ import { Wve } from "~/type/struct/Wve";
 import { EasingDefinition, useWaveTableContext, WaveShapeDefinition, WaveTableDefinition, WaveTableKeyframe } from "./createWaveTable";
 
 /** @public */
-export const Editor = (p: {
-  initialFrameCount?: number;
-  initialTableSize?: number;
-  // onChange?: (define: WaveTableDefine) => void;
-}) => {
+export const Editor = () => {
   const context = useWaveTableContext();
   const state = Wve.from(() => context.state);
   const definition = state.partial("definition");
@@ -126,7 +122,7 @@ export const Editor = (p: {
                       "keyframes",
                       (frame) => frame.id === keyframe.id,
                       "shape",
-                      { type: "builtin", id: e.currentTarget.value as ShapeKind },
+                      { type: "builtin", id: e.currentTarget.value as keyof typeof WaveShapeDefinition.builtinMap },
                     );
                   }}
                 >
@@ -177,13 +173,3 @@ export const Editor = (p: {
 };
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
-
-type ShapeKind = "sine" | "square" | "triangle" | "saw" | "halfSine";
-type EasingKind = "linear" | "easeInQuad" | "easeOutQuad" | "easeInOutQuad";
-
-type EditorKeyframe = {
-  id: number;
-  offset: number;
-  shape: ShapeKind;
-  easing: EasingKind | "";
-};

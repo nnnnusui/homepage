@@ -1,13 +1,23 @@
 import type { Meta, StoryObj } from "storybook-solidjs-vite";
 
+import { Resizable } from "~/components/foundation/render/Resizable";
+
 import { WaveTable } from ".";
 
 const meta = {
   component: () => (
-    <WaveTable>
-      <WaveTable.View3D />
-      <WaveTable.Player />
-    </WaveTable>
+    <div class="flex flex-col items-center justify-start gap-8 p-4">
+      <WaveTable>
+        <Resizable resizable={["bottom"]} class="w-full">
+          <WaveTable.View3D />
+        </Resizable>
+        <Resizable resizable={["bottom", "left", "right"]}>
+          <WaveTable.View2D />
+        </Resizable>
+        <WaveTable.Player />
+        <WaveTable.Editor />
+      </WaveTable>
+    </div>
   ),
   parameters: {
   },

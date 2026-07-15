@@ -36,6 +36,11 @@ export const createWaveTableDraw = (p: {
     pitch?: number;
     yaw?: number;
   };
+  color: {
+    base: string;
+    main: string;
+    accent: string;
+  };
 }) => {
   const size = createElementSize(() => p.canvas);
 
@@ -58,7 +63,7 @@ export const createWaveTableDraw = (p: {
     }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    ctx.fillStyle = "#0b0f16";
+    ctx.fillStyle = p.color.base;
     ctx.fillRect(0, 0, width, height);
 
     if (p.morphTable.length === 0) return;
@@ -116,12 +121,12 @@ export const createWaveTableDraw = (p: {
     };
 
     projectionToCanvas(ctx, waveTableMeshAdjusted, {
-      stroke: "hsla(190, 100%, 75%, 0.26)",
+      stroke: p.color.main,
       rowWidth: 1,
       colWidth: 0.9,
       colStep: 6,
     });
-    drawBoundsBox(ctx, boundsMeshAdjusted);
+    drawBoundsBox(ctx, boundsMeshAdjusted, p.color.accent);
 
     const currentMorphIndex = Math.round(clamp(p.currentMorphRatio, 0, 1) * (p.morphTable.length - 1));
     const highlightRow = Math.round(
@@ -133,7 +138,7 @@ export const createWaveTableDraw = (p: {
       * (waveTableMeshAdjusted.rows - 1),
     );
 
-    drawHighlightedRow(ctx, waveTableMeshAdjusted, highlightRow);
+    drawHighlightedRow(ctx, waveTableMeshAdjusted, highlightRow, p.color.accent);
   };
 };
 
@@ -503,6 +508,7 @@ function drawHighlightedRow(
     points: Array<Vec2 | null>;
   },
   rowIndex: number,
+  color: string,
 ) {
   const row = clamp(rowIndex, 0, projected.rows - 1);
   let started = false;
@@ -521,10 +527,10 @@ function drawHighlightedRow(
 
   if (!started) return;
 
-  ctx.strokeStyle = "hsla(48, 100%, 72%, 0.9)";
+  ctx.strokeStyle = color;
   ctx.lineWidth = 2.2;
   ctx.shadowBlur = 10;
-  ctx.shadowColor = "hsla(48, 100%, 72%, 0.6)";
+  ctx.shadowColor = color;
   ctx.stroke();
   ctx.shadowBlur = 0;
 }
@@ -534,6 +540,7 @@ function drawBoundsBox(
   projected: {
     points: Array<Vec2 | null>;
   },
+  color: string,
 ) {
   const edges: Array<[number, number]> = [
     [0, 1], [1, 2], [2, 3], [3, 0],
@@ -543,7 +550,7 @@ function drawBoundsBox(
 
   ctx.save();
   ctx.setLineDash([6, 4]);
-  ctx.strokeStyle = "hsla(48, 100%, 78%, 0.4)";
+  ctx.strokeStyle = color;
   ctx.lineWidth = 1.2;
 
   for (const [a, b] of edges) {

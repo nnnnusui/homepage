@@ -1,6 +1,7 @@
 import { createMemo, For } from "solid-js";
 
-const ACCENT = "#cc3232";
+import { useTheme } from "~/fn/state/root/useTheme";
+
 type KeyInfo = {
   note: number;
   x: number;
@@ -17,6 +18,7 @@ export const Piano = (p: {
   onNoteOn?: (note: number) => void;
   onNoteOff?: (note: number) => void;
 }) => {
+  const theme = useTheme();
 
   const octaveKeyboardRatio = [7,6,7,6,7,7,6,6,6,6,6,7];
   const blackKeyIndices = [1,3,6,8,10];
@@ -144,7 +146,7 @@ export const Piano = (p: {
           y={whiteKey.y}
           width={whiteKey.w}
           height={whiteKey.h}
-          fill={isActive(whiteKey.note) ? ACCENT : "white"}
+          fill={isActive(whiteKey.note) ? theme.accent : "white"}
           stroke="#555"
           stroke-width={1}
         />
@@ -155,7 +157,7 @@ export const Piano = (p: {
           y={blackKey.y}
           width={blackKey.w}
           height={blackKey.h}
-          fill={isActive(blackKey.note) ? ACCENT : "#1a1a1a"}
+          fill={isActive(blackKey.note) ? theme.accent : "#1a1a1a"}
         />
       )}</For>
     </svg>

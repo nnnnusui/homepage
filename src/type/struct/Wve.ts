@@ -220,15 +220,15 @@ export const Wve = (() => {
   const as = <To>(accessor: () => Wve<unknown>): Wve<To> =>
     accessor() as Wve<To>;
 
-  const assign = <T, Assign extends AnyObject>(wve: Wve<T>, assign: Assign): Wve<T> & Assign => {
+  const assign = <From, Assign extends AnyObject>(from: From, assign: Assign): From & Assign => {
     Object.keys(assign).forEach((key) => {
-      if (key in wve) return;
-      Object.defineProperty(wve, key, {
+      if (key in (from as AnyObject)) return;
+      Object.defineProperty(from, key, {
         get() { return assign[key]; },
         enumerable: true,
       });
     });
-    return wve as Wve<T> & Assign;
+    return from as From & Assign;
   };
 
   const track = <T>(any: T): T => {

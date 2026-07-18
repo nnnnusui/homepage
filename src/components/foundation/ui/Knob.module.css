@@ -1,5 +1,6 @@
 .Arc {
-  --arc-width: 11px; /* the boder thickness */
+  --arc-width-base: 11px;
+  --arc-width: var(--arc-width-base);
   --start-deg: 0deg;
   --end-deg: 275deg;
   --_g:/var(--arc-width) var(--arc-width) no-repeat
@@ -19,6 +20,10 @@
     calc(50% - 50%*cos(calc(var(--end-deg) + var(--start-deg)))) var(--_g),
     linear-gradient(#0000 0 0) content-box intersect,
     conic-gradient(from var(--start-deg), #000 var(--end-deg),#0000 0);
+
+  &.Indicate {
+    --arc-width: calc(var(--arc-width-base) - 6px);
+  }
 }
 
 .Grow {

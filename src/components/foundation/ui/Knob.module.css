@@ -7,7 +7,6 @@
     radial-gradient(50% 50%,#000 97%,#0000);
 
   aspect-ratio: 1;
-  /* rotate: var(--start-deg); */
 
   padding: var(--arc-width);
   background: #c0d860;

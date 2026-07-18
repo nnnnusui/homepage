@@ -1,4 +1,4 @@
-import { onCleanup, onMount } from "solid-js";
+import { createEffect, onCleanup, onMount } from "solid-js";
 
 import { useTheme } from "~/fn/state/root/useTheme";
 import { useWaveTableContext } from "./createWaveTable";
@@ -17,13 +17,14 @@ export const View3D = () => {
     color: theme,
   });
 
-  const drawAndLoop = (timeMs: number) => {
-    draw(timeMs);
-    rafId = requestAnimationFrame(drawAndLoop);
-  };
+  createEffect(() => {
+    void context.instance.samples;
+    void context.state().currentMorphRatio;
+    rafId = requestAnimationFrame(draw);
+  });
 
   onMount(() => {
-    rafId = requestAnimationFrame(drawAndLoop);
+    rafId = requestAnimationFrame(draw);
   });
 
   onCleanup(() => {

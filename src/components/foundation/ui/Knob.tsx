@@ -117,7 +117,7 @@ export const Knob = (p: ParentProps<{
       aria-valuenow={state().value}
       {...pointerEvent.handlerMap}
       onKeyDown={onKeyDown}
-      class="relative grid size-20 place-items-center rounded-full select-none outline-none touch-none"
+      class="relative min-w-15 aspect-square grid place-items-center rounded-full select-none outline-none touch-none"
     >
       <div class={cn(styles.Arc, "absolute inset-0")}
         ref={chainUseRef([
@@ -140,7 +140,7 @@ export const Knob = (p: ParentProps<{
             transform: `rotate(${(45 + sweepDegree() * ratio()) + startDegree()}deg)`,
           }}
         >
-          <div class="absolute w-1 h-3.25 rounded-full origin-top -rotate-45 -translate-x-1/2"
+          <div class="absolute w-1 h-1/2 rounded-full origin-top -rotate-45 -translate-x-1/2"
             style={{ "background-color": theme.accent }}
             ref={chainUseRef([
               withNeumorphism(() => ({ baseColor: theme.accent, shape: "concave" })),

@@ -1,4 +1,8 @@
+import { createEffect } from "solid-js";
+
 import { createElementSize } from "~/fn/state/createElementSize";
+import { createThrottleParAnimationFrame } from "~/fn/state/createThrottleParAnimationFrame";
+import { Wve } from "~/type/struct/Wve";
 
 type Vec2 = {
   x: number;
@@ -44,7 +48,7 @@ export const createWaveTableDraw = (p: {
 }) => {
   const size = createElementSize(() => p.canvas);
 
-  return (_timeMs: number) => {
+  const draw = (_timeMs: number) => {
     const canvas = p.canvas;
     if (!canvas) return;
 
@@ -140,6 +144,13 @@ export const createWaveTableDraw = (p: {
 
     drawHighlightedRow(ctx, waveTableMeshAdjusted, highlightRow, p.color.accent);
   };
+
+  const drawParAnimationFrame = createThrottleParAnimationFrame(() => draw);
+  createEffect(() => {
+    void Wve.track(size());
+    requestAnimationFrame(drawParAnimationFrame.run);
+  });
+  return draw;
 };
 
 function rotateY(v: Vec3, angle: number): Vec3 {

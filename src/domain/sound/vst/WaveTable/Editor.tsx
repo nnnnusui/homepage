@@ -1,6 +1,8 @@
 import { For } from "solid-js";
 
+import { Knob } from "~/components/foundation/ui/Knob";
 import { Objects } from "~/fn/objects";
+import { createThrottleParAnimationFrame } from "~/fn/state/createThrottleParAnimationFrame";
 import { Wve } from "~/type/struct/Wve";
 import { EasingDefinition, useWaveTableContext, WaveShapeDefinition, WaveTableDefinition, WaveTableKeyframe } from "./createWaveTable";
 
@@ -9,6 +11,20 @@ export const Editor = () => {
   const context = useWaveTableContext();
   const state = Wve.from(() => context.state);
   const definition = state.partial("definition");
+
+  const commitOffset = (id: typeof WaveTableDefinition.KeyframeId.type, value: number) => {
+    definition.set(
+      "keyframes",
+      (frame) => frame.id === id,
+      "offset",
+      clamp(value, 0, 1),
+    );
+  };
+
+  const throttledOffsetUpdate = createThrottleParAnimationFrame(
+    (id: typeof WaveTableDefinition.KeyframeId.type, value: number) =>
+      () => commitOffset(id, value),
+  );
 
   const addKeyframe = () => {
     definition.set("keyframes", (prev) => [
@@ -29,64 +45,60 @@ export const Editor = () => {
 
   return (
     <section class="flex flex-col gap-4 w-full">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <label class="flex flex-col gap-1">
-          <span class="text-sm text-slate-300">Frame Count</span>
-          <input
-            type="number"
-            min="1"
-            value={context.instance.frameCount}
-            // onInput={(e) => state.set("frameCount", Number(e.currentTarget.value || 1))}
-            disabled
-          />
-        </label>
-
-        <label class="flex flex-col gap-1">
-          <span class="text-sm text-slate-300">Table Size</span>
-          <input
-            type="number"
-            min="1"
-            step="1"
-            value={context.instance.tableSize}
-            // onInput={(e) => state.set("tableSize", Number(e.currentTarget.value || 1))}
-            disabled
-          />
-        </label>
-
-        <label class="flex flex-col gap-1">
-          <span class="text-sm text-slate-300">Default Easing</span>
-          <select
-            value={definition().defaultEasing.id}
-            onInput={(e) => definition.set("defaultEasing", { type: "builtin", id: e.currentTarget.value as keyof typeof EasingDefinition.builtinMap })}
-          >
-            <For each={Objects.keys(EasingDefinition.builtinMap)}>{(easing) => (
-              <option value={easing}>{easing}</option>
-            )}</For>
-          </select>
-        </label>
-      </div>
-
-      <label class="flex flex-col gap-1">
-        <span class="text-sm text-slate-300">Preview Morph ({state().currentMorphRatio.toFixed(3)})</span>
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.001"
-          value={state().currentMorphRatio}
-          onInput={(e) => state.set("currentMorphRatio", Number(e.currentTarget.value))}
-        />
-      </label>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3" />
 
       <div class="flex items-center justify-between">
         <h2 class="text-lg font-semibold">Keyframes</h2>
-        <button
-          type="button"
-          class="px-3 py-1.5 rounded-md bg-cyan-500 text-slate-900 font-semibold hover:bg-cyan-400 transition-colors"
-          onClick={addKeyframe}
-        >
-          Add Keyframe
-        </button>
+        <div class="flex gap-6 items-center">
+          <label class="flex flex-col gap-1 text-xs">
+            <span class="text-sm text-slate-300">Frame Count</span>
+            <input
+              type="number"
+              min="1"
+              value={context.instance.frameCount}
+              // onInput={(e) => state.set("frameCount", Number(e.currentTarget.value || 1))}
+              disabled
+            />
+          </label>
+
+          <label class="flex flex-col gap-1 text-xs">
+            <span class="text-sm text-slate-300">Table Size</span>
+            <input
+              type="number"
+              min="1"
+              step="1"
+              value={context.instance.tableSize}
+              // onInput={(e) => state.set("tableSize", Number(e.currentTarget.value || 1))}
+              disabled
+            />
+          </label>
+          <Knob
+            min={0}
+            max={1}
+            step={0.001}
+            onInput={(value) => state.set("currentMorphRatio", value)}
+          >
+            Morph
+          </Knob>
+          <label class="flex flex-col gap-1">
+            <span class="text-sm text-slate-300">Default Easing</span>
+            <select
+              value={definition().defaultEasing.id}
+              onInput={(e) => definition.set("defaultEasing", { type: "builtin", id: e.currentTarget.value as keyof typeof EasingDefinition.builtinMap })}
+            >
+              <For each={Objects.keys(EasingDefinition.builtinMap)}>{(easing) => (
+                <option value={easing}>{easing}</option>
+              )}</For>
+            </select>
+          </label>
+          <button
+            type="button"
+            class="px-3 py-1.5 rounded-md bg-cyan-500 text-slate-900 font-semibold hover:bg-cyan-400 transition-colors"
+            onClick={addKeyframe}
+          >
+            Add Keyframe
+          </button>
+        </div>
       </div>
 
       <div class="flex flex-col gap-2">
@@ -103,12 +115,12 @@ export const Editor = () => {
                   value={keyframe.offset}
                   onInput={(e) => {
                     const value = Number(e.currentTarget.value);
-                    definition.set(
-                      "keyframes",
-                      (frame) => frame.id === keyframe.id,
-                      "offset",
-                      clamp(value, 0, 1),
-                    );
+                    throttledOffsetUpdate.run(keyframe.id, value);
+                  }}
+                  onChange={(e) => {
+                    const value = Number(e.currentTarget.value);
+                    throttledOffsetUpdate.cancel();
+                    commitOffset(keyframe.id, value);
                   }}
                 />
               </label>

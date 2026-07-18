@@ -11,9 +11,9 @@ export const createEnvelope = (p: { p?: unknown }): EnvelopeContextProps => {
     decay: 0.24,
     sustain: 0.55,
     release: 0.32,
-    attackCurve: { x1: 0.25, y1: 0.15, x2: 0.4, y2: 1 },
-    decayCurve: { x1: 0.15, y1: 0, x2: 0.45, y2: 1 },
-    sustainCurve: { x1: 0.25, y1: 0.25, x2: 0.75, y2: 0.75 },
+    attackCurve: { x1: 0.5, y1: 0.5, x2: 0.5, y2: 0.5 },
+    decayCurve: { x1: 0.5, y1: 0.5, x2: 0.5, y2: 0.5 },
+    releaseCurve: { x1: 0.5, y1: 0.5, x2: 0.5, y2: 0.5 },
   });
   const node = createEnvelopeNode({ get envelope() { return state(); } });
 
@@ -25,32 +25,30 @@ export const createEnvelope = (p: { p?: unknown }): EnvelopeContextProps => {
     const decay = Math.max(0.001, current.decay);
     const sustain = clamp(current.sustain, 0, 1);
     const release = Math.max(0.001, current.release);
-    const sustainSpan = Math.max(0.12, release * 0.5);
-    const sustainSettleValue = lerp(1, sustain, 0.65);
 
-    const points = [
+    const anchors = [
       { time: 0, value: 0 },
       { time: delay, value: 0 },
       { time: delay + attack, value: 1 },
       { time: delay + attack + hold, value: 1 },
-      { time: delay + attack + hold + decay, value: sustainSettleValue },
-      { time: delay + attack + hold + decay + sustainSpan, value: sustain },
-      { time: delay + attack + hold + decay + sustainSpan + release, value: 0 },
+      { time: delay + attack + hold + decay, value: sustain },
+      { time: delay + attack + hold + decay + release, value: 0 },
     ] as const;
 
+    const points = anchors.slice(1);
+
     const sampledPoints = [
-      ...createSegmentSamples({ from: points[0]!, to: points[1]!, curve: LINEAR_CURVE, sampleCount: 8 }),
-      ...createSegmentSamples({ from: points[1]!, to: points[2]!, curve: current.attackCurve, sampleCount: 28, skipFirst: true }),
-      ...createSegmentSamples({ from: points[2]!, to: points[3]!, curve: LINEAR_CURVE, sampleCount: 8, skipFirst: true }),
-      ...createSegmentSamples({ from: points[3]!, to: points[4]!, curve: current.decayCurve, sampleCount: 28, skipFirst: true }),
-      ...createSegmentSamples({ from: points[4]!, to: points[5]!, curve: current.sustainCurve, sampleCount: 18, skipFirst: true }),
-      ...createSegmentSamples({ from: points[5]!, to: points[6]!, curve: LINEAR_CURVE, sampleCount: 18, skipFirst: true }),
+      ...createSegmentSamples({ from: anchors[0]!, to: anchors[1]!, curve: LINEAR_CURVE, sampleCount: 8 }),
+      ...createSegmentSamples({ from: anchors[1]!, to: anchors[2]!, curve: current.attackCurve, sampleCount: 28, skipFirst: true }),
+      ...createSegmentSamples({ from: anchors[2]!, to: anchors[3]!, curve: LINEAR_CURVE, sampleCount: 8, skipFirst: true }),
+      ...createSegmentSamples({ from: anchors[3]!, to: anchors[4]!, curve: current.decayCurve, sampleCount: 28, skipFirst: true }),
+      ...createSegmentSamples({ from: anchors[4]!, to: anchors[5]!, curve: current.releaseCurve, sampleCount: 18, skipFirst: true }),
     ];
 
     return {
       points,
       sampledPoints,
-      totalTime: points[points.length - 1]!.time || 1,
+      totalTime: anchors[anchors.length - 1]!.time || 1,
     };
   });
 
@@ -71,7 +69,7 @@ export type EnvelopeContextProps = {
     release: number;
     attackCurve: EnvelopeBezier;
     decayCurve: EnvelopeBezier;
-    sustainCurve: EnvelopeBezier;
+    releaseCurve: EnvelopeBezier;
   }>;
   graph: {
     points: readonly { time: number; value: number }[];

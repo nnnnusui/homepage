@@ -87,9 +87,9 @@ export const Editor = () => {
           onInput={(next) => context.state.set("decayCurve", next)}
         />
         <BezierEditor
-          title="Sustain Curve"
-          curve={state().sustainCurve}
-          onInput={(next) => context.state.set("sustainCurve", next)}
+          title="Release Curve"
+          curve={state().releaseCurve}
+          onInput={(next) => context.state.set("releaseCurve", next)}
         />
       </div>
     </section>

@@ -86,7 +86,7 @@ const normalizeEnvelope = (envelope: EnvelopeNodeEnvelope): EnvelopeNodeEnvelope
     release: Math.max(0.001, envelope.release),
     attackCurve: normalizeCurve(envelope.attackCurve),
     decayCurve: normalizeCurve(envelope.decayCurve),
-    sustainCurve: normalizeCurve(envelope.sustainCurve),
+    releaseCurve: normalizeCurve(envelope.releaseCurve),
   };
 };
 
@@ -153,7 +153,7 @@ class EnvelopeNodeProcessor extends AudioWorkletProcessor {
       release: Math.max(0.001, raw.release ?? 0.2),
       attackCurve: this.normalizeCurve(raw.attackCurve ?? { x1: 0.25, y1: 0.1, x2: 0.4, y2: 1 }),
       decayCurve: this.normalizeCurve(raw.decayCurve ?? { x1: 0.15, y1: 0, x2: 0.45, y2: 1 }),
-      sustainCurve: this.normalizeCurve(raw.sustainCurve ?? { x1: 0.25, y1: 0.25, x2: 0.75, y2: 0.75 }),
+      releaseCurve: this.normalizeCurve(raw.releaseCurve ?? { x1: 0.25, y1: 0.25, x2: 0.75, y2: 0.75 }),
     };
   }
 
@@ -210,9 +210,6 @@ class EnvelopeNodeProcessor extends AudioWorkletProcessor {
     const attackEnd = delayEnd + env.attack;
     const holdEnd = attackEnd + env.hold;
     const decayEnd = holdEnd + env.decay;
-    const settleDuration = Math.max(0.04, env.release * 0.5);
-    const settleEnd = decayEnd + settleDuration;
-    const sustainSettle = this.lerp(1, env.sustain, 0.65);
 
     if (elapsed <= delayEnd) return this.noteOnStartLevel;
 
@@ -227,13 +224,7 @@ class EnvelopeNodeProcessor extends AudioWorkletProcessor {
     if (elapsed <= decayEnd) {
       const t = (elapsed - holdEnd) / Math.max(env.decay, 0.001);
       const eased = this.cubicBezierProgress(env.decayCurve, t);
-      return this.lerp(1, sustainSettle, eased);
-    }
-
-    if (elapsed <= settleEnd) {
-      const t = (elapsed - decayEnd) / Math.max(settleDuration, 0.001);
-      const eased = this.cubicBezierProgress(env.sustainCurve, t);
-      return this.lerp(sustainSettle, env.sustain, eased);
+      return this.lerp(1, env.sustain, eased);
     }
 
     return env.sustain;
@@ -260,7 +251,8 @@ class EnvelopeNodeProcessor extends AudioWorkletProcessor {
 
     const releaseElapsed = atSec - this.noteOffAtSec;
     const t = this.clamp(releaseElapsed / Math.max(this.envelope.release, 0.001), 0, 1);
-    return this.clamp(this.lerp(this.releaseStartLevel, 0, t) + retriggerTail, 0, 1);
+    const eased = this.cubicBezierProgress(this.envelope.releaseCurve, t);
+    return this.clamp(this.lerp(this.releaseStartLevel, 0, eased) + retriggerTail, 0, 1);
   }
 
   process(_inputs, outputs) {
@@ -290,5 +282,5 @@ export type EnvelopeNodeEnvelope = {
   release: number;
   attackCurve: EnvelopeBezier;
   decayCurve: EnvelopeBezier;
-  sustainCurve: EnvelopeBezier;
+  releaseCurve: EnvelopeBezier;
 };

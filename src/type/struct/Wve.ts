@@ -231,10 +231,10 @@ export const Wve = (() => {
     return wve as Wve<T> & Assign;
   };
 
-  const truck = <T>(any: T): T => {
+  const track = <T>(any: T): T => {
     if (typeof any === "object") {
       Object.keys(any as AnyObject).forEach((key) => {
-        truck((any as AnyObject)[key]);
+        track((any as AnyObject)[key]);
       });
     }
     return any;
@@ -258,7 +258,7 @@ export const Wve = (() => {
     mayBe,
     as,
     assign,
-    truck,
+    track,
     unwrap,
   };
 })();

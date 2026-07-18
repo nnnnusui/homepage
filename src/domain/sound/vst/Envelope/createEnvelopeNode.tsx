@@ -13,7 +13,7 @@ export const createEnvelopeNode = (p: {
   let gainNode: GainNode | undefined;
   const envelopeNodeResolvers = Promise.withResolvers<GainNode>();
   onMount(() => {
-    audioEnv.useContext(async (context) => {
+    audioEnv.useContext(async ({ context }) => {
       if (audioWorkletNode && gainNode) return gainNode;
       const moduleUrl = getEnvelopeModuleUrl();
       await context.audioWorklet.addModule(moduleUrl);
@@ -42,7 +42,7 @@ export const createEnvelopeNode = (p: {
       value: normalizeEnvelope(envelope),
     });
   };
-  createEffect(() => { void Wve.truck(p.envelope); updateEnvelope(p.envelope); });
+  createEffect(() => { void Wve.track(p.envelope); updateEnvelope(p.envelope); });
 
   const noteOn = (atSec = audioEnv.context.currentTime) => {
     audioWorkletNode?.port.postMessage({ kind: "noteOn", atSec });

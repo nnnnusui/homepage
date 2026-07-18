@@ -5,14 +5,17 @@ import { Wve } from "~/type/struct/Wve";
 const createAudioEnvironment = () => {
   const state = Wve.create({
     state: "uninitialized" as "uninitialized" | "initialized",
-    gain: 0.2,
+    gain: 0.1,
   });
 
   let audioContext: AudioContext | undefined;
   const audioContextResolvers = Promise.withResolvers<AudioContext>();
   let masterGainNode: GainNode | undefined;
-  let audioContextInitializeQueue: { consume: (context: AudioContext) => void }[] = [];
+  let audioContextInitializeQueue: { consume: (environment: { context: AudioContext; connectFrom: (node: AudioNode) => void }) => void }[] = [];
 
+  const connectFrom = (node: AudioNode) => {
+    node.connect(masterGainNode!);
+  };
   const initAudioContext = (newContext: AudioContext) => {
     audioContext = newContext;
     audioContextResolvers.resolve(newContext);
@@ -20,7 +23,7 @@ const createAudioEnvironment = () => {
     masterGainNode.gain.value = Wve.unwrap(state()).gain;
     masterGainNode.connect(newContext.destination);
     for (const { consume } of audioContextInitializeQueue) {
-      void consume(newContext);
+      void consume({ context: newContext, connectFrom });
     }
     audioContextInitializeQueue = [];
     state.set("state", "initialized");
@@ -53,8 +56,8 @@ const createAudioEnvironment = () => {
   };
   onCleanup(() => { void cleanup(); });
 
-  const useContext = <Return>(consume: (context: AudioContext) => Return | undefined) => {
-    if (audioContext) return consume(audioContext);
+  const useContext = <Return>(consume: (environment: { context: AudioContext; connectFrom: (node: AudioNode) => void }) => Return | undefined) => {
+    if (audioContext) return consume({ context: audioContext, connectFrom });
     audioContextInitializeQueue.push({ consume });
   };
 

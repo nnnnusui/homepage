@@ -10,7 +10,7 @@ export const createWaveTable = (p: { p?: unknown }): WaveTableContextProps => {
     currentMorphRatio: 0,
     isPlaying: false,
     frequency: 440,
-    gain: 0.18,
+    gain: 1,
     definition: {
       keyframes: [
         { id: WaveTableDefinition.KeyframeId.from("1"), offset: 0, shape: { type: "builtin", id: "sine" }, easing: undefined },

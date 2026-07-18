@@ -1,27 +1,42 @@
+import { onMount } from "solid-js";
+
+import { useAudioEnvironment } from "~/fn/state/root/useAudioEnvironment";
 import { Wve } from "~/type/struct/Wve";
 import { useWaveTableContext } from "./createWaveTable";
-import { createWaveTableSynth } from "./createWaveTableSynth";
 
 export const Player = () => {
   const context = useWaveTableContext();
   const state = Wve.from(() => context.state);
-  const synth = createWaveTableSynth({
-    get frequency() { return state().frequency; },
-    get morph() { return state().currentMorphRatio; },
-    get gain() { return state().gain; },
-    get waveTableInstance() { return context.instance.samples; },
-    get frameCount() { return context.instance.frameCount; },
-    get tableSize() { return context.instance.tableSize; },
+  const audioEnv = useAudioEnvironment();
+
+  let gainNode: GainNode | null = null;
+  onMount(() => {
+    audioEnv.useContext(async ({ context: audioContext, connectFrom }) => {
+      gainNode = audioContext.createGain();
+      gainNode.gain.value = 0;
+      connectFrom(
+        (await context.node.ready)
+          .connect(gainNode),
+      );
+    });
   });
 
   const start = () => {
+    if (!gainNode) return;
     state.set("isPlaying", true);
-    synth.start();
+    const t = audioEnv.context.currentTime;
+    gainNode.gain.cancelScheduledValues(t);
+    gainNode.gain.setValueAtTime(gainNode.gain.value, t);
+    gainNode.gain.linearRampToValueAtTime(1, t + 0.03);
   };
 
   const stop = () => {
     state.set("isPlaying", false);
-    synth.stop();
+    if (!gainNode) return;
+    const t = audioEnv.context.currentTime;
+    gainNode.gain.cancelScheduledValues(t);
+    gainNode.gain.setValueAtTime(gainNode.gain.value, t);
+    gainNode.gain.linearRampToValueAtTime(0, t + 0.03);
   };
 
   return (

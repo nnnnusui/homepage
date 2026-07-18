@@ -19,7 +19,7 @@ export const createWaveTableNode = (p: {
     const source = createWorkletModuleSource();
     const blob = new Blob([source], { type: "application/javascript" });
     const workletModuleUrl = URL.createObjectURL(blob);
-    audioEnv.useContext(async (context) => {
+    audioEnv.useContext(async ({ context }) => {
       await context.audioWorklet.addModule(workletModuleUrl);
 
       workletNode = new AudioWorkletNode(context, "wavetable-morph-processor", {

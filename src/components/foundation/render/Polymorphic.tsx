@@ -3,10 +3,10 @@ import { Dynamic } from "solid-js/web";
 
 import { Override } from "~/type/Override";
 
-export const Polymorphic = <T extends ValidComponent, Props>(_p: Override<
-  PolymorphicProps<T, Props>,
+export const Polymorphic = <As extends ValidComponent, Props>(_p: Override<
+  PolymorphicProps<As, Props>,
   {
-    as: Required<PolymorphicProps<T, Props>>["as"];
+    as: Required<PolymorphicProps<As, Props>>["as"];
   }
 >) => {
   const [p, wrappedProps] = splitProps(_p, ["as"]);
@@ -16,9 +16,9 @@ export const Polymorphic = <T extends ValidComponent, Props>(_p: Override<
   );
 };
 
-export type PolymorphicProps<T extends ValidComponent, Props> = Override<
-  ComponentProps<T>,
+export type PolymorphicProps<As extends ValidComponent, Props> = Override<
+  ComponentProps<As>,
   {
-    as?: T; // | keyof JSX.HTMLElementTags;
+    as?: As; // | keyof JSX.HTMLElementTags;
   } & Props
 >;

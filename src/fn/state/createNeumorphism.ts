@@ -3,7 +3,8 @@ import { Rgb } from "~/type/struct/Rgb";
 
 /** @public */
 export const createNeumorphism = (p: {
-  baseColor: string;
+  shadowColor: string;
+  baseColor?: string;
   shape?: "flat" | "concave" | "convex" | "pressed";
   depth?: number;
   clarity?: number;
@@ -25,7 +26,8 @@ export const createNeumorphism = (p: {
   const overElement = () => p.light?.overElement ?? false;
   const centerLight = () => (overElement() ? proximity() : 0);
   const size = () => 100;
-  const background = () => Rgb.fromRgbHexStr(p.baseColor);
+  const shadow = () => Rgb.fromRgbHexStr(p.shadowColor);
+  const background = () => Rgb.fromRgbHexStr(p.baseColor ?? p.shadowColor);
   const shape = () => p.shape || "flat";
   const depth = () => p.depth ?? 0.4;
   const clarity = () => p.clarity ?? 0.6;
@@ -42,21 +44,21 @@ export const createNeumorphism = (p: {
   const dy = () => Math.sin(shadowAngle()) * offset();
 
   // ---- shadow colors -------------------------------------------------------
-  const bgHsl = () => Hsl.fromRgb(background());
+  const shadowHsl = () => Hsl.fromRgb(shadow());
   const lightnessDelta = () => 8 + depth() * 12;
 
   const lightColor = () => Hsl.toRgb(
     Hsl.fromHsl(
-      bgHsl().hue,
-      bgHsl().saturation,
-      clamp(bgHsl().lightness + lightnessDelta(), 0, Hsl.max().lightness),
+      shadowHsl().hue,
+      shadowHsl().saturation,
+      clamp(shadowHsl().lightness + lightnessDelta(), 0, Hsl.max().lightness),
     ),
   );
   const darkColor = () => Hsl.toRgb(
     Hsl.fromHsl(
-      bgHsl().hue,
-      bgHsl().saturation,
-      clamp(bgHsl().lightness - lightnessDelta(), 0, Hsl.max().lightness),
+      shadowHsl().hue,
+      shadowHsl().saturation,
+      clamp(shadowHsl().lightness - lightnessDelta(), 0, Hsl.max().lightness),
     ),
   );
 
@@ -96,6 +98,7 @@ export const createNeumorphism = (p: {
   // ---- gradient colors ----------------------------------------------------
   const backgroundCss = () => {
     if (["flat", "pressed"].includes(shape())) return Rgb.toRgbHexStr(background());
+    const bgHsl = () => Hsl.fromRgb(background());
     const surfaceHsl = bgHsl();
     const contrast
       = (3 + depth() * 5)

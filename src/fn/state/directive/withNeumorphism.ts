@@ -14,13 +14,15 @@ export const withNeumorphism = (
   const theme = useTheme();
   const inStorybook = useInStorybook();
   const baseColor = () => {
+    if (p().shadowColor) return p().shadowColor!;
     if (!inStorybook()) return theme.base;
     return ref.closest(".light, .dark")?.classList.contains("light")
       ? theme.lightBase
       : theme.darkBase;
   };
   const style = createNeumorphism({
-    get baseColor() { return baseColor(); },
+    get shadowColor() { return baseColor(); },
+    get baseColor() { return p().baseColor; },
     get shape() { return p().shape; },
     get depth() { return p().depth; },
     get clarity() { return p().clarity; },
@@ -67,7 +69,7 @@ type BaseProps = Parameters<typeof createNeumorphism>[0];
 type UseDirectiveNeumorphismProps = Override<
   BaseProps,
   {
-    baseColor?: BaseProps["baseColor"];
+    shadowColor?: BaseProps["shadowColor"];
     light?: BaseProps["light"] | Pos;
   }
 >;

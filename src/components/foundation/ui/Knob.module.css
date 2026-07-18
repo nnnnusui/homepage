@@ -1,0 +1,31 @@
+.Arc {
+  --arc-width: 11px; /* the boder thickness */
+  --start-deg: 0deg;
+  --end-deg: 275deg;
+  --_g:/var(--arc-width) var(--arc-width) no-repeat
+    radial-gradient(50% 50%,#000 97%,#0000);
+
+  aspect-ratio: 1;
+  /* rotate: var(--start-deg); */
+
+  padding: var(--arc-width);
+  background: #c0d860;
+  border-radius: 50%;
+
+  mask:
+    calc(50% + 50%*sin(calc(var(--start-deg))))
+    calc(50% - 50%*cos(calc(var(--start-deg)))) var(--_g),
+    calc(50% + 50%*sin(calc(var(--end-deg) + var(--start-deg))))
+    calc(50% - 50%*cos(calc(var(--end-deg) + var(--start-deg)))) var(--_g),
+    linear-gradient(#0000 0 0) content-box intersect,
+    conic-gradient(from var(--start-deg), #000 var(--end-deg),#0000 0);
+}
+
+.Grow {
+  --color: #fceaac; filter: saturate(175%);
+  --blur: 1.75rem;
+  --box-blur: calc(.5 * var(--blur));
+  --glow: var(--color);
+  box-shadow: 0 -40px 100px, 0 0 2px, 0 0 1em #ff4444, 0 0 .5em #ff4444, 0 0 .1em #ff4444, 0 10px 3px #000;
+  border: 4px solid currentColor;
+}

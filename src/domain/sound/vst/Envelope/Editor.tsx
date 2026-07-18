@@ -1,3 +1,4 @@
+import { Knob } from "~/components/foundation/ui/Knob";
 import { EnvelopeBezier, useEnvelopeContext } from "./createEnvelope";
 
 export const Editor = () => {
@@ -11,55 +12,67 @@ export const Editor = () => {
         <p class="text-sm text-slate-300">Adjust delay, attack, hold, decay, sustain, and release.</p>
       </header>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-        <Slider
-          label={`Delay (${state().delay.toFixed(3)}s)`}
+      <div class="flex flex-row gap-3">
+        <Knob
           min={0}
           max={2}
           step={0.001}
-          value={state().delay}
+          defaultValue={context.state().delay}
           onInput={(value) => context.state.set("delay", value)}
-        />
-        <Slider
-          label={`Attack (${state().attack.toFixed(3)}s)`}
+        >
+          <span>Delay</span>
+          <span>{`(${state().delay.toFixed(3)}s)`}</span>
+        </Knob>
+        <Knob
           min={0.001}
           max={2}
           step={0.001}
-          value={state().attack}
+          defaultValue={context.state().attack}
           onInput={(value) => context.state.set("attack", value)}
-        />
-        <Slider
-          label={`Hold (${state().hold.toFixed(3)}s)`}
+        >
+          <span>Attack</span>
+          <span>{`(${state().attack.toFixed(3)}s)`}</span>
+        </Knob>
+        <Knob
           min={0}
           max={2}
           step={0.001}
-          value={state().hold}
+          defaultValue={context.state().hold}
           onInput={(value) => context.state.set("hold", value)}
-        />
-        <Slider
-          label={`Decay (${state().decay.toFixed(3)}s)`}
+        >
+          <span>Hold</span>
+          <span>{`(${state().hold.toFixed(3)}s)`}</span>
+        </Knob>
+        <Knob
           min={0.001}
           max={3}
           step={0.001}
-          value={state().decay}
+          defaultValue={context.state().decay}
           onInput={(value) => context.state.set("decay", value)}
-        />
-        <Slider
-          label={`Sustain (${state().sustain.toFixed(3)})`}
+        >
+          <span>Decay</span>
+          <span>{`(${state().decay.toFixed(3)}s)`}</span>
+        </Knob>
+        <Knob
           min={0}
           max={1}
           step={0.001}
-          value={state().sustain}
+          defaultValue={context.state().sustain}
           onInput={(value) => context.state.set("sustain", value)}
-        />
-        <Slider
-          label={`Release (${state().release.toFixed(3)}s)`}
+        >
+          <span>Sustain</span>
+          <span>{`(${state().sustain.toFixed(3)}s)`}</span>
+        </Knob>
+        <Knob
           min={0.001}
           max={4}
           step={0.001}
-          value={state().release}
+          defaultValue={context.state().release}
           onInput={(value) => context.state.set("release", value)}
-        />
+        >
+          <span>Release</span>
+          <span>{`(${state().release.toFixed(3)}s)`}</span>
+        </Knob>
       </div>
 
       <div class="grid grid-cols-1 xl:grid-cols-3 gap-3">

@@ -117,7 +117,7 @@ export const Knob = (p: ParentProps<{
       aria-valuenow={state().value}
       {...pointerEvent.handlerMap}
       onKeyDown={onKeyDown}
-      class="relative min-w-15 aspect-square grid place-items-center rounded-full select-none outline-none touch-none"
+      class="relative min-w-15 aspect-square place-items-center rounded-full select-none outline-none touch-none"
     >
       <div class={cn(styles.Arc, "absolute inset-0")}
         ref={chainUseRef([

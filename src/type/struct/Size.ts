@@ -17,8 +17,16 @@ export const Size = (() => {
     };
   };
 
+  const fromElement = (element: HTMLElement): Size => {
+    return {
+      width: element.offsetWidth,
+      height: element.offsetHeight,
+    };
+  };
+
   return {
     init,
     from,
+    fromElement,
   };
 })();

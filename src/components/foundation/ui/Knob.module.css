@@ -1,8 +1,8 @@
 .Arc {
-  --arc-width-base: 11px;
-  --arc-width: var(--arc-width-base);
-  --start-deg: 0deg;
+  /* --start-deg: 0deg;
   --end-deg: 275deg;
+  --arc-width-base: 11px; */
+  --arc-width: var(--arc-width-base);
   --_g:/var(--arc-width) var(--arc-width) no-repeat
     radial-gradient(50% 50%,#000 97%,#0000);
 
@@ -19,7 +19,7 @@
     conic-gradient(from var(--start-deg), #000 var(--end-deg),#0000 0);
 
   &.Indicate {
-    --arc-width: calc(var(--arc-width-base) - 6px);
+    --arc-width: calc(var(--arc-width-base) / 2);
   }
 }
 

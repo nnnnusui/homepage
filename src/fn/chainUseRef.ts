@@ -12,7 +12,7 @@ export type UseDirective = <
 
 /** @public */
 export const chainUseRef = <Element extends HTMLElement = HTMLElement>(
-  directives: readonly UseRef<Element>[],
+  directives: readonly (UseRef<Element> | undefined)[],
 ) => (ref: Element) => {
   directives.forEach((directive) => {
     directive?.(ref);

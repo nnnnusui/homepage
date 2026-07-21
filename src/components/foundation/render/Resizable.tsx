@@ -65,8 +65,8 @@ export const Resizable = <
 
   const style = () => {
     const raw = size();
-    const width = raw.width == null ? {} : { "--width": `${raw.width}px` };
-    const height = raw.height == null ? {} : { "--height": `${raw.height}px` };
+    const width = raw.width == null ? {} : { width: `${raw.width}px` };
+    const height = raw.height == null ? {} : { height: `${raw.height}px` };
     return {
       // "--initWidth": `${p.initSize?.width ?? 100}px`,
       // "--initHeight": `${p.initSize?.height ?? 100}px`,

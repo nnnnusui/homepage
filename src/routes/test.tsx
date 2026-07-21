@@ -51,7 +51,9 @@ export default function Test() {
         onPointerUp={() => envelope.node.noteOff()}
       >Play</ButtonStyled>
       <WaveTable api={waveTable}>
-        <Resizable resizable={["bottom"]}>
+        <Resizable resizable={["bottom"]}
+          class="size-full"
+        >
           <WaveTable.View3D />
         </Resizable>
         <WaveTable.Editor />

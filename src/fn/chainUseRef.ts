@@ -12,9 +12,10 @@ export type UseDirective = <
 
 /** @public */
 export const chainUseRef = <Element extends HTMLElement = HTMLElement>(
-  directives: readonly (UseRef<Element> | undefined)[],
+  directives: readonly (Element | UseRef<Element> | undefined)[],
 ) => (ref: Element) => {
   directives.forEach((directive) => {
-    directive?.(ref);
+    // A prop-passed `let ref` is also represented as a callable ref handler.
+    (directive as UseRef<Element>)?.(ref);
   });
 };

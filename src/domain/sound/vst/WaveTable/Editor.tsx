@@ -76,7 +76,7 @@ export const Editor = () => {
             min={0}
             max={1}
             step={0.001}
-            onInput={(value) => state.set("currentMorphRatio", value)}
+            onPreview={(value) => state.set("currentMorphRatio", value)}
           >
             Morph
           </Knob>

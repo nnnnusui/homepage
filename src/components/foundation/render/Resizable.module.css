@@ -2,8 +2,6 @@
   --resizerThumbColor: blue;
   --resizerWidth: 4px;
   position: relative;
-  width: var(--width, 100%);
-  height: var(--height, 100%);
 }
 
 .Resizers {

@@ -1,10 +1,12 @@
-import { createEffect, onCleanup, onMount } from "solid-js";
+import { ComponentProps, createEffect, onCleanup, onMount } from "solid-js";
 
+import { chainUseRef } from "~/fn/chainUseRef";
+import { cn } from "~/fn/cn";
 import { useTheme } from "~/fn/state/root/useTheme";
 import { useWaveTableContext } from "./createWaveTable";
 import { createWaveTableDraw } from "./createWaveTableDraw";
 
-export const View3D = () => {
+export const View3D = (p: ComponentProps<"canvas">) => {
   const context = useWaveTableContext();
   const theme = useTheme();
   let canvasRef!: HTMLCanvasElement;
@@ -32,6 +34,9 @@ export const View3D = () => {
   });
 
   return (
-    <canvas ref={canvasRef} class="size-full" />
+    <canvas {...p}
+      ref={chainUseRef([(el) => canvasRef = el, p.ref])}
+      class={cn("size-full", p.class)}
+    />
   );
 };

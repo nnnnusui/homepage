@@ -1,8 +1,9 @@
 import { ParentProps, splitProps, untrack } from "solid-js";
 
 import { Polymorphic, PolymorphicAs, PolymorphicProps } from "~/components/foundation/render/Polymorphic";
+import { Anchor } from "./Anchor";
 import { createEnvelope, EnvelopeContext } from "./createEnvelope";
-import { Editor } from "./Editor";
+import { Knob } from "./Knob";
 import { Scaler } from "./Scaler";
 import { View } from "./View";
 
@@ -23,7 +24,8 @@ const Root = <As extends PolymorphicAs>(_p: PolymorphicProps<As, ParentProps<Par
 
 /** @public */
 export const Envelope = Object.assign(Root, {
-  Editor,
+  Anchor,
+  Knob,
   Scaler,
   View,
 });

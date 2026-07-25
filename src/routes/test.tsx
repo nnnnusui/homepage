@@ -58,9 +58,14 @@ export default function Test() {
         </Resizable>
         <WaveTable.Editor />
       </WaveTable>
-      <Envelope api={envelope}>
-        <Envelope.View />
-        <Envelope.Editor />
+      <Envelope api={envelope}
+        class="relative overflow-hidden w-full p-2 border rounded-lg border-slate-700/70 flex flex-col gap-4"
+      >
+        <Envelope.View>
+          <Envelope.Scaler class="absolute top-0 right-0" />
+          <Envelope.Anchor.All />
+        </Envelope.View>
+        <Envelope.Knob.All />
       </Envelope>
     </main>
   );

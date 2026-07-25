@@ -12,6 +12,7 @@ import styles from "./Knob.module.css";
 
 export const Knob = (p: ParentProps<{
   defaultValue?: number;
+  value?: number;
   min?: number;
   max?: number;
   step?: number;
@@ -27,10 +28,11 @@ export const Knob = (p: ParentProps<{
   const theme = useTheme();
 
   const slider = createSlider({
+    get defaultValue() { return p.defaultValue; },
+    get value() { return p.value; },
     get min() { return p.min; },
     get max() { return p.max; },
     get step() { return p.step; },
-    get defaultValue() { return p.defaultValue; },
     get onPreview() { return p.onPreview; },
     get onApply() { return p.onApply; },
     getProgress: (ratio2D) => {

@@ -17,7 +17,7 @@ export const Editor = () => {
           min={0}
           max={2}
           step={0.001}
-          defaultValue={context.state().delay}
+          value={context.state().delay}
           onPreview={(value) => context.state.set("delay", value)}
         >
           <span>Delay</span>
@@ -27,7 +27,7 @@ export const Editor = () => {
           min={0.001}
           max={2}
           step={0.001}
-          defaultValue={context.state().attack}
+          value={context.state().attack}
           onPreview={(value) => context.state.set("attack", value)}
         >
           <span>Attack</span>
@@ -37,7 +37,7 @@ export const Editor = () => {
           min={0}
           max={2}
           step={0.001}
-          defaultValue={context.state().hold}
+          value={context.state().hold}
           onPreview={(value) => context.state.set("hold", value)}
         >
           <span>Hold</span>
@@ -47,7 +47,7 @@ export const Editor = () => {
           min={0.001}
           max={3}
           step={0.001}
-          defaultValue={context.state().decay}
+          value={context.state().decay}
           onPreview={(value) => context.state.set("decay", value)}
         >
           <span>Decay</span>
@@ -57,7 +57,7 @@ export const Editor = () => {
           min={0}
           max={1}
           step={0.001}
-          defaultValue={context.state().sustain}
+          value={context.state().sustain}
           onPreview={(value) => context.state.set("sustain", value)}
         >
           <span>Sustain</span>
@@ -67,7 +67,7 @@ export const Editor = () => {
           min={0.001}
           max={4}
           step={0.001}
-          defaultValue={context.state().release}
+          value={context.state().release}
           onPreview={(value) => context.state.set("release", value)}
         >
           <span>Release</span>

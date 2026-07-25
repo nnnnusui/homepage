@@ -4,12 +4,13 @@ import { Envelope } from ".";
 
 const meta = {
   component: () => (
-    <div class="flex flex-col items-center justify-start gap-6 p-4 w-full">
-      <Envelope>
+    <Envelope class="relative w-full">
+      <div class="w-full overflow-hidden">
         <Envelope.View />
-        <Envelope.Editor />
-      </Envelope>
-    </div>
+        <Envelope.Scaler class="absolute top-0 right-0" />
+      </div>
+      <Envelope.Editor />
+    </Envelope>
   ),
   parameters: {
   },

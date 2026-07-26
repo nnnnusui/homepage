@@ -12,17 +12,7 @@ const config: StorybookConfig = {
     "@storybook/addon-a11y",
     "@storybook/addon-docs",
   ],
-  framework: {
-    name: "storybook-solidjs-vite",
-    options: {
-      docgen: {
-        savePropValueAsString: true,
-        shouldExtractLiteralValuesFromEnum: true,
-        propFilter: (prop) =>
-          prop.parent ? !/node_modules/.test(prop.parent.fileName) : true,
-      },
-    },
-  },
+  framework: "storybook-solidjs-vite",
   async viteFinal(config) {
     return {
       ...config,

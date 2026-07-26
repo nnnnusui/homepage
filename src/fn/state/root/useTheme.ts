@@ -4,12 +4,12 @@ import { Hsl } from "~/type/struct/Hsl";
 import { Rgb } from "~/type/struct/Rgb";
 import { Wve } from "~/type/struct/Wve";
 
-const STORAGE_KEY = "theme.darkMode";
+const darkModeStorageKey = "theme.darkMode";
 
 const getInitialDarkMode = () => {
   if (typeof window === "undefined") return true;
 
-  const saved = window.localStorage.getItem(STORAGE_KEY);
+  const saved = window.localStorage.getItem(darkModeStorageKey);
   if (saved === "true") return true;
   if (saved === "false") return false;
 
@@ -19,7 +19,7 @@ const getInitialDarkMode = () => {
 const persistAndApplyDarkMode = (darkMode: boolean) => {
   if (typeof window === "undefined") return;
 
-  window.localStorage.setItem(STORAGE_KEY, String(darkMode));
+  window.localStorage.setItem(darkModeStorageKey, String(darkMode));
   document.documentElement.classList.toggle("light", !darkMode);
   document.documentElement.classList.toggle("dark", darkMode);
 };
@@ -49,21 +49,13 @@ const createTheme = () => {
   return () => ({
     set: state.set,
     get style() { return `
-      @layer base {
-        .light {
-          --base-color: ${getModeColor(state().base, false)};
-          --main-color: ${getModeColor(state().main, false)};
-          --accent-color: ${getModeColor(state().accent, false)};
-          background-color: var(--base-color);
-          color: var(--main-color);
-        }
-        .dark {
-          --base-color: ${getModeColor(state().base, true)};
-          --main-color: ${getModeColor(state().main, true)};
-          --accent-color: ${getModeColor(state().accent, true)};
-          background-color: var(--base-color);
-          color: var(--main-color);
-        }
+      :root {
+        --color-base-light: ${getModeColor(state().base, false)};
+        --color-base-dark: ${getModeColor(state().base, true)};
+        --color-main-light: ${getModeColor(state().main, false)};
+        --color-main-dark: ${getModeColor(state().main, true)};
+        --color-accent-light: ${getModeColor(state().accent, false)};
+        --color-accent-dark: ${getModeColor(state().accent, true)};
       }
     `;},
     get base() { return getModeColor(state().base, darkMode()); },

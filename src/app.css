@@ -3,6 +3,19 @@
 /* stylelint-disable-next-line stylus/at-rule-no-unknown */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* stylelint-disable-next-line stylus/at-rule-no-unknown */
+@theme {
+  --color-base-light: #e7e7e7;
+  --color-base-dark: #181818;
+  --color-base: light-dark(var(--color-base-light), var(--color-base-dark));
+  --color-main-light: #4e4e4e;
+  --color-main-dark: #b1b1b1;
+  --color-main: light-dark(var(--color-main-light), var(--color-main-dark));
+  --color-accent-light: #cd3333;
+  --color-accent-dark: #cc3232;
+  --color-accent: light-dark(var(--color-accent-light), var(--color-accent-dark));
+}
+
 @layer base {
   :where(*:not(svg *)) {
     all: unset;
@@ -10,5 +23,27 @@
     box-sizing: border-box;
 
     display: revert;
+  }
+  :root {
+    background-color: var(--color-base);
+
+    color: var(--color-main);
+  }
+  .light {
+    color-scheme: light;
+
+    background-color: var(--color-base);
+
+    color: var(--color-main);
+  }
+  .dark {
+    color-scheme: dark;
+
+    background-color: var(--color-base);
+
+    color: var(--color-main);
+  }
+  em {
+    color: var(--color-accent);
   }
 }

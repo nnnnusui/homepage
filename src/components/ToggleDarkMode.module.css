@@ -7,8 +7,8 @@
   width: var(--size);
   height: var(--size);
 
-  background-color: var(--base-color);
-  box-shadow: inset calc(var(--size) * .33) calc(var(--size) * -.25) 0 var(--main-color);
+  background-color: var(--color-base);
+  box-shadow: inset calc(var(--size) * .33) calc(var(--size) * -.25) 0 var(--color-main);
   border-radius: 100%;
   outline: none;
   transition: all 500ms;
@@ -16,7 +16,7 @@
   appearance: none;
 
   &.LightMode {
-    --color: var(--main-color);
+    --color: var(--color-main);
     --ray-size: calc(var(--size) * -.4);
     --offset-orthogonal: calc(var(--size) * .65);
     --offset-diagonal: calc(var(--size) * .45);

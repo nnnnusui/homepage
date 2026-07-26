@@ -13,11 +13,11 @@
   zoom: min(progress(100cql, 0px, 20rem), 1);
 
   &:hover {
-    color: color-mix(in srgb, var(--main-color) 88%, #36404f);
+    color: color-mix(in srgb, var(--color-main) 88%, #36404f);
   }
 
   &:focus-visible {
-    outline: 1px solid color-mix(in srgb, var(--main-color) 20%, var(--base-color));
+    outline: 1px solid color-mix(in srgb, var(--color-main) 20%, var(--color-base));
   }
 
   &:active {

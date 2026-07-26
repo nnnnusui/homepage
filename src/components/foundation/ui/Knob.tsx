@@ -83,9 +83,7 @@ export const Knob = (p: ParentProps<{
               transform: `rotate(${(45 + sweepDegree() * slider.valueRatio) + startDegree()}deg)`,
             }}
           >
-            <div class="w-[20%] h-3/8 rounded-full origin-top -rotate-45 -translate-x-1/2"
-              style={{ "background-color": theme.accent }}
-            />
+            <div class="w-[20%] h-3/8 rounded-full origin-top -rotate-45 -translate-x-1/2 bg-accent" />
           </div>
         </div>
         <Slider.Range class={cn(styles.Arc, styles.Indicate, "absolute inset-0.5")}

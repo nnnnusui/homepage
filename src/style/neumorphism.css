@@ -1,0 +1,110 @@
+/* stylelint-disable stylus/at-rule-no-unknown */
+
+/*
+ * Ensure Tailwind emits shadow-related CSS variables (--tw-shadow, --tw-ring-shadow, etc.)
+ * even when the project never uses any shadow-* utility classes.
+ */
+@source inline("shadow-none");
+
+/*
+ * Override Tailwind's vanilla bg-* utility to also expose the resolved background color
+ * via --tw-bg-color. This lets neumorphism utilities reuse the same runtime background
+ * color when deriving highlight/shadow tones, so neumo shading follows the actual bg-* value.
+ */
+@utility bg-* {
+  --tw-bg-color: --value(--color-*, [color]);
+
+  background-color: color-mix(
+    in oklch,
+    var(--tw-bg-color) var(--tw-bg-opacity, 100%),
+    transparent
+  );
+}
+
+@theme {
+  --neumo-shadow-color: var(--color-base);
+  --neumo-bg-color: var(--tw-bg-color);
+  --neumo-depth: .4;
+  --neumo-clarity: .6;
+  --neumo-light-azimuth: 225;
+  --neumo-light-elevation: .8;
+  --neumo-light-proximity: 0;
+}
+
+@utility neumo {
+  --neumo-c-shadow-color: var(--neumo-shadow-color, var(--color-base));
+  --neumo-c-depth: var(--neumo-depth, .4);
+  --neumo-c-clarity: var(--neumo-clarity, .6);
+  --neumo-c-light-azimuth: clamp(0, var(--neumo-light-azimuth, 225), 360);
+  --neumo-c-light-elevation: var(--neumo-light-elevation, .8);
+  --neumo-c-light-proximity: var(--neumo-light-proximity, 0);
+  --neumo-c-lightness-delta: calc(.01 + var(--neumo-c-depth) * .05);
+  --neumo-c-dark-color: oklch(from var(--neumo-c-shadow-color) calc(l - var(--neumo-c-lightness-delta)) c h);
+  --neumo-c-light-color: oklch(from var(--neumo-c-shadow-color) calc(l + var(--neumo-c-lightness-delta)) c h);
+  --neumo-c-center-light: max(0, var(--neumo-c-light-proximity));
+  --neumo-c-size: calc(100 * .02 + var(--neumo-c-depth) * 20);
+  --neumo-c-offset: calc(var(--neumo-c-size) * (.5 + var(--neumo-c-light-elevation)) * (1 - var(--neumo-c-center-light) * .85));
+  --neumo-c-dx: calc(var(--neumo-c-offset) * cos(var(--neumo-c-light-azimuth) * 1deg + 180deg));
+  --neumo-c-dy: calc(var(--neumo-c-offset) * sin(var(--neumo-c-light-azimuth) * 1deg + 180deg));
+  --neumo-c-blur: calc(var(--neumo-c-offset) * (4 - var(--neumo-c-clarity) * 4) * (1 - var(--neumo-c-center-light) * .55));
+  --neumo-c-dark-shadow: calc(var(--neumo-c-dx) * 1px) calc(var(--neumo-c-dy) * 1px) calc(var(--neumo-c-blur) * 1px) var(--neumo-c-dark-color);
+  --neumo-c-light-shadow: calc(var(--neumo-c-dx) * -1px) calc(var(--neumo-c-dy) * -1px) calc(var(--neumo-c-blur) * 1px) var(--neumo-c-light-color);
+
+  --neumo-c-bg-color: var(--neumo-bg-color, var(--tw-bg-color, var(--color-base)));
+  --neumo-c-bg-dark-color: oklch(from var(--neumo-c-bg-color) calc(l - var(--neumo-c-lightness-delta)) c h);
+  --neumo-c-bg-light-color: oklch(from var(--neumo-c-bg-color) calc(l + var(--neumo-c-lightness-delta)) c h);
+}
+
+@utility neumo-shadow-bump {
+  --neumo-shadow: var(--neumo-c-dark-shadow), var(--neumo-c-light-shadow);
+  box-shadow:
+    var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow),
+    var(--tw-ring-shadow), var(--tw-shadow), var(--neumo-shadow);
+}
+
+@utility neumo-shadow-dent {
+  --neumo-shadow: inset var(--neumo-c-dark-shadow), inset var(--neumo-c-light-shadow);
+  box-shadow:
+    var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow),
+    var(--tw-ring-shadow), var(--tw-shadow), var(--neumo-shadow);
+}
+
+@utility neumo-bg-concave {
+  --neumo-c-bg-degree: calc((90 + var(--neumo-c-light-azimuth) + 0) * 1deg);
+  background-image:
+    linear-gradient(var(--neumo-c-bg-degree), var(--neumo-c-bg-dark-color), var(--neumo-c-bg-light-color));
+}
+
+@utility neumo-bg-convex {
+  --neumo-c-bg-degree: calc((90 + var(--neumo-c-light-azimuth) + 180) * 1deg);
+  background-image:
+    linear-gradient(var(--neumo-c-bg-degree), var(--neumo-c-bg-dark-color), var(--neumo-c-bg-light-color));
+}
+
+@utility neumo-bump {
+  @apply neumo neumo-shadow-bump;
+}
+
+@utility neumo-bump-concave {
+  @apply neumo neumo-shadow-bump neumo-bg-concave;
+}
+
+@utility neumo-bump-convex {
+  @apply neumo neumo-shadow-bump neumo-bg-convex;
+}
+
+@utility neumo-dent {
+  @apply neumo neumo-shadow-dent;
+}
+
+@utility neumo-dent-concave {
+  @apply neumo neumo-shadow-dent neumo-bg-concave;
+}
+
+@utility neumo-dent-convex {
+  @apply neumo neumo-shadow-dent neumo-bg-convex;
+}
+
+@utility neumo-shadow-color-* {
+  --neumo-shadow-color: --value(--color-*, [color]);
+}
